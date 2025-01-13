@@ -1,0 +1,24 @@
+<project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>it.eng.dome.brokerage</groupId>
+  <artifactId>brokerage-utils</artifactId>
+  <version>0.0.1</version>
+  <name>Brokerage Utils </name>
+  <description>Brokerage Utils for DOME project</description>
+
+	<dependencies>
+		<!--  TMF637 Product Inventory Management  -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf637-v4</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<!-- TMF678 Customer Bill -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf678-v4</artifactId>
+			<version>1.0.1</version>
+		</dependency>
+	</dependencies>
+  
+</project>
