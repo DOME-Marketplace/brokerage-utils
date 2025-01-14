@@ -1,10 +1,28 @@
-<project xmlns="https://maven.apache.org/POM/4.0.0" xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>it.eng.dome.brokerage</groupId>
-  <artifactId>brokerage-utils</artifactId>
-  <version>0.0.1</version>
-  <name>Brokerage Utils </name>
-  <description>Brokerage Utils for DOME project</description>
+<project xmlns="https://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>3.2.10</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
+	<groupId>it.eng.dome.brokerage</groupId>
+	<artifactId>brokerage-utils</artifactId>
+	<version>0.0.1</version>
+	<packaging>jar</packaging>
+	<name>Brokerage Utils </name>
+	<description>Brokerage Utils for DOME project</description>
+
+	<distributionManagement>
+		<repository>
+			<id>nexus</id>
+			<url>https://production.eng.it/nexus/content/repositories/releases/</url>
+		</repository>
+	</distributionManagement>
 
 	<dependencies>
 		<!--  TMF637 Product Inventory Management  -->
@@ -20,5 +38,5 @@
 			<version>1.0.1</version>
 		</dependency>
 	</dependencies>
-  
+
 </project>
