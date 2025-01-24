@@ -11,7 +11,7 @@ import it.eng.dome.tmforum.tmf637.v4.model.ProductPrice;
 import it.eng.dome.tmforum.tmf678.v4.model.TimePeriod;
 
 /**
- * This class represents the DTO used by the "calculateBill" API of the billing service to calculate a bill \n.
+ * This class represents the DTO used by the "billing/bill" API  to calculate a bill \n.
  * This class contains information about the Product (TMF637-v4), the TimePeriod (TMF678-v4) and the list of ProductPrice (TMF637-v4) for which the bill must be calculated.
  */
 public class BillingRequestDTO {
