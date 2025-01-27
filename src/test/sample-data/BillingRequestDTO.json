@@ -1,0 +1,43 @@
+{
+	"product": {
+		"id": "1234",
+		"description": "Test Product 1",
+		"isBundle": false,
+		"billingAccount": {
+			"id": "4567",
+			"name": "BillingAccountRef Test"
+		},
+		"productPrice": [
+			{
+				"priceType": "recurring",
+				"productOfferingPrice": {
+					"id": "urn:ngsi-ld:product-offering-price:38b293a6-92db-4ca3-8fe6-54a6e4a9e12c"
+				}
+			},
+			{
+				"priceType": "recurring",
+				"productOfferingPrice": {
+					"id": "urn:ngsi-ld:product-offering-price:04a8cd8e-c88f-49be-8425-dca68e69708b"
+				}
+			}
+		]
+	},
+	"timePeriod": {
+		"endDateTime": "2024-12-20T00:16:56.9640635+01:00",
+		"startDateTime": "2024-12-20T00:16:56.962064+01:00"
+	},
+	"productPrice": [
+		{
+			"priceType": "recurring",
+			"productOfferingPrice": {
+				"id": "urn:ngsi-ld:product-offering-price:38b293a6-92db-4ca3-8fe6-54a6e4a9e12c"
+			}
+		},
+		{
+			"priceType": "recurring",
+			"productOfferingPrice": {
+				"id": "urn:ngsi-ld:product-offering-price:04a8cd8e-c88f-49be-8425-dca68e69708b"
+			}
+		}
+	]
+}

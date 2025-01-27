@@ -2,6 +2,8 @@ package it.eng.dome.brokerage.invoicing.dto;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -16,7 +18,23 @@ public class ApplyTaxesRequestDTO {
 	
 	private Product product;
 	
-	private List<AppliedCustomerBillingRate> appliedCustomerBillingRateList;
+	private List<AppliedCustomerBillingRate> appliedCustomerBillingRate;
+	
+	/** 
+	* Class constructor.
+	*/
+	public ApplyTaxesRequestDTO() {
+		// TODO Auto-generated constructor stub
+	}
+	
+	/**
+	 * Class constructor specifying the Product, the TimePeriod and the list of ProductPrice for which the bill will be calculated
+	 */
+	@JsonCreator
+	public ApplyTaxesRequestDTO(@JsonProperty("product") Product pr, @JsonProperty("appliedCustomerBillingRate") List<AppliedCustomerBillingRate> acbrl) {
+		this.setProduct(pr);
+		this.setAppliedCustomerBillingRate(acbrl);
+	}
 	
 	/**
 	 * The Product of the AppliedCustomerBillingRate list
@@ -41,17 +59,17 @@ public class ApplyTaxesRequestDTO {
 	 * 
 	 * @return the list of the AppliedCustomerBillingRate to which the taxes must be applied
 	 */
-	public List<AppliedCustomerBillingRate> getAppliedCustomerBillingRateList() {
-		return appliedCustomerBillingRateList;
+	public List<AppliedCustomerBillingRate> getAppliedCustomerBillingRate() {
+		return appliedCustomerBillingRate;
 	}
 	
 	/**
 	 * Sets the list of the AppliedCustomerBillingRate to which the taxes must be applied
 	 * 
-	 * @param appliedCustomerBillingRateList the list of the AppliedCustomerBillingRate to set
+	 * @param appliedCustomerBillingRate the list of the AppliedCustomerBillingRate to set
 	 */
-	public void setAppliedCustomerBillingRateList(List<AppliedCustomerBillingRate> appliedCustomerBillingRateList) {
-		this.appliedCustomerBillingRateList = appliedCustomerBillingRateList;
+	public void setAppliedCustomerBillingRate(List<AppliedCustomerBillingRate> appliedCustomerBillingRate) {
+		this.appliedCustomerBillingRate = appliedCustomerBillingRate;
 	}
 
 	
@@ -67,15 +85,15 @@ public class ApplyTaxesRequestDTO {
 
 		// appliedCustomerBillingRateList
 		StringBuilder appliedCustomerBillingRateList = new StringBuilder("[");
-		for (int i = 0; i < this.getAppliedCustomerBillingRateList().size(); i++) {
+		for (int i = 0; i < this.getAppliedCustomerBillingRate().size(); i++) {
 			if (i > 0) {
 				appliedCustomerBillingRateList.append(", ");
 			}
-			appliedCustomerBillingRateList.append(this.getAppliedCustomerBillingRateList().get(i).toJson());
+			appliedCustomerBillingRateList.append(this.getAppliedCustomerBillingRate().get(i).toJson());
 		}
 		appliedCustomerBillingRateList.append("]");
 
-		return "{ \"product\": " + capitalizeStatus(productJson) + ", \"appliedCustomerBillingRateList\": " + appliedCustomerBillingRateList.toString() + "}";
+		return "{ \"product\": " + capitalizeStatus(productJson) + ", \"appliedCustomerBillingRate\": " + appliedCustomerBillingRateList.toString() + "}";
 
 	}
 	
