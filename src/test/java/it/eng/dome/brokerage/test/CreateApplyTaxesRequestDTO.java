@@ -1,6 +1,7 @@
 package it.eng.dome.brokerage.test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import it.eng.dome.brokerage.invoicing.dto.ApplyTaxesRequestDTO;
 import it.eng.dome.tmforum.tmf637.v4.model.BillingAccountRef;
@@ -16,6 +17,7 @@ public class CreateApplyTaxesRequestDTO {
 	
 		test.testSerializationApplyTaxesRequestDTO();
 		test.testDeserializationApplyTaxesRequestDTO();	
+
 	}
 
     private void testSerializationApplyTaxesRequestDTO() {
@@ -55,7 +57,8 @@ public class CreateApplyTaxesRequestDTO {
 
     private void testDeserializationApplyTaxesRequestDTO() {
     	String test=new String("{\"product\":{\"id\":\"1234\",\"description\":\"Test Product 1\",\"isBundle\":false,\"billingAccount\":{\"id\":\"4567\",\"name\":\"BillingAccountRef Test\"}},\"appliedCustomerBillingRate\":[{\"id\":\"test\",\"description\":\"Test1\"},{\"id\":\"test2\",\"description\":\"Test2\"}]}");
-		ApplyTaxesRequestDTO obj=JSON.deserialize(test, ApplyTaxesRequestDTO.class);
+		ApplyTaxesRequestDTO obj=(ApplyTaxesRequestDTO)JSON.deserialize(test, ApplyTaxesRequestDTO.class);
 		System.out.println(obj.toString());
     }
+  
 }
