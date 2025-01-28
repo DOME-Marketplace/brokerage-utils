@@ -4,7 +4,7 @@ import java.time.OffsetDateTime;
 
 public class BillingUtils {
 	
-	protected static OffsetDateTime getNextBillingTime(OffsetDateTime t, OffsetDateTime now, String s) {
+	public static OffsetDateTime getNextBillingTime(OffsetDateTime t, OffsetDateTime now, String s) {
 		String[] data = s.split("\\s+");
 		if (data.length == 2) {
 			if (data[0].matches("-?\\d+")) { // if data[0] is a number
@@ -16,7 +16,7 @@ public class BillingUtils {
 		return null;
 	}
 	
-	protected static OffsetDateTime getPreviousBillingTime(OffsetDateTime t, String s) {
+	public static OffsetDateTime getPreviousBillingTime(OffsetDateTime t, String s) {
 		String[] data = s.split("\\s+");
 		if (data.length == 2) {
 			if (data[0].matches("-?\\d+")) { // if data[0] is a number
@@ -28,7 +28,7 @@ public class BillingUtils {
 		return null;
 	}
 	
-	private static OffsetDateTime nextBillingTime(OffsetDateTime time, OffsetDateTime now, int number, String unit) {
+	public static OffsetDateTime nextBillingTime(OffsetDateTime time, OffsetDateTime now, int number, String unit) {
 		if ((time.toLocalDate().equals(now.toLocalDate()) || (time.isAfter(now)))) {
 			return time;
 		}else {
@@ -55,7 +55,7 @@ public class BillingUtils {
 		}
 	}
 	
-	private static OffsetDateTime getPreviusBilling(OffsetDateTime time, int number, String unit) {
+	public static OffsetDateTime getPreviusBilling(OffsetDateTime time, int number, String unit) {
 		switch (unit) {
 			case "day":
 	        case "days":
