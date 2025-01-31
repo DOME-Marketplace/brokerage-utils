@@ -1,8 +1,6 @@
 package it.eng.dome.brokerage.test;
 
 import java.util.ArrayList;
-import java.util.List;
-
 import it.eng.dome.brokerage.invoicing.dto.ApplyTaxesRequestDTO;
 import it.eng.dome.tmforum.tmf637.v4.model.BillingAccountRef;
 import it.eng.dome.tmforum.tmf637.v4.model.Product;
