@@ -7,7 +7,7 @@ import java.time.format.DateTimeFormatter;
 
 public class DateUtils {
 	
-	private final String PATTERN = "dd-MM-yyyy HH:mm:ss";
+	private final static String PATTERN = "dd-MM-yyyy HH:mm:ss";
 	
 	/**
 	 * Formats the given {@link Instant} into a timestamp string using the pattern "dd-MM-yyyy HH:mm:ss".
@@ -17,7 +17,7 @@ public class DateUtils {
 	 * @return a formatted timestamp string in the "dd-MM-yyyy HH:mm:ss" pattern and "Europe/Rome" time zone
 	 * @throws DateTimeException if the instant cannot be converted to a zoned date-time
 	 */
-    public String getFormatterTimestamp(Instant time) {
+    public static String getFormatterTimestamp(Instant time) {
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(PATTERN);
         ZonedDateTime zonedDateTime = time.atZone(ZoneId.of("Europe/Rome"));
     	return zonedDateTime.format(formatter);        
@@ -32,7 +32,7 @@ public class DateUtils {
      * @return A formatted timestamp string based on the provided pattern.
      * @throws DateTimeException If the pattern is invalid or the time cannot be formatted.
      */
-    public String getFormatterTimestamp(Instant time, String pattern) {
+    public static String getFormatterTimestamp(Instant time, String pattern) {
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern(pattern);
         ZonedDateTime zonedDateTime = time.atZone(ZoneId.of("Europe/Rome"));
     	return zonedDateTime.format(formatter);        

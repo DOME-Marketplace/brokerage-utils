@@ -2,7 +2,7 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
-### <code>0.0.7</code> :calendar: 31/01/2025
+### <code>0.0.8</code> :calendar: 31/01/2025
 **Feature**
 * Added `DateUtils` class.
 
