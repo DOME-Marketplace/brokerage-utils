@@ -2,6 +2,10 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>1.0.0</code> :calendar: 18/02/2025
+**Feature**
+* Added `ErrorResponse` class to manage exception with a custom error response
+
 ### <code>0.0.9</code> :calendar: 31/01/2025
 **Feature**
 * Added `DateUtils` class.
