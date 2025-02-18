@@ -1,9 +1,10 @@
 package it.eng.dome.brokerage.exception;
 
 import java.time.OffsetDateTime;
-import java.util.Date;
 
 import org.springframework.http.HttpStatus;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 /**
  * Custom error response class to structure error messages 
@@ -28,7 +29,17 @@ public class ErrorResponse {
 	/**
 	 * The time the response was generated
 	 */
-	OffsetDateTime timstamp;
+	OffsetDateTime timestamp;
+	
+	/**
+	 * The custom exception type
+	 */
+	String exceptionType;
+	
+	/**
+	 * The path of the request
+	 */
+	String path;
 	
 	/**
 	 * Class default constructor
@@ -38,27 +49,22 @@ public class ErrorResponse {
 		// TODO Auto-generated constructor stub
 	}
 
-	/**
-	 * Class constructor 
-	 * 
-	 * @param status The HTTP status code series
-	 * @param exc The thrown exception 
-	 */
-	public ErrorResponse(HttpStatus status, Throwable exc) {
-		this(status, exc.getMessage());
-	}
 
-	/**
-	 * Class constructor 
+	/** Class constructor 
+	 * 
+	 * @param request The request that generates the error
 	 * @param status The HTTP status code series
-	 * @param message The message of the thrown exception
+	 * @param exc The thrown exception
 	 */
-	public ErrorResponse(HttpStatus status, String message) {
+	public ErrorResponse(HttpServletRequest request, HttpStatus status, Throwable exc) {
+		this.exceptionType=exc.getClass().getSimpleName();
+		this.path=request.getServletPath();
 		this.status = status;
 		this.statusCode = status.value();
-		this.message = message;
-		this.timstamp = OffsetDateTime.now();
+		this.message = exc.getMessage();
+		this.timestamp = OffsetDateTime.now();
 	}
+
 
 	/**
 	 * Gets the type of the error 
@@ -90,7 +96,25 @@ public class ErrorResponse {
 	 * @return The time the response was generated
 	 */
 	public OffsetDateTime getTimstamp() {
-		return timstamp;
+		return timestamp;
 	}
+
+	/**
+	 * Gets the type of custom exception
+	 * @return A string representing the custom exception
+	 */
+	public String getExceptionType() {
+		return exceptionType;
+	}
+
+	/**
+	 * Gets the path of the request that generates the exception
+	 * @return A string representing the path of the request
+	 */
+	public String getPath() {
+		return path;
+	}
+
+	
 
 }

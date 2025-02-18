@@ -12,7 +12,7 @@
 
 	<groupId>it.eng.dome.brokerage</groupId>
 	<artifactId>brokerage-utils</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1</version>
 	<packaging>jar</packaging>
 	<name>Brokerage Utils </name>
 	<description>Brokerage Utils for DOME project</description>
