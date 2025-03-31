@@ -6,48 +6,64 @@ import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
 import it.eng.dome.tmforum.tmf678.v4.ApiException;
 import it.eng.dome.tmforum.tmf678.v4.api.AppliedCustomerBillingRateApi;
 import it.eng.dome.tmforum.tmf678.v4.api.CustomerBillExtensionApi;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
+import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRateCreate;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRateUpdate;
 import it.eng.dome.tmforum.tmf678.v4.model.CustomerBill;
 import it.eng.dome.tmforum.tmf678.v4.model.CustomerBillCreate;
 
-public class AppliedCustomerBillRateUtils implements InitializingBean {
+public class AppliedCustomerBillRateApis {
 	
-	private final Logger logger = LoggerFactory.getLogger(AppliedCustomerBillRateUtils.class);
+	private final Logger logger = LoggerFactory.getLogger(AppliedCustomerBillRateApis.class);
 	private final int LIMIT = 10;
-
-	@Autowired
-	private ApiClient apiClientTMF678;
-
+	
 	private AppliedCustomerBillingRateApi appliedCustomerBillingRate;
 	private CustomerBillExtensionApi customerBillExtension;
-	
-	@Override
-	public void afterPropertiesSet() throws Exception {
+
+	/**
+	 * Constructor
+	 * @param apiClientTMF678
+	 */
+	public AppliedCustomerBillRateApis(ApiClient apiClientTMF678){
+		logger.info("Init AppliedCustomerBillRateUtils - apiClientTMF678 basePath: {}", apiClientTMF678.getBasePath());
 		appliedCustomerBillingRate = new AppliedCustomerBillingRateApi(apiClientTMF678);	
 		customerBillExtension = new CustomerBillExtensionApi(apiClientTMF678);
 	}
 	
+	/**
+	 * This method retrieves the list of AppliedCustomerBillingRate
+	 * 
+	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
+	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
+	 * - use fields == null to get all attributes	 
+	 * @return List&lt;AppliedCustomerBillingRate&gt;
+	 */
 	
-	public List<AppliedCustomerBillingRate> getAllAppliedCustomerBillingRates() {
-		logger.info("Get all AppliedCustomerBillingRates");
+	public List<AppliedCustomerBillingRate> getAllAppliedCustomerBillingRates(String fields) {
+		logger.info("Request: getAllAppliedCustomerBillingRates");
 		List<AppliedCustomerBillingRate> all = new ArrayList<AppliedCustomerBillingRate>();
-		getAllApplied(all, 0);
+		getAllApplied(all, fields, 0);
 		Collections.reverse(all); //reverse order
 		logger.info("Number of AppliedCustomerBillingRates: {}", all.size());
 		return all;
 	}
 	
-	public boolean updateAppliedCustomerBillingRate(String appliedId, AppliedCustomerBillingRateUpdate update) {
+	/**
+	 * This method updates the AppliedCustomerBillingRate by Id
+	 * 
+	 * @param appliedId - Identifier of the AppliedCustomerBillingRate (required) 
+	 * @param appliedCustomerBillingRateUpdate - AppliedCustomerBillingRateUpdate object used to update the AppliedCustomerBillingRate (required) 
+	 * @return boolean
+	 */
+	public boolean updateAppliedCustomerBillingRate(String appliedId, AppliedCustomerBillingRateUpdate appliedCustomerBillingRateUpdate) {
+		logger.info("Request: updateAppliedCustomerBillingRate");
 		try {
-			AppliedCustomerBillingRate billUpdate = appliedCustomerBillingRate.updateAppliedCustomerBillingRate(appliedId, update);
+			AppliedCustomerBillingRate billUpdate = appliedCustomerBillingRate.updateAppliedCustomerBillingRate(appliedId, appliedCustomerBillingRateUpdate);
 			logger.info("Update AppliedCustomerBillingRate with id: {}", billUpdate.getId());
 			return true;
 		} catch (ApiException e) {
@@ -56,8 +72,30 @@ public class AppliedCustomerBillRateUtils implements InitializingBean {
 		}
 	}
 	
+	/**
+	 * This method creates an AppliedCustomerBillingRate
+	 * 
+	 * @param appliedCustomerBillingRateCreate - AppliedCustomerBillingRateCreate object used in the creation request of the AppliedCustomerBillingRate (required) 
+	 * @return AppliedCustomerBillingRate
+	 */
+	public AppliedCustomerBillingRate createAppliedCustomerBillingRate(AppliedCustomerBillingRateCreate appliedCustomerBillingRateCreate) {
+		try {
+			AppliedCustomerBillingRate applied = appliedCustomerBillingRate.createAppliedCustomerBillingRate(appliedCustomerBillingRateCreate);
+			return applied;
+		} catch (ApiException e) {
+			logger.error("Error: ", e.getMessage());
+			return null;
+		}
+	}
+	
+	/**
+	 * This method creates a CustomerBill
+	 * 
+	 * @param customerBillCreate - CustomerBillCreate object used in the creation request of the CustomerBill (required) 
+	 * @return customerBillId
+	 */
 	public String createCustomerBill(CustomerBillCreate customerBillCreate) {
-		logger.info("Saving the customerBill ...");
+		logger.info("Request: createCustomerBill");
 		try {
 			CustomerBill customerBill = customerBillExtension.createCustomerBill(customerBillCreate);
 			logger.info("CustomerBill saved with id: {}", customerBill.getId());
@@ -69,19 +107,24 @@ public class AppliedCustomerBillRateUtils implements InitializingBean {
 		}
 	}
 	
-	private void getAllApplied(List<AppliedCustomerBillingRate> list, int start) {
+	/*
+	 * Internal method to get all AppliedCustomerBillingRate in recursive way
+	 */
+	private void getAllApplied(List<AppliedCustomerBillingRate> list, String fields, int start) {
 		int offset = start * LIMIT;
 
 		try {
-			List<AppliedCustomerBillingRate> appliedList = appliedCustomerBillingRate.listAppliedCustomerBillingRate(null, offset, LIMIT);
+			List<AppliedCustomerBillingRate> appliedList = appliedCustomerBillingRate.listAppliedCustomerBillingRate(fields, offset, LIMIT);
+
 			if (!appliedList.isEmpty()) {
 				Collections.reverse(appliedList); //reverse order
-				getAllApplied(list, start + 1);
+				getAllApplied(list, fields, start + 1);
 				list.addAll(appliedList);
 			}else {
 				return;
 			}
 		} catch (Exception e) {
+			logger.error("Error: {}", e.getMessage());
 			return;
 		}		
 	}

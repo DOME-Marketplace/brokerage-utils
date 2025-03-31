@@ -2,9 +2,9 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
-### <code>1.0.2</code> :calendar: 31/03/2025
+### <code>2.0.0</code> :calendar: 31/03/2025
 **Feature**
-* Added `AppliedCustomerBillRateUtils` class to manage the applied.
+* Added `AppliedCustomerBillRateApis`, `OrganizationApis`, `ProductOfferingPriceApis`, and `ProductApis` classes to manage the Brokerage API.
 
 ### <code>1.0.0</code> :calendar: 18/02/2025
 **Feature**

@@ -29,36 +29,52 @@ public class ProductApis {
 		productInventory = new ProductApi(apiClientTMF637);
 	}
 	
-	
-	public Product getProduct(String productId) {
+	/**
+	 * This method retrieves a specific Product by ID
+	 * 
+	 * @param productId - Identifier of the Product (required)
+	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
+	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
+	 * - use fields == null to get all attributes
+	 * @return Product
+	 */
+	public Product getProduct(String productId, String fields) {
 		try {
-			Product product = productInventory.retrieveProduct(productId, null);
-			return product;
+			
+			return productInventory.retrieveProduct(productId, fields);
 		} catch (ApiException e) {
 			logger.error("Error: ", e.getMessage());
 			return null;
 		}
 	}
 	
-	public List<Product> getAllProducts() {
+	/**
+	 * This method retrieves the list of Product
+	 * 
+	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
+	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
+	 * - use fields == null to get all attributes
+	 * @return List&lt;Product&gt;
+	 */
+	public List<Product> getAllProducts(String fields) {
 		logger.info("Request: getAllProducts");
 		List<Product> all = new ArrayList<Product>();
-		getAllProducts(all, 0);
+		getAllProducts(all, fields, 0);
 		Collections.reverse(all); //reverse order
 		logger.info("Number of Products: {}", all.size());
 		return all;
 	}
 	
 	
-	private void getAllProducts(List<Product> list, int start) {
+	private void getAllProducts(List<Product> list, String fields, int start) {
 		int offset = start * LIMIT;
 
 		try {
-			List<Product> appliedList =  productInventory.listProduct(null,  offset, LIMIT);
+			List<Product> appliedList =  productInventory.listProduct(fields,  offset, LIMIT);
 
 			if (!appliedList.isEmpty()) {
 				Collections.reverse(appliedList); //reverse order
-				getAllProducts(list, start + 1);
+				getAllProducts(list, fields, start + 1);
 				list.addAll(appliedList);
 			}else {
 				return;
