@@ -1,7 +1,6 @@
 package it.eng.dome.brokerage.api;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,7 +19,7 @@ import it.eng.dome.tmforum.tmf678.v4.model.CustomerBillCreate;
 public class AppliedCustomerBillRateApis {
 	
 	private final Logger logger = LoggerFactory.getLogger(AppliedCustomerBillRateApis.class);
-	private final int LIMIT = 10;
+	private final int LIMIT = 100;
 	
 	private AppliedCustomerBillingRateApi appliedCustomerBillingRate;
 	private CustomerBillExtensionApi customerBillExtension;
@@ -48,7 +47,6 @@ public class AppliedCustomerBillRateApis {
 		logger.info("Request: getAllAppliedCustomerBillingRates");
 		List<AppliedCustomerBillingRate> all = new ArrayList<AppliedCustomerBillingRate>();
 		getAllApplied(all, fields, 0);
-		Collections.reverse(all); //reverse order
 		logger.info("Number of AppliedCustomerBillingRates: {}", all.size());
 		return all;
 	}
@@ -117,9 +115,8 @@ public class AppliedCustomerBillRateApis {
 			List<AppliedCustomerBillingRate> appliedList = appliedCustomerBillingRate.listAppliedCustomerBillingRate(fields, offset, LIMIT);
 
 			if (!appliedList.isEmpty()) {
-				Collections.reverse(appliedList); //reverse order
-				getAllApplied(list, fields, start + 1);
 				list.addAll(appliedList);
+				getAllApplied(list, fields, start + 1);
 			}else {
 				return;
 			}

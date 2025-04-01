@@ -1,7 +1,6 @@
 package it.eng.dome.brokerage.api;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -16,7 +15,7 @@ import it.eng.dome.tmforum.tmf637.v4.model.Product;
 public class ProductApis {
 	
 	private final Logger logger = LoggerFactory.getLogger(ProductApis.class);
-	private final int LIMIT = 10;
+	private final int LIMIT = 100;
 	
 	private ProductApi productInventory;
 	
@@ -60,7 +59,6 @@ public class ProductApis {
 		logger.info("Request: getAllProducts");
 		List<Product> all = new ArrayList<Product>();
 		getAllProducts(all, fields, 0);
-		Collections.reverse(all); //reverse order
 		logger.info("Number of Products: {}", all.size());
 		return all;
 	}
@@ -73,9 +71,8 @@ public class ProductApis {
 			List<Product> appliedList =  productInventory.listProduct(fields,  offset, LIMIT);
 
 			if (!appliedList.isEmpty()) {
-				Collections.reverse(appliedList); //reverse order
-				getAllProducts(list, fields, start + 1);
 				list.addAll(appliedList);
+				getAllProducts(list, fields, start + 1);				
 			}else {
 				return;
 			}
