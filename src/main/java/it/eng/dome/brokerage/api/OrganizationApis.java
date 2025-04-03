@@ -28,7 +28,7 @@ public class OrganizationApis {
 	 * 
 	 * @param organizationId - Identifier of the ProductOfferingPrice (required) 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
+	 * - use this string to get specific fields (separated by comma: i.e. 'name,tradingName')<br> 
 	 * - use fields == null to get all attributes
 	 * @return Organization
 	 */

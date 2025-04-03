@@ -33,7 +33,7 @@ public class ProductApis {
 	 * 
 	 * @param productId - Identifier of the Product (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
+	 * - use this string to get specific fields (separated by comma: i.e. 'name,periodCoverage')<br> 
 	 * - use fields == null to get all attributes
 	 * @return Product
 	 */
@@ -51,7 +51,7 @@ public class ProductApis {
 	 * This method retrieves the list of Product
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
+	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br> 
 	 * - use fields == null to get all attributes
 	 * @return List&lt;Product&gt;
 	 */
