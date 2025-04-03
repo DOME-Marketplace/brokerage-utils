@@ -34,6 +34,26 @@ public class AppliedCustomerBillRateApis {
 		customerBillExtension = new CustomerBillExtensionApi(apiClientTMF678);
 	}
 	
+
+	/**
+	 * This method retrieves a specific AppliedCustomerBillingRate by ID
+	 *  
+	 * @param applyId - Identifier of the Product (required)
+	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
+	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
+	 * - use fields == null to get all attributes
+	 * @return AppliedCustomerBillingRate
+	 */
+	public AppliedCustomerBillingRate getAppliedCustomerBillingRate(String applyId, String fields) {
+		try {
+			
+			return appliedCustomerBillingRate.retrieveAppliedCustomerBillingRate(applyId, fields);
+		} catch (ApiException e) {
+			logger.error("Error: ", e.getMessage());
+			return null;
+		}
+	}
+	
 	/**
 	 * This method retrieves the list of AppliedCustomerBillingRate
 	 * 
