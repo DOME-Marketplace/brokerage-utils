@@ -49,7 +49,7 @@ public class AppliedCustomerBillRateApis {
 			
 			return appliedCustomerBillingRate.retrieveAppliedCustomerBillingRate(applyId, fields);
 		} catch (ApiException e) {
-			logger.error("Error: ", e.getMessage());
+			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
 	}
@@ -85,7 +85,7 @@ public class AppliedCustomerBillRateApis {
 			logger.info("Update AppliedCustomerBillingRate with id: {}", billUpdate.getId());
 			return true;
 		} catch (ApiException e) {
-			logger.error("Error: ", e.getMessage());
+			logger.error("Error: {}", e.getResponseBody());
 			return false;
 		}
 	}
@@ -101,7 +101,7 @@ public class AppliedCustomerBillRateApis {
 			AppliedCustomerBillingRate applied = appliedCustomerBillingRate.createAppliedCustomerBillingRate(appliedCustomerBillingRateCreate);
 			return applied;
 		} catch (ApiException e) {
-			logger.error("Error: ", e.getMessage());
+			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
 	}
@@ -120,7 +120,7 @@ public class AppliedCustomerBillRateApis {
 			return customerBill.getId();
 		} catch (ApiException e) {
 			logger.info("CustomerBill not saved: {}", customerBillCreate.toString());
-			logger.error("Error: {}", e.getMessage());
+			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
 	}
@@ -140,8 +140,8 @@ public class AppliedCustomerBillRateApis {
 			}else {
 				return;
 			}
-		} catch (Exception e) {
-			logger.error("Error: {}", e.getMessage());
+		} catch (ApiException e) {
+			logger.error("Error: {}", e.getResponseBody());
 			return;
 		}		
 	}

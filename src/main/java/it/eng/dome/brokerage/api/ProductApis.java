@@ -42,7 +42,7 @@ public class ProductApis {
 			
 			return productInventory.retrieveProduct(productId, fields);
 		} catch (ApiException e) {
-			logger.error("Error: ", e.getMessage());
+			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
 	}
@@ -76,8 +76,8 @@ public class ProductApis {
 			}else {
 				return;
 			}
-		} catch (Exception e) {
-			logger.error("Error: {}", e.getMessage());
+		} catch (ApiException e) {
+			logger.error("Error: {}", e.getResponseBody());
 			return;
 		}		
 	}

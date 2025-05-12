@@ -37,7 +37,7 @@ public class ProductOfferingPriceApis {
 		try {
 			return  popApi.retrieveProductOfferingPrice(popId, fields);
 		} catch (ApiException e) {
-			logger.error("Error: ", e.getMessage());
+			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
 	}

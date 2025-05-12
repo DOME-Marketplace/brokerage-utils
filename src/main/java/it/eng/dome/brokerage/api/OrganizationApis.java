@@ -36,7 +36,7 @@ public class OrganizationApis {
 		try {
 			return organizationApi.retrieveOrganization(organizationId, fields);
 		} catch (ApiException e) {
-			logger.error("Error: ", e.getMessage());
+			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
 	}
