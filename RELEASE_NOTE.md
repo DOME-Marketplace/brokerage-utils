@@ -2,6 +2,11 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.0.2</code> :calendar: 12/05/2025
+**Bug Fixing**
+* Set **getResponseBody** in the **logger.error**.
+
+
 ### <code>2.0.1</code> :calendar: 01/04/2025
 **Improvements**
 * Improvement in the **recursive functions**.
