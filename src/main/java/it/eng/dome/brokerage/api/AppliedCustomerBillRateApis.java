@@ -2,6 +2,7 @@ package it.eng.dome.brokerage.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,10 +64,10 @@ public class AppliedCustomerBillRateApis {
 	 * @return List&lt;AppliedCustomerBillingRate&gt;
 	 */
 	
-	public List<AppliedCustomerBillingRate> getAllAppliedCustomerBillingRates(String fields) {
+	public List<AppliedCustomerBillingRate> getAllAppliedCustomerBillingRates(String fields, Map<String, String> filter) {
 		logger.info("Request: getAllAppliedCustomerBillingRates");
 		List<AppliedCustomerBillingRate> all = new ArrayList<AppliedCustomerBillingRate>();
-		getAllApplied(all, fields, 0);
+		getAllApplied(all, fields, 0, filter);
 		logger.info("Number of AppliedCustomerBillingRates: {}", all.size());
 		return all;
 	}
@@ -128,15 +129,15 @@ public class AppliedCustomerBillRateApis {
 	/*
 	 * Internal method to get all AppliedCustomerBillingRate in recursive way
 	 */
-	private void getAllApplied(List<AppliedCustomerBillingRate> list, String fields, int start) {
+	private void getAllApplied(List<AppliedCustomerBillingRate> list, String fields, int start, Map<String, String> filter) {
 		int offset = start * LIMIT;
 
 		try {
-			List<AppliedCustomerBillingRate> appliedList = appliedCustomerBillingRate.listAppliedCustomerBillingRate(fields, offset, LIMIT);
+			List<AppliedCustomerBillingRate> appliedList = appliedCustomerBillingRate.listAppliedCustomerBillingRate(fields, offset, LIMIT, filter);
 
 			if (!appliedList.isEmpty()) {
 				list.addAll(appliedList);
-				getAllApplied(list, fields, start + 1);
+				getAllApplied(list, fields, start + 1, filter);
 			}else {
 				return;
 			}

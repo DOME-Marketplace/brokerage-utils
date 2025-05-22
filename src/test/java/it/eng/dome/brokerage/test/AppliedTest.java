@@ -1,6 +1,8 @@
 package it.eng.dome.brokerage.test;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import it.eng.dome.brokerage.api.AppliedCustomerBillRateApis;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
@@ -12,30 +14,54 @@ import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
 public class AppliedTest {
 
 	final static String tmf678CustomerBillPath = "tmf-api/customerBillManagement/v4";
-	final static String tmfEndpoint = "https://<tmforum-endpoint>";
+	final static String tmfEndpoint = "https://dome-dev.eng.it";
 
 	public static void main(String[] args) {
-		TestApiClient();
-		TestApis();
+		
+		//TestApiClient();
+		//TestApis();
+		TestFilter();
 	}
 	
-	private static void TestApis() {
+	public static void TestFilter() {
+		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+		
+		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+
+		Map<String, String> filter = new HashMap<String, String>();
+		//filter.put("isBilled", "false");
+		//filter.put("name", "Applied Customer Bill Rate #54");
+		//filter.put("type", "applied-customer-billing-rate");
+		filter.put("rateType", "recurring");
+		
+		List<AppliedCustomerBillingRate> applied = apis.getAllAppliedCustomerBillingRates(null, filter);
+		int count = 0;
+
+	 
+		
+		for (AppliedCustomerBillingRate apply : applied) {
+			System.out.println(++count + " => " + apply.getId() + " / " + apply.getIsBilled() + " / " + apply.getType() );
+		}
+	}
+	
+	public static void TestApis() {
 		
 		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
 		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
 		
 		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
-		AppliedCustomerBillingRate apply = apis.getAppliedCustomerBillingRate("urn:ngsi-ld:applied-customer-billing-rate:ddda692f-8fec-4c12-9e21-1b03f05cd5881", null);
+		AppliedCustomerBillingRate apply = apis.getAppliedCustomerBillingRate("urn:ngsi-ld:applied-customer-billing-rate:8f99c450-139f-40be-b7ec-8fbd48e357de", null);
 		if (apply != null) {
 			System.out.println(apply.getName());
 		}
 		
-		List<AppliedCustomerBillingRate> applied = apis.getAllAppliedCustomerBillingRates(null);
+		List<AppliedCustomerBillingRate> applied = apis.getAllAppliedCustomerBillingRates(null, null);
 		System.out.println(applied.size());
 		
 	}
 	
-	private static void TestApiClient() {
+	public static void TestApiClient() {
 		try {
 			ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
 			
@@ -43,7 +69,7 @@ public class AppliedTest {
 
 			AppliedCustomerBillingRateApi applied = new AppliedCustomerBillingRateApi(apiClientTmf678);
 
-			AppliedCustomerBillingRate apply = applied.retrieveAppliedCustomerBillingRate("urn:ngsi-ld:applied-customer-billing-rate:ddda692f-8fec-4c12-9e21-1b03f05cd5881", null);
+			AppliedCustomerBillingRate apply = applied.retrieveAppliedCustomerBillingRate("urn:ngsi-ld:applied-customer-billing-rate:8f99c450-139f-40be-b7ec-8fbd48e357de", null);
 			System.out.println(apply.getName());
 
 		} catch (ApiException e) {
