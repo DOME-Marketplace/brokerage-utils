@@ -1,5 +1,6 @@
 package it.eng.dome.brokerage.test;
 
+import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,15 +34,30 @@ public class AppliedTest {
 		//filter.put("isBilled", "false");
 		//filter.put("name", "Applied Customer Bill Rate #54");
 		//filter.put("type", "applied-customer-billing-rate");
-		filter.put("rateType", "recurring");
+		//filter.put("rateType", "recurring");
+		String mydate = "2025-04-22T15:18:52.065849400Z";
+		OffsetDateTime dateRef = OffsetDateTime.parse(mydate);
+		filter.put("date.gt", mydate); // gt, lt, eq OK
+		//filter.put("periodCoverage.endDateTime", mydate);
 		
 		List<AppliedCustomerBillingRate> applied = apis.getAllAppliedCustomerBillingRates(null, filter);
 		int count = 0;
-
 	 
 		
 		for (AppliedCustomerBillingRate apply : applied) {
 			System.out.println(++count + " => " + apply.getId() + " / " + apply.getIsBilled() + " / " + apply.getType() );
+			/*
+			if (dateRef.isBefore(apply.getPeriodCoverage().getEndDateTime())) {
+				System.out.println(dateRef  + " is before " + apply.getPeriodCoverage().getEndDateTime());
+			} else {
+				System.out.println(dateRef  + " is after " + apply.getPeriodCoverage().getEndDateTime());
+			}*/
+			
+			if (dateRef.isBefore(apply.getDate())) {
+				System.out.println(dateRef  + " is before " + apply.getDate());
+			} else {
+				System.out.println(dateRef  + " is after " + apply.getDate());
+			}
 		}
 	}
 	
