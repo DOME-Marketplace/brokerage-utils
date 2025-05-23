@@ -2,6 +2,7 @@ package it.eng.dome.brokerage.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,26 +54,27 @@ public class ProductApis {
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br> 
 	 * - use fields == null to get all attributes
+	 * @param filter - HashMap<K,V> to set query string params (optional)<br> 
 	 * @return List&lt;Product&gt;
 	 */
-	public List<Product> getAllProducts(String fields) {
+	public List<Product> getAllProducts(String fields, Map<String, String> filter) {
 		logger.info("Request: getAllProducts");
 		List<Product> all = new ArrayList<Product>();
-		getAllProducts(all, fields, 0);
+		getAllProducts(all, fields, 0, filter);
 		logger.info("Number of Products: {}", all.size());
 		return all;
 	}
 	
 	
-	private void getAllProducts(List<Product> list, String fields, int start) {
+	private void getAllProducts(List<Product> list, String fields, int start, Map<String, String> filter) {
 		int offset = start * LIMIT;
 
 		try {
-			List<Product> appliedList =  productInventory.listProduct(fields,  offset, LIMIT);
+			List<Product> appliedList =  productInventory.listProduct(fields,  offset, LIMIT, filter);
 
 			if (!appliedList.isEmpty()) {
 				list.addAll(appliedList);
-				getAllProducts(list, fields, start + 1);				
+				getAllProducts(list, fields, start + 1, filter);				
 			}else {
 				return;
 			}

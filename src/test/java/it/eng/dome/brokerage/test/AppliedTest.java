@@ -15,7 +15,7 @@ import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
 public class AppliedTest {
 
 	final static String tmf678CustomerBillPath = "tmf-api/customerBillManagement/v4";
-	final static String tmfEndpoint = "https://dome-dev.eng.it";
+	final static String tmfEndpoint = "https://<tmforum-endpoint>";
 
 	public static void main(String[] args) {
 		
@@ -34,7 +34,7 @@ public class AppliedTest {
 		//filter.put("isBilled", "false");
 		//filter.put("name", "Applied Customer Bill Rate #54");
 		//filter.put("type", "applied-customer-billing-rate");
-		//filter.put("rateType", "recurring");
+		filter.put("rateType", "recurring");
 		String mydate = "2025-04-22T15:18:52.065849400Z";
 		OffsetDateTime dateRef = OffsetDateTime.parse(mydate);
 		filter.put("date.gt", mydate); // gt, lt, eq OK

@@ -60,7 +60,8 @@ public class AppliedCustomerBillRateApis {
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
-	 * - use fields == null to get all attributes	 
+	 * - use fields == null to get all attributes	
+	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
 	 * @return List&lt;AppliedCustomerBillingRate&gt;
 	 */
 	
