@@ -2,6 +2,11 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.1.0</code> :calendar: 23/05/2025
+**Improvements**
+* Add **filtering** functionality in the **AppliedCustomerBillRateApis** and **ProductApis**.
+
+
 ### <code>2.0.2</code> :calendar: 12/05/2025
 **Bug Fixing**
 * Set **getResponseBody** in the **logger.error**.
