@@ -68,6 +68,11 @@ public class AppliedCustomerBillRateApis {
 	public List<AppliedCustomerBillingRate> getAllAppliedCustomerBillingRates(String fields, Map<String, String> filter) {
 		logger.info("Request: getAllAppliedCustomerBillingRates");
 		List<AppliedCustomerBillingRate> all = new ArrayList<AppliedCustomerBillingRate>();
+		
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		
 		getAllApplied(all, fields, 0, filter);
 		logger.info("Number of AppliedCustomerBillingRates: {}", all.size());
 		return all;

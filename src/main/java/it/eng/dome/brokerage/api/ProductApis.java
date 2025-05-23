@@ -60,6 +60,11 @@ public class ProductApis {
 	public List<Product> getAllProducts(String fields, Map<String, String> filter) {
 		logger.info("Request: getAllProducts");
 		List<Product> all = new ArrayList<Product>();
+		
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		
 		getAllProducts(all, fields, 0, filter);
 		logger.info("Number of Products: {}", all.size());
 		return all;

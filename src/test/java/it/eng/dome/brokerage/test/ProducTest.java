@@ -13,7 +13,7 @@ import it.eng.dome.tmforum.tmf637.v4.model.Product;
 public class ProducTest {
 
 	final static String tmf637ProductInventoryPath = "tmf-api/productInventory/v4";
-	final static String tmfEndpoint = "https://dome-dev.eng.it";
+	final static String tmfEndpoint = "https://<tmforum-endpoint>";
 
 	public static void main(String[] args) {
 
@@ -33,7 +33,7 @@ public class ProducTest {
 		OffsetDateTime dateRef = OffsetDateTime.parse(mydate);
 		filter.put("startDate.lt", mydate); // gt, lt, eq OK
 		
-		List<Product> products = apis.getAllProducts(null, filter);
+		List<Product> products = apis.getAllProducts(null, null);
 
 		int count = 0;
 		
