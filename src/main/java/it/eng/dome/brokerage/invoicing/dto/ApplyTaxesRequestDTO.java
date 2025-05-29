@@ -24,7 +24,6 @@ public class ApplyTaxesRequestDTO {
 	* Class constructor.
 	*/
 	public ApplyTaxesRequestDTO() {
-		// TODO Auto-generated constructor stub
 	}
 	
 	/**

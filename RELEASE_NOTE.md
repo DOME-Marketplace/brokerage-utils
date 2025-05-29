@@ -2,6 +2,11 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.1.1</code> :calendar: 29/05/2025
+**Bug Fixing**
+* Test of `RelatedParty` in **AppliedCustomerBillRate** and **CustomerBill** objects.
+
+
 ### <code>2.1.0</code> :calendar: 23/05/2025
 **Improvements**
 * Add **filtering** functionality in the **AppliedCustomerBillRateApis** and **ProductApis**.

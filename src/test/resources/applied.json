@@ -1,0 +1,73 @@
+{
+   "isBilled":false,
+   "type":"recurring",
+   "name": "Applied Customer Bill Rate from Java test",
+   "appliedTax":[
+      {
+         "taxCategory":"VAT",
+         "taxRate":1.0,
+         "taxAmount":{
+            "unit":"EUR",
+            "value":1.2
+         }
+      }
+   ],
+   "billingAccount":{
+      "id":"urn:ngsi-ld:billing-account:3bf025cb-1b58-48be-b0ae-bb0967d09d3b",
+      "href":"urn:ngsi-ld:billing-account:3bf025cb-1b58-48be-b0ae-bb0967d09d3b"
+   },
+   "product":{
+      "id":"urn:ngsi-ld:product:33a92eeb-2b8a-4c78-81c4-97a64a7b4fac",
+      "href":"urn:ngsi-ld:product:33a92eeb-2b8a-4c78-81c4-97a64a7b4fac"
+   },
+   "taxExcludedAmount":{
+      "unit":"EUR",
+      "value":20.0
+   },
+   "taxIncludedAmount":{
+      "unit":"EUR",
+      "value":23.0
+   },
+   "periodCoverage": {
+      "endDateTime": "2025-12-22T15:18:52.065849400Z",
+      "startDateTime": "2024-12-22T15:18:52.065849400Z"
+   },
+   "characteristic": [
+   	  {
+        "name": "characteristic",
+        "valueType": "type",
+        "value": "test"
+      }
+   ],
+   "@schemaLocation": "https://raw.githubusercontent.com/DOME-Marketplace/dome-odrl-profile/refs/heads/add-related-party-ref/schemas/simplified/RelatedPartyRef.schema.json",
+   "relatedParty":[
+		{
+		    "@referredType": "organization",
+		    "role": "Buyer",
+			"name": "IN2 INGENIERIA DE LA INFORMACION SOCIEDAD LIMITADA", 
+		    "href": "urn:ngsi-ld:organization:caf3a7ce-00a0-4e3b-b2b4-bf1ad4a52eb7",
+		    "id": "urn:ngsi-ld:organization:caf3a7ce-00a0-4e3b-b2b4-bf1ad4a52eb7"
+		},
+		{
+		    "@referredType": "organization",
+		    "role": "Seller",
+			"name": "CloudFerro S.A.", 
+		    "href": "urn:ngsi-ld:organization:a195013a-a0e4-493a-810a-b040e10da58f",
+		    "id": "urn:ngsi-ld:organization:a195013a-a0e4-493a-810a-b040e10da58f"
+		},
+		{
+		    "@referredType": "organization",
+		    "role": "BuyerOperator",
+			"name": "DHUB, Engineering D.HUB S.p.A.",
+		    "href": "urn:ngsi-ld:organization:38817de3-8c3e-4141-a344-86ffd915cc3b",
+		    "id": "urn:ngsi-ld:organization:38817de3-8c3e-4141-a344-86ffd915cc3b"
+		},
+		{
+		    "@referredType": "organization",
+		    "role": "SellerOperator",
+			"name": "Engineering Ingegneria Informatica S.p.A.",
+		    "href": "urn:ngsi-ld:organization:f2ad85a5-9edf-497c-b343-f08899084ebb",
+		    "id": "urn:ngsi-ld:organization:f2ad85a5-9edf-497c-b343-f08899084ebb"
+		}
+   ]
+}
