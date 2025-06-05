@@ -2,12 +2,11 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
-### <code>2.1.2</code> :calendar: 05/06/2025
+
+### <code>2.1.1</code> :calendar: 05/06/2025
 **Feature**
 * Add `UsageManagementApis` class of *TMF635 specification* to manage Usage and  in **Usage** and **UsageSpecification** objects.
 
-
-### <code>2.1.1</code> :calendar: 29/05/2025
 **Bug Fixing**
 * Test of `RelatedParty` in **AppliedCustomerBillRate** and **CustomerBill** objects.
 
