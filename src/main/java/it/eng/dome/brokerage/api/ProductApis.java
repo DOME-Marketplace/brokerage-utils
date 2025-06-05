@@ -25,7 +25,7 @@ public class ProductApis {
 	 * @param apiClientTMF637
 	 */
 	public ProductApis(ApiClient apiClientTMF637){
-		logger.info("Init ProductUtils -  apiClientTMF637 basePath: {}", apiClientTMF637.getBasePath());
+		logger.info("Init ProductApis -  apiClientTMF637 basePath: {}", apiClientTMF637.getBasePath());
 		productInventory = new ProductApi(apiClientTMF637);
 	}
 	
@@ -75,7 +75,7 @@ public class ProductApis {
 		int offset = start * LIMIT;
 
 		try {
-			List<Product> appliedList =  productInventory.listProduct(fields,  offset, LIMIT, filter);
+			List<Product> appliedList =  productInventory.listProduct(fields, offset, LIMIT, filter);
 
 			if (!appliedList.isEmpty()) {
 				list.addAll(appliedList);

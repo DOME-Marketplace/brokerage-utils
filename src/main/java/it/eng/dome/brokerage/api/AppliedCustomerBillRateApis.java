@@ -30,7 +30,7 @@ public class AppliedCustomerBillRateApis {
 	 * @param apiClientTMF678
 	 */
 	public AppliedCustomerBillRateApis(ApiClient apiClientTMF678){
-		logger.info("Init AppliedCustomerBillRateUtils - apiClientTMF678 basePath: {}", apiClientTMF678.getBasePath());
+		logger.info("Init AppliedCustomerBillRateApis - apiClientTMF678 basePath: {}", apiClientTMF678.getBasePath());
 		appliedCustomerBillingRate = new AppliedCustomerBillingRateApi(apiClientTMF678);	
 		customerBillExtension = new CustomerBillExtensionApi(apiClientTMF678);
 	}
