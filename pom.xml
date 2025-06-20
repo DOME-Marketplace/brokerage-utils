@@ -14,7 +14,7 @@
 
 	<groupId>it.eng.dome.brokerage</groupId>
 	<artifactId>brokerage-utils</artifactId>
-	<version>2.1.1</version>
+	<version>2.1.2</version>
 	<packaging>jar</packaging>
 	<name>Brokerage Utils</name>
 	<description>Brokerage Utils for DOME project</description>
@@ -39,6 +39,12 @@
 			<artifactId>tmf622-v4</artifactId>
 			<version>[2.1.0, 2.2.0)</version>
 		</dependency>
+		<!-- TMF629 Customer Management -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf629-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
 		<!-- TMF632 Party Management -->
 		<dependency>
 			<groupId>it.eng.dome.tmforum-sdk</groupId>
@@ -55,6 +61,12 @@
 		<dependency>
 			<groupId>it.eng.dome.tmforum-sdk</groupId>
 			<artifactId>tmf637-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+			<!--  TMF651 Agreement Management  -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf651-v4</artifactId>
 			<version>[2.1.0, 2.2.0)</version>
 		</dependency>
 		<!-- TMF678 Customer Bill -->

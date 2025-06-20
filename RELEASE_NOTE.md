@@ -2,10 +2,15 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.1.2</code> :calendar: 20/06/2025
+**Feature**
+* Add `CustomerManagementApis` class of *TMF629 specification* to manage a **Customer** object.
+* Add `AgreementManagementApis` class of *TMF651 specification* to manage a **Agreement** object.
+
 
 ### <code>2.1.1</code> :calendar: 05/06/2025
 **Feature**
-* Add `UsageManagementApis` class of *TMF635 specification* to manage Usage and  in **Usage** and **UsageSpecification** objects.
+* Add `UsageManagementApis` class of *TMF635 specification* to manage **Usage** and **UsageSpecification** objects.
 
 **Bug Fixing**
 * Test of `RelatedParty` in **AppliedCustomerBillRate** and **CustomerBill** objects.
