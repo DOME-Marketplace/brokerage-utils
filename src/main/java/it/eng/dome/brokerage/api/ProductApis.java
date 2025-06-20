@@ -11,6 +11,8 @@ import it.eng.dome.tmforum.tmf637.v4.ApiClient;
 import it.eng.dome.tmforum.tmf637.v4.ApiException;
 import it.eng.dome.tmforum.tmf637.v4.api.ProductApi;
 import it.eng.dome.tmforum.tmf637.v4.model.Product;
+import it.eng.dome.tmforum.tmf637.v4.model.ProductCreate;
+import it.eng.dome.tmforum.tmf637.v4.model.ProductUpdate;
 
 
 public class ProductApis {
@@ -29,6 +31,23 @@ public class ProductApis {
 		productInventory = new ProductApi(apiClientTMF637);
 	}
 	
+	
+	/**
+	 * This method creates a Product
+	 * 
+	 * @param ProductCreate - ProductCreate object used in the creation request of the Product (required) 
+	 * @return Product
+	 */
+	public Product createProduct(ProductCreate productCreate) {		
+		try {
+			return productInventory.createProduct(productCreate);
+		} catch (ApiException e) {
+			logger.error("Error: {}", e.getResponseBody());
+			return null;
+		}
+	}
+	
+	
 	/**
 	 * This method retrieves a specific Product by ID
 	 * 
@@ -45,6 +64,25 @@ public class ProductApis {
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
+		}
+	}
+	
+	/**
+	 * This method updates the Product by Id
+	 * 
+	 * @param productId - Identifier of the Product (required) 
+	 * @param productUpdate - ProductUpdate object used to update the Product (required) 
+	 * @return boolean
+	 */
+	public boolean updateProduct(String productId, ProductUpdate productUpdate) {
+		logger.info("Request: updateProduct");
+		try {
+			Product product = productInventory.patchProduct(productId, productUpdate);
+			logger.info("Update Product with id: {}", product.getId());
+			return true;
+		} catch (ApiException e) {
+			logger.error("Error: {}", e.getResponseBody());
+			return false;
 		}
 	}
 	

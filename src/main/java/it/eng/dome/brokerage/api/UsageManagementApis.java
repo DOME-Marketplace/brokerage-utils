@@ -32,7 +32,7 @@ public class UsageManagementApis {
 	 * @param apiClientTMF635
 	 */
 	public UsageManagementApis(ApiClient apiClientTMF635){
-		logger.info("Init UsageApis - apiClientTMF635 basePath: {}", apiClientTMF635.getBasePath());
+		logger.info("Init UsageManagementApis - apiClientTMF635 basePath: {}", apiClientTMF635.getBasePath());
 		usageApi = new UsageApi(apiClientTMF635);
 		usageSpecificationApi = new UsageSpecificationApi(apiClientTMF635);
 
