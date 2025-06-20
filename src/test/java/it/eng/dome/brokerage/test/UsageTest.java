@@ -1,6 +1,7 @@
 package it.eng.dome.brokerage.test;
 
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import it.eng.dome.brokerage.api.UsageManagementApis;
@@ -8,6 +9,7 @@ import it.eng.dome.tmforum.tmf635.v4.ApiClient;
 import it.eng.dome.tmforum.tmf635.v4.Configuration;
 import it.eng.dome.tmforum.tmf635.v4.model.TimePeriod;
 import it.eng.dome.tmforum.tmf635.v4.model.Usage;
+import it.eng.dome.tmforum.tmf635.v4.model.UsageCharacteristic;
 import it.eng.dome.tmforum.tmf635.v4.model.UsageCreate;
 import it.eng.dome.tmforum.tmf635.v4.model.UsageSpecification;
 import it.eng.dome.tmforum.tmf635.v4.model.UsageSpecificationCreate;
@@ -28,7 +30,7 @@ public class UsageTest {
 //		String id = TestCreateUsage();
 //		if (id != null) {
 //			Usage u = TestGetUsage(id);
-//			System.out.println(u.getId() + " " + u.getStatus() + " " + u.getUsageDate());
+//			System.out.println(u.getId() + " " + u.getStatus() + " " + u.getUsageCharacteristic());
 //		}
 		
 		/**
@@ -40,7 +42,7 @@ public class UsageTest {
 		/**
 		 * Get All Usages
 		 */
-		TestGetAllUsages();
+//		TestGetAllUsages();
 		
 		
 		/**
@@ -61,7 +63,7 @@ public class UsageTest {
 		/**
 		 * Get All UsageSpecifications
 		 */
-		TestGetAllUsageSpecifications();
+//		TestGetAllUsageSpecifications();
 	}
 	
 	protected static String TestCreateUsageSpecification() {
@@ -170,11 +172,20 @@ public class UsageTest {
 		UsageManagementApis apis = new UsageManagementApis(apiClientTmf635);
 		
 		UsageCreate uc = new UsageCreate();
-		uc.setDescription("Test usage");
-		uc.setStatus(UsageStatusType.RATED);
+		uc.setDescription("Test UsageCharacteristic");
+		uc.setStatus(UsageStatusType.GUIDED);
 		uc.setUsageDate(OffsetDateTime.now());
 		uc.setUsageType("VOICE");
 		
+		UsageCharacteristic uch = new UsageCharacteristic();
+		uch.setId("a0ba-b532cd8b82a7");
+		uch.setName("endDate");
+		uch.setValue("2025-06-06T10:05:18.707725700Z");
+		uch.setValueType("string");
+		List<UsageCharacteristic> listUch = new ArrayList<UsageCharacteristic>();
+		listUch.add(uch);
+		uc.setUsageCharacteristic(listUch);
+
 		Usage u = apis.createUsage(uc);
 		
 		return u.getId();

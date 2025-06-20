@@ -30,13 +30,13 @@ public class TestAppliedWithRelatedParty {
 		/**
 		 *  Create RelatedParty
 		 */
-		/*
+		
 		String id = TestCreateApplyRelatedParty();
 		if (id != null) {
 			System.out.println(id);
 			getApplied(id);
 		}
-		*/
+		
 		
 		/**
 		 *  Update RelatedParty
@@ -93,7 +93,8 @@ public class TestAppliedWithRelatedParty {
 		AppliedCustomerBillingRateUpdate update = new AppliedCustomerBillingRateUpdate();
 
 		try {
-			update.setAtSchemaLocation(new URI("https://raw.githubusercontent.com/DOME-Marketplace/dome-odrl-profile/refs/heads/add-related-party-ref/schemas/simplified/RelatedPartyRef.schema.json"));
+			// https://raw.githubusercontent.com/DOME-Marketplace/dome-odrl-profile/refs/heads/add-related-party-ref/schemas/simplified/RelatedPartyRef.schema.json
+			update.setAtSchemaLocation(new URI("https://raw.githubusercontent.com/DOME-Marketplace/dome-odrl-profile/refs/heads/applied-with-related-party/schemas/simplified/AppliedCustomerBillingRateWithRelatedParty.schema.json"));
 		} catch (URISyntaxException e) {
 			System.out.println("Error: " + e.getMessage());
 		}

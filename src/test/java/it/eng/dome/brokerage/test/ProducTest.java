@@ -6,23 +6,63 @@ import java.util.List;
 import java.util.Map;
 
 import it.eng.dome.brokerage.api.ProductApis;
-import it.eng.dome.tmforum.tmf637.v4.ApiClient;
-import it.eng.dome.tmforum.tmf637.v4.Configuration;
+import it.eng.dome.brokerage.api.ProductOfferingPriceApis;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingPrice;
 import it.eng.dome.tmforum.tmf637.v4.model.Product;
 
 public class ProducTest {
 
 	final static String tmf637ProductInventoryPath = "tmf-api/productInventory/v4";
-	final static String tmfEndpoint = "https://<tmforum-endpoint>";
+	final static String tmf620ProductCatalogPath = "tmf-api/productCatalogManagement/v4";
+	final static String tmfEndpoint = "https://dome-dev.eng.it";
 
 	public static void main(String[] args) {
 
-		TestApis();
+		//TestApis();
+		
+		//TestPOPApis();
+		
+		TestGetFilteredProducts();
+	}
+	
+	
+	protected static void TestGetFilteredProducts() {
+
+		it.eng.dome.tmforum.tmf637.v4.ApiClient apiClientTmf637 = it.eng.dome.tmforum.tmf637.v4.Configuration.getDefaultApiClient();
+		apiClientTmf637.setBasePath(tmfEndpoint + "/" + tmf637ProductInventoryPath);
+
+		ProductApis apis = new ProductApis(apiClientTmf637);
+
+		Map<String, String> filter = new HashMap<String, String>();
+		filter.put("status", "created");
+		List<Product> products = apis.getAllProducts(null, filter);
+
+		int count = 0;
+		for (Product product : products) {
+			System.out.println(++count + " => " + product.getId() + " " + product.getStatus() + " " + product.getName());
+		}
 	}
 
-	private static void TestApis() {
+	protected static void TestPOPApis() {
+		
+		it.eng.dome.tmforum.tmf620.v4.ApiClient apiClientTmf620 = it.eng.dome.tmforum.tmf620.v4.Configuration.getDefaultApiClient();
+		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductCatalogPath);
+		
+		ProductOfferingPriceApis apis = new ProductOfferingPriceApis(apiClientTmf620);
+		
+		String id = "urn:ngsi-ld:product-offering-price:47915f9d-e132-4d29-82db-28c3e985c211";
+		ProductOfferingPrice pop = apis.getProductOfferingPrice(id, null);
+		if (pop != null) {
+			System.out.println(pop.getRecurringChargePeriodLength());
 
-		ApiClient apiClientTmf637 = Configuration.getDefaultApiClient();
+		} else {
+			System.out.println(id);
+		}
+	}
+	
+	protected static void TestApis() {
+
+		it.eng.dome.tmforum.tmf637.v4.ApiClient apiClientTmf637 = it.eng.dome.tmforum.tmf637.v4.Configuration.getDefaultApiClient();
 		apiClientTmf637.setBasePath(tmfEndpoint + "/" + tmf637ProductInventoryPath);
 
 		ProductApis apis = new ProductApis(apiClientTmf637);
