@@ -11,17 +11,46 @@ import it.eng.dome.tmforum.tmf678.v4.ApiException;
 import it.eng.dome.tmforum.tmf678.v4.Configuration;
 import it.eng.dome.tmforum.tmf678.v4.api.AppliedCustomerBillingRateApi;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
+import it.eng.dome.tmforum.tmf678.v4.model.TimePeriod;
 
 public class AppliedTest {
 
 	final static String tmf678CustomerBillPath = "tmf-api/customerBillManagement/v4";
-	final static String tmfEndpoint = "https://<tmforum-endpoint>";
+	final static String tmfEndpoint = "https://dome-dev.eng.it";
 
 	public static void main(String[] args) {
 		
 		//TestApiClient();
 		//TestApis();
-		TestFilter();
+		//TestFilter();
+		
+		TestIsAlreadyBilled();
+	}
+	
+	
+	public static void TestIsAlreadyBilled() {
+		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+		
+		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+
+		Map<String, String> filter = new HashMap<String, String>();
+		
+		TimePeriod tp = new TimePeriod();
+		tp.setEndDateTime(OffsetDateTime.parse("2025-07-01T10:04:38.983Z"));
+		tp.setStartDateTime(OffsetDateTime.parse("2025-06-30T10:04:38.983Z"));
+		
+		filter.put("rateType", "pay-per-use");
+		filter.put("periodCoverage.endDateTime.eq", tp.getEndDateTime().toString());
+		filter.put("periodCoverage.startDateTime.eq", tp.getStartDateTime().toString());
+		filter.put("product.id", "urn:ngsi-ld:product:f942601c-1902-4b09-a498-23d844d21972");
+		
+		List<AppliedCustomerBillingRate> applied = apis.getAllAppliedCustomerBillingRates("isBilled,type", filter);
+		int count = 0;
+	 		
+		for (AppliedCustomerBillingRate apply : applied) {
+			System.out.println(++count + " => " + apply.getId() + " / " + apply.getIsBilled() + " / " + apply.getType() );
+		}
 	}
 	
 	public static void TestFilter() {
@@ -34,11 +63,12 @@ public class AppliedTest {
 		//filter.put("isBilled", "false");
 		//filter.put("name", "Applied Customer Bill Rate #54");
 		//filter.put("type", "applied-customer-billing-rate");
-		filter.put("rateType", "recurring");
+		//filter.put("rateType", "recurring");
 		String mydate = "2025-04-22T15:18:52.065849400Z";
 		OffsetDateTime dateRef = OffsetDateTime.parse(mydate);
-		filter.put("date.gt", mydate); // gt, lt, eq OK
+		//filter.put("date.gt", mydate); // gt, lt, eq OK
 		//filter.put("periodCoverage.endDateTime", mydate);
+		filter.put("relatedParty.name", "OLIMPO");
 		
 		List<AppliedCustomerBillingRate> applied = apis.getAllAppliedCustomerBillingRates(null, filter);
 		int count = 0;
