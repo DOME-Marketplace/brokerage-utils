@@ -93,8 +93,10 @@ public class TestAppliedWithRelatedParty {
 		AppliedCustomerBillingRateUpdate update = new AppliedCustomerBillingRateUpdate();
 
 		try {
-			// https://raw.githubusercontent.com/DOME-Marketplace/dome-odrl-profile/refs/heads/add-related-party-ref/schemas/simplified/RelatedPartyRef.schema.json
-			update.setAtSchemaLocation(new URI("https://raw.githubusercontent.com/DOME-Marketplace/dome-odrl-profile/refs/heads/applied-with-related-party/schemas/simplified/AppliedCustomerBillingRateWithRelatedParty.schema.json"));
+			
+			//update.setAtSchemaLocation(new URI("https://raw.githubusercontent.com/FIWARE/tmforum-api/refs/heads/main/extension-schemas/related-party-extension.json"));
+			update.setAtSchemaLocation(new URI("https://raw.githubusercontent.com/DOME-Marketplace/dome-odrl-profile/refs/heads/add-related-party-ref/schemas/simplified/RelatedPartyRef.schema.json"));
+			//update.setAtSchemaLocation(new URI("https://raw.githubusercontent.com/DOME-Marketplace/dome-odrl-profile/refs/heads/applied-with-related-party/schemas/simplified/AppliedCustomerBillingRateWithRelatedParty.schema.json"));
 		} catch (URISyntaxException e) {
 			System.out.println("Error: " + e.getMessage());
 		}
