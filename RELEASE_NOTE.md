@@ -2,6 +2,11 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.1.3</code> :calendar: 22/07/2025
+**Feature**
+* Add `AccountManagementApis` class of *TMF666 specification* to manage a **Accounts** object (`partyAccount`, `billingAccount`, and `billFormat`).
+
+
 ### <code>2.1.2</code> :calendar: 20/06/2025
 **Feature**
 * Add `CustomerManagementApis` class of *TMF629 specification* to manage a **Customer** object.
