@@ -2,7 +2,9 @@ package it.eng.dome.brokerage.test;
 
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import it.eng.dome.brokerage.api.UsageManagementApis;
 import it.eng.dome.tmforum.tmf635.v4.ApiClient;
@@ -16,6 +18,7 @@ import it.eng.dome.tmforum.tmf635.v4.model.UsageSpecificationCreate;
 import it.eng.dome.tmforum.tmf635.v4.model.UsageSpecificationUpdate;
 import it.eng.dome.tmforum.tmf635.v4.model.UsageStatusType;
 import it.eng.dome.tmforum.tmf635.v4.model.UsageUpdate;
+import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
 
 public class UsageTest {
 	
@@ -64,6 +67,8 @@ public class UsageTest {
 		 * Get All UsageSpecifications
 		 */
 //		TestGetAllUsageSpecifications();
+		
+		TestFilter();
 	}
 	
 	protected static String TestCreateUsageSpecification() {
@@ -189,5 +194,31 @@ public class UsageTest {
 		Usage u = apis.createUsage(uc);
 		
 		return u.getId();
+	}
+	
+	protected static void TestFilter() {
+		
+		ApiClient apiClientTmf635 = Configuration.getDefaultApiClient();
+		apiClientTmf635.setBasePath(tmfEndpoint + "/" + tmf635UsagePath);
+		
+		UsageManagementApis apis = new UsageManagementApis(apiClientTmf635);
+		
+		Map<String, String> filter = new HashMap<String, String>();
+		
+		TimePeriod tp = new TimePeriod();
+		tp.setEndDateTime(OffsetDateTime.parse("2024-12-20T22:16:57.964063500Z"));
+		tp.setStartDateTime(OffsetDateTime.parse("2024-12-20T00:16:56.9640635+01:00"));
+		
+		filter.put("usageDate.lt", tp.getEndDateTime().toString());
+		filter.put("usageDate.gt", tp.getStartDateTime().toString());
+		
+		List<Usage> usages=apis.getAllUsages(null, filter);
+		
+		int count=0;
+		for (Usage usage : usages) {
+			System.out.println(++count + " => " + usage.getId() + " date " + usage.getUsageDate());
+		}
+		
+		
 	}
 }
