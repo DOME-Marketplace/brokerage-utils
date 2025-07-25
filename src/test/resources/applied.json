@@ -1,7 +1,7 @@
 {
    "isBilled":false,
    "type":"recurring",
-   "name": "Applied Customer Bill Rate from Java test",
+   "name": "Applied Customer Bill Rate using the applied-with-related-party",
    "appliedTax":[
       {
          "taxCategory":"VAT",
@@ -39,7 +39,7 @@
         "value": "test"
       }
    ],
-   "@schemaLocation": "https://raw.githubusercontent.com/DOME-Marketplace/dome-odrl-profile/refs/heads/add-related-party-ref/schemas/simplified/RelatedPartyRef.schema.json",
+   "@schemaLocation": "https://raw.githubusercontent.com/DOME-Marketplace/dome-odrl-profile/refs/heads/main/schemas/simplified/RelatedPartyRef.schema.json",
    "relatedParty":[
 		{
 		    "@referredType": "organization",

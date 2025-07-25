@@ -20,9 +20,9 @@ public class ProducTest {
 
 		//TestApis();
 		
-		//TestPOPApis();
+		TestPOPApis();
 		
-		TestGetFilteredProducts();
+		//TestGetFilteredProducts();
 	}
 	
 	
@@ -50,14 +50,24 @@ public class ProducTest {
 		
 		ProductOfferingPriceApis apis = new ProductOfferingPriceApis(apiClientTmf620);
 		
-		String id = "urn:ngsi-ld:product-offering-price:47915f9d-e132-4d29-82db-28c3e985c211";
+		//POP id with isBundle = false
+		String id = "urn:ngsi-ld:product-offering-price:3da19c94-f884-49e2-ae3e-2dd35dc09f96";
 		ProductOfferingPrice pop = apis.getProductOfferingPrice(id, null);
 		if (pop != null) {
-			System.out.println(pop.getRecurringChargePeriodLength());
-
+			System.out.println("POP: " + pop.getName() + " " + pop.getIsBundle() + " " + pop.getLastUpdate());
 		} else {
-			System.out.println(id);
+			System.out.println("POP not found with id: " + id);
 		}
+		
+		//POP id with isBundle = true
+		id = "urn:ngsi-ld:product-offering-price:1b9b98b4-6c90-494a-b599-7456d87ad371";
+		pop = apis.getProductOfferingPrice(id, null);
+		if (pop != null) {
+			System.out.println("POP: " + pop.getName() + " " + pop.getIsBundle() + " " + pop.getLastUpdate());
+		} else {
+			System.out.println("POP not found with id: " + id);
+		}
+
 	}
 	
 	protected static void TestApis() {
