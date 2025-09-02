@@ -2,6 +2,10 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.1.4</code> :calendar: 02/09/2025
+**Improvements**
+* Add `BillingPriceType` class to enumerate the allowed priceType values.
+
 ### <code>2.1.3</code> :calendar: 22/07/2025
 **Feature**
 * Add `AccountManagementApis` class of *TMF666 specification* to manage a **Accounts** object (`partyAccount`, `billingAccount`, and `billFormat`).
