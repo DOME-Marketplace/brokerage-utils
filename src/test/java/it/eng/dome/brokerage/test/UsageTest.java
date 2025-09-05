@@ -18,7 +18,6 @@ import it.eng.dome.tmforum.tmf635.v4.model.UsageSpecificationCreate;
 import it.eng.dome.tmforum.tmf635.v4.model.UsageSpecificationUpdate;
 import it.eng.dome.tmforum.tmf635.v4.model.UsageStatusType;
 import it.eng.dome.tmforum.tmf635.v4.model.UsageUpdate;
-import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
 
 public class UsageTest {
 	
