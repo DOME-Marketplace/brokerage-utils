@@ -24,7 +24,60 @@ public class AppliedTest {
 		//TestApis();
 		//TestFilter();
 		
-		TestIsAlreadyBilled();
+//		TestIsAlreadyBilled();
+		
+		TestRevenueBilled();
+	}
+	
+	public static void TestRevenueBilled() {
+		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+		
+		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+
+		Map<String, String> filter = new HashMap<String, String>();
+		
+		TimePeriod tp = new TimePeriod();
+		
+		// January
+//		tp.setStartDateTime(OffsetDateTime.parse("2025-01-01T00:00:00.0Z"));
+//		tp.setEndDateTime(OffsetDateTime.parse("2025-01-28T23:59:59.999Z"));
+
+		// February
+//		tp.setStartDateTime(OffsetDateTime.parse("2025-02-01T00:00:00.0Z"));
+//		tp.setEndDateTime(OffsetDateTime.parse("2025-02-28T23:59:59.999Z"));
+		
+		// March
+//		tp.setStartDateTime(OffsetDateTime.parse("2025-03-01T00:00:00.0Z"));
+//		tp.setEndDateTime(OffsetDateTime.parse("2025-03-28T23:59:59.999Z"));
+
+		// April
+//		tp.setStartDateTime(OffsetDateTime.parse("2025-04-01T00:00:00.0Z"));
+//		tp.setEndDateTime(OffsetDateTime.parse("2025-04-30T23:59:59.999Z"));
+		
+		// May
+//		tp.setStartDateTime(OffsetDateTime.parse("2025-05-01T00:00:00.0Z"));
+//		tp.setEndDateTime(OffsetDateTime.parse("2025-05-31T23:59:59.999Z"));
+		
+		// June
+//		tp.setStartDateTime(OffsetDateTime.parse("2025-06-01T00:00:00.0Z"));
+//		tp.setEndDateTime(OffsetDateTime.parse("2025-06-30T23:59:59.999Z"));
+
+		tp.setStartDateTime(OffsetDateTime.parse("2025-01-01T00:00:00.0Z"));
+		tp.setEndDateTime(OffsetDateTime.parse("2025-07-24T23:59:59.999Z"));
+		
+		filter.put("isBilled", "true");
+		filter.put("relatedParty", "urn:ngsi-ld:organization:f2ad85a5-9edf-497c-b343-f08899084ebb");
+		//filter.put("relatedParty.role", "Seller");
+		filter.put("date.lt", tp.getEndDateTime().toString());
+		filter.put("date.gt", tp.getStartDateTime().toString());
+		
+		List<AppliedCustomerBillingRate> applied = apis.getAllAppliedCustomerBillingRates(null, filter);
+		int count = 0;
+	 		
+		for (AppliedCustomerBillingRate apply : applied) {
+			System.out.println(++count + " => " + apply.getId() + " / " + apply.getTaxExcludedAmount().getValue() + " / " + apply.getName() );
+		}
 	}
 	
 	

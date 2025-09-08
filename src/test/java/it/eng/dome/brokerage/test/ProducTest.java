@@ -20,9 +20,9 @@ public class ProducTest {
 
 		//TestApis();
 		
-		TestPOPApis();
+		//TestPOPApis();
 		
-		//TestGetFilteredProducts();
+		TestGetFilteredProducts();
 	}
 	
 	

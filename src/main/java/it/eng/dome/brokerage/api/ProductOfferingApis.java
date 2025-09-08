@@ -20,11 +20,10 @@ public class ProductOfferingApis {
 	private final int LIMIT = 100;
 	
 	private ProductOfferingApi productOfferingApi;
-	//private ProductSpecificationApi productSpecificationApi;
 	
 	/**
 	 * Constructor
-	 * @param apiClientTMF635
+	 * @param apiClientTMF620
 	 */
 	public ProductOfferingApis(ApiClient apiClientTMF620){
 		logger.info("Init ProductOfferingApis - apiClientTMF620 basePath: {}", apiClientTMF620.getBasePath());
@@ -93,7 +92,7 @@ public class ProductOfferingApis {
 	 * @return List&lt;ProductOffering&gt;
 	 */
 	public List<ProductOffering> getAllProductOfferings(String fields, Map<String, String> filter) {
-		logger.info("Request: ProductOfferings");
+		logger.info("Request: getAllProductOfferings");
 		List<ProductOffering> all = new ArrayList<ProductOffering>();
 		
 		if (filter != null && !filter.isEmpty()) {
@@ -109,7 +108,7 @@ public class ProductOfferingApis {
 		int offset = start * LIMIT;
 
 		try {
-			List<ProductOffering> productOfferingList =  productOfferingApi.listProductOffering(fields, offset, LIMIT, filter);
+			List<ProductOffering> productOfferingList = productOfferingApi.listProductOffering(fields, offset, LIMIT, filter);
 
 			if (!productOfferingList.isEmpty()) {
 				list.addAll(productOfferingList);
