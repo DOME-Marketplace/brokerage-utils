@@ -2,6 +2,12 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.1.6</code> :calendar: 23/09/2025
+**Feature**
+* Add `ProductSpecificationApis` class of *TMF620 specification* to manage a **ProductSpecification** object.
+* Add `ResourceSpecificationApis` classes of *TMF634 specification* to manage a **ResourceSpecification** object.
+
+
 ### <code>2.1.5</code> :calendar: 08/09/2025
 **Feature**
 * Add `ProductOfferingApis` class of *TMF620 specification* to manage a **ProductOffering** object.
