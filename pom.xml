@@ -14,7 +14,7 @@
 
 	<groupId>it.eng.dome.brokerage</groupId>
 	<artifactId>brokerage-utils</artifactId>
-	<version>2.1.6</version>
+	<version>2.1.7</version>
 	<packaging>jar</packaging>
 	<name>Brokerage Utils</name>
 	<description>Brokerage Utils for DOME project</description>
@@ -49,6 +49,12 @@
 		<dependency>
 			<groupId>it.eng.dome.tmforum-sdk</groupId>
 			<artifactId>tmf632-v4</artifactId>
+			<version>[2.1.0, 2.2.0)</version>
+		</dependency>
+		<!-- TMF633 Service Catalog Management -->
+		<dependency>
+			<groupId>it.eng.dome.tmforum-sdk</groupId>
+			<artifactId>tmf633-v4</artifactId>
 			<version>[2.1.0, 2.2.0)</version>
 		</dependency>
 		<!-- TMF634 Resource Specification Management -->
