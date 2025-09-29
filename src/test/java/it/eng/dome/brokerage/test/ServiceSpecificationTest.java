@@ -22,7 +22,7 @@ public class ServiceSpecificationTest {
         /**
          * Get ServiceSpecification by ID
          */
-        String id = "urn:ngsi-ld:service-specification:8f5f2d0c-9af4-47ad-a932-387455fc11df";
+        String id = "urn:ngsi-ld:service-specification:44e32a74-94ee-4625-a6e3-ca69a66b3881";
         TestGetServiceSpecification(id);
 
     }

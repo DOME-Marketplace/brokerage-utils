@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
 import it.eng.dome.tmforum.tmf678.v4.ApiException;
 import it.eng.dome.tmforum.tmf678.v4.api.AppliedCustomerBillingRateApi;
+import it.eng.dome.tmforum.tmf678.v4.api.CustomerBillApi;
 import it.eng.dome.tmforum.tmf678.v4.api.CustomerBillExtensionApi;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRateCreate;
@@ -24,6 +25,7 @@ public class AppliedCustomerBillRateApis {
 	
 	private AppliedCustomerBillingRateApi appliedCustomerBillingRate;
 	private CustomerBillExtensionApi customerBillExtension;
+	private CustomerBillApi customerBill;
 
 	/**
 	 * Constructor
@@ -33,6 +35,7 @@ public class AppliedCustomerBillRateApis {
 		logger.info("Init AppliedCustomerBillRateApis - apiClientTMF678 basePath: {}", apiClientTMF678.getBasePath());
 		appliedCustomerBillingRate = new AppliedCustomerBillingRateApi(apiClientTMF678);	
 		customerBillExtension = new CustomerBillExtensionApi(apiClientTMF678);
+		customerBill = new CustomerBillApi(apiClientTMF678);
 	}
 	
 
@@ -114,6 +117,50 @@ public class AppliedCustomerBillRateApis {
 	}
 	
 	/**
+	 * This method retrieves the list of CustomerBill
+	 * 
+	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
+	 * - use this string to get specific fields (separated by comma: i.e. 'state,paymentDueDate')<br> 
+	 * - use fields == null to get all attributes	
+	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
+	 * @return List&lt;CustomerBill&gt;
+	 */
+	
+	public List<CustomerBill> getAllCustomerBills(String fields, Map<String, String> filter) {
+		logger.info("Request: getAllCustomerBills");
+		List<CustomerBill> all = new ArrayList<CustomerBill>();
+		
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		
+		getAllCustomer(all, fields, 0, filter);
+		logger.info("Number of CustomerBills: {}", all.size());
+		return all;
+	}
+	
+
+	/**
+	 * This method retrieves a specific CustomerBill by ID
+	 *  
+	 * @param customerBillId - Identifier of the CustomerBill (required)
+	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
+	 * - use this string to get specific fields (separated by comma: i.e. 'state,paymentDueDate')<br> 
+	 * - use fields == null to get all attributes
+	 * @return CustomerBill
+	 */
+	public CustomerBill getCustomerBill(String customerBillId, String fields) {
+		try {
+			
+			return customerBill.retrieveCustomerBill(customerBillId, fields);
+		} catch (ApiException e) {
+			logger.error("Error: {}", e.getResponseBody());
+			return null;
+		}
+	}
+	
+	
+	/**
 	 * This method creates a CustomerBill
 	 * 
 	 * @param customerBillCreate - CustomerBillCreate object used in the creation request of the CustomerBill (required) 
@@ -144,6 +191,24 @@ public class AppliedCustomerBillRateApis {
 			if (!appliedList.isEmpty()) {
 				list.addAll(appliedList);
 				getAllApplied(list, fields, start + 1, filter);
+			}else {
+				return;
+			}
+		} catch (ApiException e) {
+			logger.error("Error: {}", e.getResponseBody());
+			return;
+		}		
+	}
+	
+	private void getAllCustomer(List<CustomerBill> list, String fields, int start, Map<String, String> filter) {
+		int offset = start * LIMIT;
+
+		try {
+			List<CustomerBill> appliedList = customerBill.listCustomerBill(fields, offset, LIMIT, filter);
+
+			if (!appliedList.isEmpty()) {
+				list.addAll(appliedList);
+				getAllCustomer(list, fields, start + 1, filter);
 			}else {
 				return;
 			}

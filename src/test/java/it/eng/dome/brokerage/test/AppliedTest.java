@@ -11,6 +11,7 @@ import it.eng.dome.tmforum.tmf678.v4.ApiException;
 import it.eng.dome.tmforum.tmf678.v4.Configuration;
 import it.eng.dome.tmforum.tmf678.v4.api.AppliedCustomerBillingRateApi;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
+import it.eng.dome.tmforum.tmf678.v4.model.CustomerBill;
 import it.eng.dome.tmforum.tmf678.v4.model.TimePeriod;
 
 public class AppliedTest {
@@ -26,7 +27,47 @@ public class AppliedTest {
 		
 //		TestIsAlreadyBilled();
 		
-		TestRevenueBilled();
+		//TestRevenueBilled();
+		
+//		TestCustomerBill();
+		
+		TestCustomerBillFiltered();
+	}
+	
+	public static void TestCustomerBillFiltered() {
+		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+		
+		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+		
+		// filtered
+		Map<String, String> filter = new HashMap<String, String>();
+		filter.put("state", "new");
+		filter.put("amountDue.tmfValue.gt", "0");
+		List<CustomerBill> cbs = apis.getAllCustomerBills(null, filter); //gt, lt, eq
+		
+		int count = 0;		
+		for (CustomerBill cb : cbs) {
+			System.out.println(++count + " => " + cb.getId() + " / " + cb.getState() + " / " + cb.getAmountDue().getValue() );
+		}
+	}
+	
+	public static void TestCustomerBill() {
+		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+		
+		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+		
+		List<CustomerBill> cbs = apis.getAllCustomerBills(null, null);
+		
+		int count = 0;		
+		for (CustomerBill cb : cbs) {
+			System.out.println(++count + " => " + cb.getId() + " / " + cb.getState() + " / " + cb.getAmountDue() );
+		}
+		
+		// get by ID
+		String id = "urn:ngsi-ld:customer-bill:f3fc3b17-7cb8-4e92-b49e-e3b4067226da";
+		System.out.println("detail of: " + apis.getCustomerBill(id, null).getState().getValue());
 	}
 	
 	public static void TestRevenueBilled() {
