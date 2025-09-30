@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import it.eng.dome.brokerage.api.AppliedCustomerBillRateApis;
+import it.eng.dome.brokerage.api.AppliedCustomerBillRateApisX;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
 import it.eng.dome.tmforum.tmf678.v4.Configuration;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
@@ -60,7 +60,7 @@ public class TestAppliedWithRelatedParty {
 		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
 		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
 
-		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+		AppliedCustomerBillRateApisX apis = new AppliedCustomerBillRateApisX(apiClientTmf678);
 						
 		try {
 			AppliedCustomerBillingRateCreate create = AppliedCustomerBillingRateCreate.fromJson(getJson());
@@ -83,7 +83,7 @@ public class TestAppliedWithRelatedParty {
 		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
 		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
 
-		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+		AppliedCustomerBillRateApisX apis = new AppliedCustomerBillRateApisX(apiClientTmf678);
 
 		
 
@@ -128,7 +128,7 @@ public class TestAppliedWithRelatedParty {
 		
 		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
 		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
-		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+		AppliedCustomerBillRateApisX apis = new AppliedCustomerBillRateApisX(apiClientTmf678);
 		
 		AppliedCustomerBillingRate apply = apis.getAppliedCustomerBillingRate(id, null);
 		System.out.println(apply.toJson());
@@ -145,7 +145,7 @@ public class TestAppliedWithRelatedParty {
 		
 		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
 		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
-		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+		AppliedCustomerBillRateApisX apis = new AppliedCustomerBillRateApisX(apiClientTmf678);
 		
 		List<AppliedCustomerBillingRate> applied = apis.getAllAppliedCustomerBillingRates(null, null);
 		
@@ -182,7 +182,7 @@ public class TestAppliedWithRelatedParty {
 		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
 		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
 
-		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+		AppliedCustomerBillRateApisX apis = new AppliedCustomerBillRateApisX(apiClientTmf678);
 		
 		String idCustomerBill = apis.createCustomerBill(customerBill);
 		System.out.println("ID Customer Bill: " + idCustomerBill);
