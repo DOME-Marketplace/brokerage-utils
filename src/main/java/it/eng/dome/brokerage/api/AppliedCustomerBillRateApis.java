@@ -39,7 +39,12 @@ public class AppliedCustomerBillRateApis {
 	 * @return AppliedCustomerBillingRate
 	 */
 	public AppliedCustomerBillingRate getAppliedCustomerBillingRate(String applyId, String fields) {
+		logger.info("Request: getAppliedCustomerBillingRate by id {}", applyId);
+		
 		try {
+			if (fields != null) {
+				logger.debug("Fields required: [{}]", fields);
+			}
 			
 			return appliedCustomerBillingRate.retrieveAppliedCustomerBillingRate(applyId, fields);
 		} catch (ApiException e) {
@@ -67,6 +72,9 @@ public class AppliedCustomerBillRateApis {
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
+			if (fields != null) {
+				logger.debug("Fields required: [{}]", fields);
+			}
 			
 			List<AppliedCustomerBillingRate> items = appliedCustomerBillingRate.listAppliedCustomerBillingRate(fields, offset, limit, filter);
 			boolean hasNext = items.size() == limit;
@@ -88,10 +96,11 @@ public class AppliedCustomerBillRateApis {
 	 * @return boolean
 	 */
 	public boolean updateAppliedCustomerBillingRate(String appliedId, AppliedCustomerBillingRateUpdate appliedCustomerBillingRateUpdate) {
-		logger.info("Request: updateAppliedCustomerBillingRate");
+		logger.info("Request: updateAppliedCustomerBillingRate by id {}", appliedId);
+		
 		try {
 			AppliedCustomerBillingRate billUpdate = appliedCustomerBillingRate.updateAppliedCustomerBillingRate(appliedId, appliedCustomerBillingRateUpdate);
-			logger.info("Update AppliedCustomerBillingRate with id: {}", billUpdate.getId());
+			logger.info("Update successfully AppliedCustomerBillingRate with id: {}", billUpdate.getId());
 			return true;
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
@@ -103,13 +112,17 @@ public class AppliedCustomerBillRateApis {
 	 * This method creates an AppliedCustomerBillingRate
 	 * 
 	 * @param appliedCustomerBillingRateCreate - AppliedCustomerBillingRateCreate object used in the creation request of the AppliedCustomerBillingRate (required) 
-	 * @return AppliedCustomerBillingRate
+	 * @return appliedId
 	 */
-	public AppliedCustomerBillingRate createAppliedCustomerBillingRate(AppliedCustomerBillingRateCreate appliedCustomerBillingRateCreate) {
+	public String createAppliedCustomerBillingRate(AppliedCustomerBillingRateCreate appliedCustomerBillingRateCreate) {
+		logger.info("Create: AppliedCustomerBillingRate");
+		
 		try {
 			AppliedCustomerBillingRate applied = appliedCustomerBillingRate.createAppliedCustomerBillingRate(appliedCustomerBillingRateCreate);
-			return applied;
+			logger.info("AppliedCustomerBillingRate saved successfully with id: {}", applied.getId());
+			return applied.getId();
 		} catch (ApiException e) {
+			logger.info("AppliedCustomerBillingRate not saved: {}", appliedCustomerBillingRateCreate.toString());
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}

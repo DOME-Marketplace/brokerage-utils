@@ -41,7 +41,12 @@ public class CustomerBillApis {
 	 * @return CustomerBill
 	 */
 	public CustomerBill getCustomerBill(String customerBillId, String fields) {
+		logger.info("Request: getCustomerBill by id {}", customerBillId);
+		
 		try {
+			if (fields != null) {
+				logger.debug("Fields required: [{}]", fields);
+			}
 			
 			return customerBill.retrieveCustomerBill(customerBillId, fields);
 		} catch (ApiException e) {
@@ -69,6 +74,9 @@ public class CustomerBillApis {
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
+			if (fields != null) {
+				logger.debug("Fields required: [{}]", fields);
+			}
 			
 			List<CustomerBill> items = customerBill.listCustomerBill(fields, offset, limit, filter);
 			boolean hasNext = items.size() == limit;
@@ -91,7 +99,7 @@ public class CustomerBillApis {
 		logger.info("Request: createCustomerBill");
 		try {
 			CustomerBill customerBill = customerBillExtension.createCustomerBill(customerBillCreate);
-			logger.info("CustomerBill saved with id: {}", customerBill.getId());
+			logger.info("CustomerBill saved successfully with id: {}", customerBill.getId());
 			return customerBill.getId();
 		} catch (ApiException e) {
 			logger.info("CustomerBill not saved: {}", customerBillCreate.toString());

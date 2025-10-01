@@ -1,5 +1,8 @@
 package it.eng.dome.brokerage.test;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
 import java.util.Map;
@@ -10,6 +13,7 @@ import it.eng.dome.brokerage.api.page.PaginationUtils;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
 import it.eng.dome.tmforum.tmf678.v4.Configuration;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
+import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRateCreate;
 import it.eng.dome.tmforum.tmf678.v4.model.TimePeriod;
 
 public class AppliedCustomerBillRateApisTest {
@@ -27,7 +31,9 @@ public class AppliedCustomerBillRateApisTest {
 		
 		//TestAppliedCustomerBillRateFilter();
 		
-		TestAppliedCustomerBillRateRevenueBilled();
+		//TestAppliedCustomerBillRateRevenueBilled();
+		
+		//TestCreateApplyRelatedParty();
 	}
 
 	
@@ -166,5 +172,36 @@ public class AppliedCustomerBillRateApisTest {
 			}
 		);	
 		System.out.println("End task");
+	}
+	
+	public static String TestCreateApplyRelatedParty() {
+		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+
+		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+						
+		try {
+			AppliedCustomerBillingRateCreate create = AppliedCustomerBillingRateCreate.fromJson(getJson());
+			System.out.println(create.toJson());
+			
+			String id = apis.createAppliedCustomerBillingRate(create);
+			System.out.println("Applied id: " + id);
+			return id;
+			
+		} catch (IOException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+
+		return null;
+	}
+	
+	private static String getJson() {
+		String file = "src/test/resources/applied.json";
+		try {
+			return new String(Files.readAllBytes(Paths.get(file)));
+		} catch (IOException e) {
+			System.out.println("Error: " + e.getMessage());
+			return null;
+		}
 	}
 }
