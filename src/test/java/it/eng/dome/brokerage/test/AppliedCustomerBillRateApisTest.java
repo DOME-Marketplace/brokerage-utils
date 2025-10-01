@@ -25,7 +25,7 @@ public class AppliedCustomerBillRateApisTest {
 	
 	public static void main(String[] args) {
 		
-		//TestAppliedCustomerBillRate();
+		TestAppliedCustomerBillRate();
 		
 		//TestAppliedCustomerBillRateById();
 		
@@ -43,19 +43,10 @@ public class AppliedCustomerBillRateApisTest {
 		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
 		
 		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
-
 		AtomicInteger count = new AtomicInteger(0);
-		/*
-		PaginationUtils.streamAll(
-		        apis::listAppliedCustomerBillingRatePage, // method reference
-		        null,                                     // fields
-		        null,                                     // filter
-		        100                                       // pageSize
-		).forEach(rate -> System.out.println(rate.getId() + " → " + rate.getName()));
-		*/
 		
 		PaginationUtils.streamAll(
-		        apis::listAppliedCustomerBillingRates, // method reference
+		        apis::listAppliedCustomerBillingRates,    // method reference
 		        null,                                     // fields
 		        Map.of("isBilled", "true"),               // filter
 		        100                                       // pageSize
@@ -68,7 +59,7 @@ public class AppliedCustomerBillRateApisTest {
 			}
 		);
 		
-		System.out.println("Totale AppliedCustomerBillingRate: " + count.get());
+		System.out.println("AppliedCustomerBillingRate found: " + count.get());
 	}
 	
 	
@@ -171,7 +162,8 @@ public class AppliedCustomerBillRateApisTest {
 			System.out.println(count + " " + rate.getId() + " → " + rate.getTaxExcludedAmount() + " / " + rate.getName() );
 			}
 		);	
-		System.out.println("End task");
+
+		System.out.println("AppliedCustomerBillingRate found: " + count);
 	}
 	
 	public static String TestCreateApplyRelatedParty() {

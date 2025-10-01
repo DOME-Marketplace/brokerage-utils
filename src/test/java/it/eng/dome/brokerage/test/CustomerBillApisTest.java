@@ -46,6 +46,8 @@ public class CustomerBillApisTest {
 			System.out.println(count + " " + cb.getId() + " → " + cb.getAmountDue().getValue() + " / " + cb.getState());
 			}
 		);
+		
+		System.out.println("CustomerBill found: " + count);
 	}
 	
 	
