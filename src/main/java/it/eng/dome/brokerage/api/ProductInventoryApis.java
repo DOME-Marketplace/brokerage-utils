@@ -34,11 +34,14 @@ public class ProductInventoryApis {
 	 * This method creates a Product
 	 * 
 	 * @param ProductCreate - ProductCreate object used in the creation request of the Product (required) 
-	 * @return Product
+	 * @return productId
 	 */
-	public Product createProduct(ProductCreate productCreate) {		
+	public String createProduct(ProductCreate productCreate) {		
 		try {
-			return productApi.createProduct(productCreate);
+			
+			Product product = productApi.createProduct(productCreate);
+			logger.info("Product saved successfully with id: {}", product.getId());
+			return product.getId();
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
