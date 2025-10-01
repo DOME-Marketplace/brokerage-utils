@@ -53,7 +53,7 @@ public class AccountManagementApis {
 		
 		try {
 			if (fields != null) {
-				logger.debug("Fields required: {}", fields);
+				logger.debug("Fields required: [{}]", fields);
 			}
 			
 			return partyAccountApi.retrievePartyAccount(partyAccountId, fields);
@@ -83,7 +83,7 @@ public class AccountManagementApis {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
 			if (fields != null) {
-				logger.debug("Fields required: {}", fields);
+				logger.debug("Fields required: [{}]", fields);
 			}
 			
 			List<PartyAccount> items = partyAccountApi.listPartyAccount(fields, offset, limit, filter);
@@ -113,7 +113,7 @@ public class AccountManagementApis {
 		
 		try {
 			if (fields != null) {
-				logger.debug("Fields required: {}", fields);
+				logger.debug("Fields required: [{}]", fields);
 			}
 			
 			return billingAccountApi.retrieveBillingAccount(billingAccountId, fields);
@@ -144,7 +144,7 @@ public class AccountManagementApis {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
 			if (fields != null) {
-				logger.debug("Fields required: {}", fields);
+				logger.debug("Fields required: [{}]", fields);
 			}
 			
 			List<BillingAccount> items = billingAccountApi.listBillingAccount(fields, offset, limit, filter);
@@ -211,7 +211,7 @@ public class AccountManagementApis {
 		
 		try {
 			if (fields != null) {
-				logger.debug("Fields required: {}", fields);
+				logger.debug("Fields required: [{}]", fields);
 			}
 			
 			return billFormatApi.retrieveBillFormat(billFormatId, fields);
@@ -242,7 +242,7 @@ public class AccountManagementApis {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
 			if (fields != null) {
-				logger.debug("Fields required: {}", fields);
+				logger.debug("Fields required: [{}]", fields);
 			}
 			
 			List<BillFormat> items = billFormatApi.listBillFormat(fields, offset, limit, filter);
