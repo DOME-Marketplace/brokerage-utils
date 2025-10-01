@@ -1,12 +1,12 @@
 package it.eng.dome.brokerage.api;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.dome.brokerage.api.page.Page;
 import it.eng.dome.tmforum.tmf651.v4.ApiClient;
 import it.eng.dome.tmforum.tmf651.v4.ApiException;
 import it.eng.dome.tmforum.tmf651.v4.api.AgreementApi;
@@ -17,8 +17,6 @@ import it.eng.dome.tmforum.tmf651.v4.model.AgreementUpdate;
 
 public class AgreementManagementApis {
 	private final Logger logger = LoggerFactory.getLogger(AgreementManagementApis.class);
-	private final int LIMIT = 100;
-
 	private AgreementApi agreementApi;
 
 	/**
@@ -39,6 +37,8 @@ public class AgreementManagementApis {
 	 * @return Agreement
 	 */
 	public Agreement createAgreement(AgreementCreate agreementCreate) {		
+		logger.info("Create: Agreement");
+		
 		try {
 			return agreementApi.createAgreement(agreementCreate);
 		} catch (ApiException e) {
@@ -56,16 +56,18 @@ public class AgreementManagementApis {
 	 * @return boolean
 	 */
 	public boolean updateAgreement(String agreementId, AgreementUpdate agreementUpdate) {
-		logger.info("Request: updateAgreement");
+		logger.info("Request: updateAgreement by id {}", agreementId);
+		
 		try {
 			Agreement agreement = agreementApi.patchAgreement(agreementId, agreementUpdate);
-			logger.info("Update Agreement with id: {}", agreement.getId());
+			logger.info("Update successfully Agreement with id: {}", agreement.getId());
 			return true;
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return false;
 		}
 	}
+	
 
 	/**
 	 * This method retrieves a specific Agreement by ID
@@ -77,7 +79,13 @@ public class AgreementManagementApis {
 	 * @return Agreement
 	 */
 	public Agreement getAgreement(String agreementId, String fields) {
+		logger.info("Request: getAgreement by id {}", agreementId);
+		
 		try {
+			if (fields != null) {
+				logger.debug("Fields required: [{}]", fields);
+			}
+			
 			return agreementApi.retrieveAgreement(agreementId, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
@@ -85,43 +93,39 @@ public class AgreementManagementApis {
 		}
 	}
 	
+	
 	/**
-	 * This method retrieves the list of Agreement
+	 * This method retrieves a paginated list of Agreement
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br> 
-	 * @return List&lt;Agreement&gt;
+	 * - use this string to get specific fields (separated by comma: i.e. 'name,status')<br>
+	 * - use fields == null to get all attributes		
+     * @param offset - the index of the first item to return (used for pagination)
+     * @param limit - the maximum number of items to return
+	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
+	 * @return a {@link Page} containing a subset of Agreement
 	 */
-	public List<Agreement> getAllAgreements(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllAgreements");
-		List<Agreement> all = new ArrayList<Agreement>();
+	public Page<Agreement> listAgreements(String fields, int offset, int limit, Map<String, String> filter) {
+		logger.info("Request: listAgreements");
 		
-		if (filter != null && !filter.isEmpty()) {
-			logger.debug("Params used in the query-string filter: {}", filter);
-		}
-		
-		getAllAgreements(all, fields, 0, filter);
-		logger.info("Number of Agreements: {}", all.size());
-		return all;
-	}
-		
-	private void getAllAgreements(List<Agreement> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
-
 		try {
-			List<Agreement> agreementList =  agreementApi.listAgreement(fields, offset, LIMIT, filter);
-
-			if (!agreementList.isEmpty()) {
-				list.addAll(agreementList);
-				getAllAgreements(list, fields, start + 1, filter);				
-			}else {
-				return;
+			
+			if (filter != null && !filter.isEmpty()) {
+				logger.debug("Params used in the query-string filter: {}", filter);
 			}
+			if (fields != null) {
+				logger.debug("Fields required: [{}]", fields);
+			}
+			
+			List<Agreement> items = agreementApi.listAgreement(fields, offset, limit, filter);
+			boolean hasNext = items.size() == limit;
+			
+			return new Page<>(items, offset, limit, hasNext);
+			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
+			return null;
+		}   
 	}
+	
 }
