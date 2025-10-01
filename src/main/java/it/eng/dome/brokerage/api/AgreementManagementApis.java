@@ -83,7 +83,7 @@ public class AgreementManagementApis {
 		
 		try {
 			if (fields != null) {
-				logger.debug("Fields required: [{}]", fields);
+				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
 			return agreementApi.retrieveAgreement(agreementId, fields);
@@ -114,7 +114,7 @@ public class AgreementManagementApis {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
 			if (fields != null) {
-				logger.debug("Fields required: [{}]", fields);
+				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
 			List<Agreement> items = agreementApi.listAgreement(fields, offset, limit, filter);

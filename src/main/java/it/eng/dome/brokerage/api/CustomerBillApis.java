@@ -45,7 +45,7 @@ public class CustomerBillApis {
 		
 		try {
 			if (fields != null) {
-				logger.debug("Fields required: [{}]", fields);
+				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
 			return customerBill.retrieveCustomerBill(customerBillId, fields);
@@ -75,7 +75,7 @@ public class CustomerBillApis {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
 			if (fields != null) {
-				logger.debug("Fields required: [{}]", fields);
+				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
 			List<CustomerBill> items = customerBill.listCustomerBill(fields, offset, limit, filter);

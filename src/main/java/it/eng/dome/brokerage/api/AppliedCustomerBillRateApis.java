@@ -43,7 +43,7 @@ public class AppliedCustomerBillRateApis {
 		
 		try {
 			if (fields != null) {
-				logger.debug("Fields required: [{}]", fields);
+				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
 			return appliedCustomerBillingRate.retrieveAppliedCustomerBillingRate(applyId, fields);
@@ -73,7 +73,7 @@ public class AppliedCustomerBillRateApis {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
 			if (fields != null) {
-				logger.debug("Fields required: [{}]", fields);
+				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
 			List<AppliedCustomerBillingRate> items = appliedCustomerBillingRate.listAppliedCustomerBillingRate(fields, offset, limit, filter);
