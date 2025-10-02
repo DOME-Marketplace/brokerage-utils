@@ -178,7 +178,7 @@ public class AccountManagementApis {
 	
 	
 	/**
-	 * This method updates the BillFormat by Id
+	 * This method updates the BillFormat by ID
 	 * 
 	 * @param billFormatId - Identifier of the BillFormat (required) 
 	 * @param billFormatUpdate - BillFormatUpdate object used to update the BillFormat (required) 

@@ -89,7 +89,7 @@ public class AppliedCustomerBillRateApis {
 
 	
 	/**
-	 * This method updates the AppliedCustomerBillingRate by Id
+	 * This method updates the AppliedCustomerBillingRate by ID
 	 * 
 	 * @param appliedId - Identifier of the AppliedCustomerBillingRate (required) 
 	 * @param appliedCustomerBillingRateUpdate - AppliedCustomerBillingRateUpdate object used to update the AppliedCustomerBillingRate (required) 

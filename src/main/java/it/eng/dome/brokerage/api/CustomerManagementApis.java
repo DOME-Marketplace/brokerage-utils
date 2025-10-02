@@ -50,7 +50,7 @@ public class CustomerManagementApis {
 	
 	
 	/**
-	 * This method updates the Customer by Id
+	 * This method updates the Customer by ID
 	 * 
 	 * @param customerId - Identifier of the Customer (required) 
 	 * @param customerUpdate - CustomerUpdate object used to update the Customer (required) 
