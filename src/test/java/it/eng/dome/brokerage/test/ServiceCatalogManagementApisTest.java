@@ -1,13 +1,14 @@
 package it.eng.dome.brokerage.test;
 
-import it.eng.dome.brokerage.api.ServiceSpecificationApis;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import it.eng.dome.brokerage.api.ServiceCatalogManagementApis;
+import it.eng.dome.brokerage.api.page.PaginationUtils;
 import it.eng.dome.tmforum.tmf633.v4.ApiClient;
 import it.eng.dome.tmforum.tmf633.v4.Configuration;
 import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
 
-import java.util.List;
-
-public class ServiceSpecificationTest {
+public class ServiceCatalogManagementApisTest {
     final static String tmf633serviceCatalogManagementPath = "tmf-api/serviceCatalogManagement/v4";
     final static String tmfEndpoint = "https://dome-dev.eng.it";
 
@@ -32,14 +33,22 @@ public class ServiceSpecificationTest {
         ApiClient apiClientTmf634 = Configuration.getDefaultApiClient();
         apiClientTmf634.setBasePath(tmfEndpoint + "/" + tmf633serviceCatalogManagementPath);
 
-        ServiceSpecificationApis apis = new ServiceSpecificationApis(apiClientTmf634);
-
-        List<ServiceSpecification> sss = apis.getAllServiceSpecification(null, null);
-
-        int count = 0;
-        for (ServiceSpecification ss : sss) {
-            System.out.println(++count + " => " + ss.getId() + " " + ss.getName() + " " + ss.getLifecycleStatus());
-        }
+        ServiceCatalogManagementApis apis = new ServiceCatalogManagementApis(apiClientTmf634);        
+        AtomicInteger count = new AtomicInteger(0);
+		
+		PaginationUtils.streamAll(
+	        apis::listServiceSpecifications,		// method reference
+	        null,                       			// fields
+	        null, 									// filter
+	        100                         			// pageSize
+		) 
+		.forEach(rs -> { 
+			count.incrementAndGet();
+			System.out.println(count + " " + rs.getId() + " → " + rs.getName() + " / " + rs.getLifecycleStatus());
+			}
+		);		
+		
+		System.out.println("ResourceSpecification found: " + count);
     }
 
     protected static void TestGetServiceSpecification(String id) {
@@ -47,7 +56,7 @@ public class ServiceSpecificationTest {
         ApiClient apiClientTmf633 = Configuration.getDefaultApiClient();
         apiClientTmf633.setBasePath(tmfEndpoint + "/" + tmf633serviceCatalogManagementPath);
 
-        ServiceSpecificationApis apis = new ServiceSpecificationApis(apiClientTmf633);
+        ServiceCatalogManagementApis apis = new ServiceCatalogManagementApis(apiClientTmf633);
 
         ServiceSpecification ss = apis.getServiceSpecification(id, null);
         if (ss != null) {
