@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import it.eng.dome.brokerage.api.UsageManagementApis;
+import it.eng.dome.brokerage.api.page.PaginationUtils;
 import it.eng.dome.tmforum.tmf635.v4.ApiClient;
 import it.eng.dome.tmforum.tmf635.v4.Configuration;
 import it.eng.dome.tmforum.tmf635.v4.model.TimePeriod;
@@ -19,7 +21,7 @@ import it.eng.dome.tmforum.tmf635.v4.model.UsageSpecificationUpdate;
 import it.eng.dome.tmforum.tmf635.v4.model.UsageStatusType;
 import it.eng.dome.tmforum.tmf635.v4.model.UsageUpdate;
 
-public class UsageTest {
+public class UsageManagementApisTest {
 	
 	final static String tmf635UsagePath = "tmf-api/usageManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
@@ -38,14 +40,14 @@ public class UsageTest {
 		/**
 		 * Update Usage
 		 */
-//		String id = "urn:ngsi-ld:usage:cecdee70-4891-4781-af58-d80cee9d6528";
+//		String id = "urn:ngsi-ld:usage:e58e3706-f583-43dc-aa7b-ec933ce553d5";
 //		TestUpdateUsage(id);
 		
 		/**
 		 * Get All Usages
 		 */
-//		TestGetAllUsages();
-		
+		TestGetAllUsages();
+		TestGetAllUsageFiltered();
 		
 		/**
 		 * Create UsageSpecification
@@ -59,15 +61,14 @@ public class UsageTest {
 		/**
 		 * Update UsageSpecification
 		 */
-//		String id = "urn:ngsi-ld:usageSpecification:e51cbdaa-5d62-431f-b0f2-b532cd8b82a7";
+//		String id = "urn:ngsi-ld:usageSpecification:9d37cacd-7e4f-4c54-8736-e45a23a5b7d4";
 //		TestUpdateUsageSpecification(id);
 		
 		/**
 		 * Get All UsageSpecifications
 		 */
-//		TestGetAllUsageSpecifications();
+//		TestGetAllUsageSpecifications();		
 		
-		TestFilter();
 	}
 	
 	protected static String TestCreateUsageSpecification() {
@@ -79,16 +80,17 @@ public class UsageTest {
 		
 		UsageSpecificationCreate usc = new UsageSpecificationCreate();
 		usc.setDescription("The UsageSpecification");
-		usc.setName("New UsageSpecification");
-		usc.setVersion("0.1.12");
+		usc.setName("Just a new UsageSpecification");
+		usc.setVersion("1.0.0");
 		TimePeriod tp = new TimePeriod();
 		tp.setStartDateTime(OffsetDateTime.now());
 		tp.setEndDateTime(OffsetDateTime.now().plusDays(10));
 		usc.setValidFor(tp);
 		usc.setLastUpdate(OffsetDateTime.now());
 		
-		UsageSpecification us = apis.createUsageSpecification(usc);	
-		return us.getId();
+		String id = apis.createUsageSpecification(usc);	
+		System.out.println("ID: " + id);
+		return id;
 	}
 	
 	protected static void TestGetAllUsageSpecifications() {
@@ -96,14 +98,22 @@ public class UsageTest {
 		ApiClient apiClientTmf635 = Configuration.getDefaultApiClient();
 		apiClientTmf635.setBasePath(tmfEndpoint + "/" + tmf635UsagePath);
 		
-		UsageManagementApis apis = new UsageManagementApis(apiClientTmf635);
+		UsageManagementApis apis = new UsageManagementApis(apiClientTmf635);		
+		AtomicInteger count = new AtomicInteger(0);
 		
-		List<UsageSpecification> specifications = apis.getAllUsageSpecifications(null, null);
+		PaginationUtils.streamAll(
+	        apis::listUsageSpecifications, 	// method reference
+	        null,                       	// fields
+	        null, 				    		// filter
+	        100                         	// pageSize
+		) 
+		.forEach(us -> { 
+			count.incrementAndGet();
+			System.out.println(count + " " + us.getId() + " → " + us.getName() + " / " + us.getVersion());
+			}
+		);		
 		
-		int count = 0;
-	 	for (UsageSpecification specification : specifications) {
-			System.out.println(++count + " => " + specification.getId() + " " + specification.getName() + " " + specification.getVersion());
-		}
+		System.out.println("UsageSpecification found: " + count);
 	}
 	
 	protected static UsageSpecification TestGetUsageSpecification(String id) {
@@ -124,7 +134,7 @@ public class UsageTest {
 		
 		UsageSpecificationUpdate usu = new UsageSpecificationUpdate();
 		usu.setDescription("Just update");
-		usu.setVersion("1.2.3");
+		usu.setVersion("1.0.1");
 		usu.setLastUpdate(OffsetDateTime.now());
 		
 		return apis.updateUsageSpecification(id, usu);
@@ -136,13 +146,21 @@ public class UsageTest {
 		apiClientTmf635.setBasePath(tmfEndpoint + "/" + tmf635UsagePath);
 		
 		UsageManagementApis apis = new UsageManagementApis(apiClientTmf635);
+		AtomicInteger count = new AtomicInteger(0);
 		
-		List<Usage> usages = apis.getAllUsages(null, null);
+		PaginationUtils.streamAll(
+	        apis::listUsages, 				// method reference
+	        null,                       	// fields
+	        null, 				   		// filter
+	        100                         	// pageSize
+		) 
+		.forEach(us -> { 
+			count.incrementAndGet();
+			System.out.println(count + " " + us.getId() + " → " + us.getUsageDate() + " / " + us.getStatus());
+			}
+		);		
 		
-		int count = 0;
-	 	for (Usage usage : usages) {
-			System.out.println(++count + " => " + usage.getId() + " " + usage.getUsageDate() + " " + usage.getStatus());
-		}
+		System.out.println("Usage found: " + count);
 	}
 	
 	protected static Usage TestGetUsage(String id) {
@@ -162,7 +180,7 @@ public class UsageTest {
 		UsageManagementApis apis = new UsageManagementApis(apiClientTmf635);
 		
 		UsageUpdate uu = new UsageUpdate();
-		uu.setDescription("Just update");
+		uu.setDescription("Update usage");
 		uu.setStatus(UsageStatusType.REJECTED);
 		
 		return apis.updateUsage(id, uu);
@@ -182,25 +200,26 @@ public class UsageTest {
 		uc.setUsageType("VOICE");
 		
 		UsageCharacteristic uch = new UsageCharacteristic();
-		uch.setId("a0ba-b532cd8b82a7");
+		uch.setId("a0ba-b214-234a-ba15");
 		uch.setName("endDate");
-		uch.setValue("2025-06-06T10:05:18.707725700Z");
-		uch.setValueType("string");
+		uch.setValue("2025-10-01T13:55:18.707725700Z");
+		uch.setValueType("value");
 		List<UsageCharacteristic> listUch = new ArrayList<UsageCharacteristic>();
 		listUch.add(uch);
 		uc.setUsageCharacteristic(listUch);
 
-		Usage u = apis.createUsage(uc);
-		
-		return u.getId();
+		String id = apis.createUsage(uc);
+		System.out.println("Usage id: " + id);
+		return id;
 	}
 	
-	protected static void TestFilter() {
+	protected static void TestGetAllUsageFiltered() {
 		
 		ApiClient apiClientTmf635 = Configuration.getDefaultApiClient();
 		apiClientTmf635.setBasePath(tmfEndpoint + "/" + tmf635UsagePath);
 		
 		UsageManagementApis apis = new UsageManagementApis(apiClientTmf635);
+		AtomicInteger count = new AtomicInteger(0);
 		
 		Map<String, String> filter = new HashMap<String, String>();
 		
@@ -210,14 +229,20 @@ public class UsageTest {
 		
 		filter.put("usageDate.lt", tp.getEndDateTime().toString());
 		filter.put("usageDate.gt", tp.getStartDateTime().toString());
+				
+		PaginationUtils.streamAll(
+	        apis::listUsages, 				// method reference
+	        null,                       	// fields
+	        filter, 				   		// filter
+	        100                         	// pageSize
+		) 
+		.forEach(us -> { 
+			count.incrementAndGet();
+			System.out.println(count + " " + us.getId() + " → " + us.getUsageType() + " / " + us.getUsageDate());
+			}
+		);		
 		
-		List<Usage> usages=apis.getAllUsages(null, filter);
-		
-		int count=0;
-		for (Usage usage : usages) {
-			System.out.println(++count + " => " + usage.getId() + " date " + usage.getUsageDate());
-		}
-		
-		
+		System.out.println("Usage found: " + count);
 	}
+	
 }

@@ -1,5 +1,6 @@
 package it.eng.dome.brokerage.test;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import it.eng.dome.brokerage.api.ServiceCatalogManagementApis;
@@ -17,7 +18,9 @@ public class ServiceCatalogManagementApisTest {
         /**
          * Get All ServiceSpecification
          */
-        TestGetAllServiceSpecification();
+//        TestGetAllServiceSpecification();        
+//        TestGetListServiceSpecification();
+        TestExitListServiceSpecification();
 
 
         /**
@@ -28,6 +31,56 @@ public class ServiceCatalogManagementApisTest {
 
     }
 
+    protected static void TestExitListServiceSpecification() {
+
+        ApiClient apiClientTmf634 = Configuration.getDefaultApiClient();
+        apiClientTmf634.setBasePath(tmfEndpoint + "/" + tmf633serviceCatalogManagementPath);
+
+        ServiceCatalogManagementApis apis = new ServiceCatalogManagementApis(apiClientTmf634); 
+        AtomicInteger count = new AtomicInteger(0);
+
+        PaginationUtils.streamAll(
+                apis::listServiceSpecifications,
+                null,
+                null,
+                100
+        )
+        .anyMatch(rs -> {
+            System.out.println(count.incrementAndGet() + " " + rs.getId() + " → " + rs.getName() + " / " + rs.getLifecycleStatus());
+            return "urn:ngsi-ld:service-specification:44e32a74-94ee-4625-a6e3-ca69a66b3881".equals(rs.getId());
+        });
+    }
+    
+    
+    protected static void TestGetListServiceSpecification() {
+
+        ApiClient apiClientTmf634 = Configuration.getDefaultApiClient();
+        apiClientTmf634.setBasePath(tmfEndpoint + "/" + tmf633serviceCatalogManagementPath);
+
+        ServiceCatalogManagementApis apis = new ServiceCatalogManagementApis(apiClientTmf634);        
+		
+        List<ServiceSpecification> serviceSpecifications = PaginationUtils.streamAll(
+	        apis::listServiceSpecifications,		// method reference
+	        null,                       			// fields
+	        null, 									// filter
+	        100                         			// pageSize
+		).toList();		
+		
+		System.out.println("ServiceSpecification found: " + serviceSpecifications.size());
+
+		int count = 0;
+		for (ServiceSpecification rs : serviceSpecifications) {
+
+		    System.out.println(++count + " " + rs.getId() + " → " + rs.getName() + " / " + rs.getLifecycleStatus());
+		    
+		    if ("urn:ngsi-ld:service-specification:44e32a74-94ee-4625-a6e3-ca69a66b3881".equals(rs.getId())) {
+		    	System.out.println("exit");
+		        break;
+		    }
+		}
+    }
+
+    
     protected static void TestGetAllServiceSpecification() {
 
         ApiClient apiClientTmf634 = Configuration.getDefaultApiClient();
@@ -48,9 +101,9 @@ public class ServiceCatalogManagementApisTest {
 			}
 		);		
 		
-		System.out.println("ResourceSpecification found: " + count);
+		System.out.println("ServiceSpecification found: " + count);
     }
-
+    
     protected static void TestGetServiceSpecification(String id) {
 
         ApiClient apiClientTmf633 = Configuration.getDefaultApiClient();
