@@ -42,26 +42,28 @@ public class AccountManagementApis {
 	/**
 	 * This method retrieves a specific PartyAccount by ID
 	 * 
-	 * @param partyAccountId - Identifier of the PartyAccount (required)
+	 * @param id - Identifier of the PartyAccount (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
 	 * - use fields == null to get all attributes
-	 * @return BillFormat
+	 * @return the {@link PartyAccount} with the given id,
+	 *         or {@code null} if no PartyAccount is found
 	 */
-	public PartyAccount getPartyAccount(String partyAccountId, String fields) {
-		logger.info("Request: getPartyAccount by id {}", partyAccountId);
+	public PartyAccount getPartyAccount(String id, String fields) {
+		logger.info("Request: getPartyAccount by id {}", id);
 		
 		try {
 			if (fields != null) {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			return partyAccountApi.retrievePartyAccount(partyAccountId, fields);
+			return partyAccountApi.retrievePartyAccount(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
 	}
+	
 		
 	/**
 	 * This method retrieves a paginated list of PartyAccount
@@ -102,21 +104,22 @@ public class AccountManagementApis {
 	/**
 	 * This method retrieves a specific BillingAccount by ID
 	 * 
-	 * @param billingAccountId - Identifier of the BillingAccount (required)
+	 * @param id - Identifier of the BillingAccount (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
 	 * - use fields == null to get all attributes
-	 * @return BillingAccount
+	 * @return the {@link BillingAccount} with the given id,
+	 *         or {@code null} if no PartyAccount is found
 	 */
-	public BillingAccount getBillingAccount(String billingAccountId, String fields) {
-		logger.info("Request: getBillingAccount by id {}", billingAccountId);
+	public BillingAccount getBillingAccount(String id, String fields) {
+		logger.info("Request: getBillingAccount by id {}", id);
 		
 		try {
 			if (fields != null) {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			return billingAccountApi.retrieveBillingAccount(billingAccountId, fields);
+			return billingAccountApi.retrieveBillingAccount(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
@@ -163,13 +166,15 @@ public class AccountManagementApis {
 	 * This method creates a BillFormat
 	 * 
 	 * @param BillFormatCreate - BillFormatCreate object used in the creation request of the BillFormat (required) 
-	 * @return BillFormat
+	 * @return id of BillFormat
 	 */
-	public BillFormat createBillFormat(BillFormatCreate billFormatCreate) {	
+	public String createBillFormat(BillFormatCreate billFormatCreate) {	
 		logger.info("Create: BillFormat");
 		
 		try {
-			return billFormatApi.createBillFormat(billFormatCreate);
+			BillFormat billFormat = billFormatApi.createBillFormat(billFormatCreate);
+			logger.info("BillFormat saved successfully with id: {}", billFormat.getId());
+			return billFormat.getId();
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
@@ -180,15 +185,16 @@ public class AccountManagementApis {
 	/**
 	 * This method updates the BillFormat by ID
 	 * 
-	 * @param billFormatId - Identifier of the BillFormat (required) 
+	 * @param id - Identifier of the BillFormat (required) 
 	 * @param billFormatUpdate - BillFormatUpdate object used to update the BillFormat (required) 
-	 * @return boolean
+	 * @return {@code true} if the update was successful,
+	 *         {@code false} otherwise
 	 */
-	public boolean updateBillFormat(String billFormatId, BillFormatUpdate billFormatUpdate) {
-		logger.info("Request: updateBillFormat by id {}", billFormatId);
+	public boolean updateBillFormat(String id, BillFormatUpdate billFormatUpdate) {
+		logger.info("Request: updateBillFormat by id {}", id);
 		
 		try {
-			BillFormat billFormat = billFormatApi.patchBillFormat(billFormatId, billFormatUpdate);
+			BillFormat billFormat = billFormatApi.patchBillFormat(id, billFormatUpdate);
 			logger.debug("Update successfully BillFormat with id: {}", billFormat.getId());
 			return true;
 		} catch (ApiException e) {
@@ -196,25 +202,27 @@ public class AccountManagementApis {
 			return false;
 		}
 	}
+	
 
 	/**
 	 * This method retrieves a specific BillFormat by ID
 	 * 
-	 * @param billFormatId - Identifier of the BillFormat (required)
+	 * @param id - Identifier of the BillFormat (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
 	 * - use fields == null to get all attributes
-	 * @return BillFormat
+	 * @return the {@link BillFormat} with the given id,
+	 *         or {@code null} if no PartyAccount is found
 	 */
-	public BillFormat getBillFormat(String billFormatId, String fields) {
-		logger.info("Request: getBillFormat by id {}", billFormatId);
+	public BillFormat getBillFormat(String id, String fields) {
+		logger.info("Request: getBillFormat by id {}", id);
 		
 		try {
 			if (fields != null) {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			return billFormatApi.retrieveBillFormat(billFormatId, fields);
+			return billFormatApi.retrieveBillFormat(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
