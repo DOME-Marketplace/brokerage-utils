@@ -2,6 +2,11 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>3.0.0</code> :calendar: 02/10/2025
+**Improvements**
+* Replace the *recursive* features, when listing objects, with **paginations** in all *Brokerage APIs* classes
+
+
 ### <code>2.1.7</code> :calendar: 29/09/2025
 **Feature**
 * Add `ServiceSpecificationApis` class of *TMF633 specification* to manage a **ServiceSpecification** object.

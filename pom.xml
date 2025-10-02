@@ -14,7 +14,7 @@
 
 	<groupId>it.eng.dome.brokerage</groupId>
 	<artifactId>brokerage-utils</artifactId>
-	<version>2.1.7</version>
+	<version>3.0.0</version>
 	<packaging>jar</packaging>
 	<name>Brokerage Utils</name>
 	<description>Brokerage Utils for DOME project</description>
