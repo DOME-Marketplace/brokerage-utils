@@ -33,15 +33,18 @@ public class AgreementManagementApis {
 	/**
 	 * This method creates a Agreement
 	 * 
-	 * @param AgreementCreate - AgreementCreate object used in the creation request of the Agreement (required) 
-	 * @return Agreement
+	 * @param agreementCreate - AgreementCreate object used in the creation request of the Agreement (required) 
+	 * @return the id of the created Agreement, or {@code null} if the creation failed
 	 */
-	public Agreement createAgreement(AgreementCreate agreementCreate) {		
+	public String createAgreement(AgreementCreate agreementCreate) {		
 		logger.info("Create: Agreement");
 		
 		try {
-			return agreementApi.createAgreement(agreementCreate);
+			Agreement agreement = agreementApi.createAgreement(agreementCreate);
+			logger.info("Agreement saved successfully with id: {}", agreement.getId());
+			return agreement.getId();
 		} catch (ApiException e) {
+			logger.info("Agreement not saved: {}", agreementCreate.toString());
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
@@ -51,15 +54,16 @@ public class AgreementManagementApis {
 	/**
 	 * This method updates the Agreement by ID
 	 * 
-	 * @param agreementId - Identifier of the Agreement (required) 
+	 * @param id - Identifier of the Agreement (required) 
 	 * @param agreementUpdate - AgreementUpdate object used to update the Agreement (required) 
-	 * @return boolean
+	 * @return {@code true} if the update was successful,
+	 *         {@code false} otherwise
 	 */
-	public boolean updateAgreement(String agreementId, AgreementUpdate agreementUpdate) {
-		logger.info("Request: updateAgreement by id {}", agreementId);
+	public boolean updateAgreement(String id, AgreementUpdate agreementUpdate) {
+		logger.info("Request: updateAgreement by id {}", id);
 		
 		try {
-			Agreement agreement = agreementApi.patchAgreement(agreementId, agreementUpdate);
+			Agreement agreement = agreementApi.patchAgreement(id, agreementUpdate);
 			logger.info("Update successfully Agreement with id: {}", agreement.getId());
 			return true;
 		} catch (ApiException e) {
@@ -72,21 +76,22 @@ public class AgreementManagementApis {
 	/**
 	 * This method retrieves a specific Agreement by ID
 	 * 
-	 * @param agreementId - Identifier of the Agreement (required)
+	 * @param id - Identifier of the Agreement (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
 	 * - use fields == null to get all attributes
-	 * @return Agreement
+	 * @return the {@link Agreement} with the given id,
+	 *         or {@code null} if no Agreement is found
 	 */
-	public Agreement getAgreement(String agreementId, String fields) {
-		logger.info("Request: getAgreement by id {}", agreementId);
+	public Agreement getAgreement(String id, String fields) {
+		logger.info("Request: getAgreement by id {}", id);
 		
 		try {
 			if (fields != null) {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			return agreementApi.retrieveAgreement(agreementId, fields);
+			return agreementApi.retrieveAgreement(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
