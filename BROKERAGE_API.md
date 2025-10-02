@@ -7,18 +7,17 @@ Here is a list of wrapped APIs to manage **TMForum** object.
 ### Reference APIs
 
 
+| TMF Reference |       API Class               |                       Object Reference Management                                     |
+|:-------------:|-------------------------------|:--------------------------------------------------------------------------------------|
+|    TMF620     | ProductCatalogManagementApis  | `productOffering`, `productOfferingPrice`, `productSpecification`   	|
+|    TMF629     | CustomerManagementApis        | `customer`                                                                      	|
+|    TMF632     | APIPartyApis       	        | `individual`, `organization`                     			     	       		|
+|    TMF633     | ServiceCatalogManagementApis  | `serviceSpecification`                                                      	|
+|    TMF634     | ResourceCatalogManagementApis | `resourceSpecification`                                     	            	|
+|    TMF635     | UsageManagementApis           | `usage`, `usageSpecification`                             	       		    	|
+|    TMF637     | ProductInventoryApis          | `product`	                                                                        |
+|    TMF651     | AgreementManagementApis       | `agreement`																	 	|
+|    TMF666     | AccountManagementApis         | `billFormat`, `billingAccount`, `partyAccount`							|
+|    TMF678     | AppliedCustomerBillRateApis   | `appliedCustomerBillingRate`											     	|
+|    TMF678     | CustomerBillApis              | `customerBill`, `customerBillExtension` 							     	|
 
-
-|       API Class               | TMF Reference |                       Object Reference Management                                     |
-|-------------------------------|:-------------:|:--------------------------------------------------------------------------------------|
-| AccountManagementApis         |   TMF666      | `billFormat`, `billingAccount`, `partyAccount`                         	|
-| AgreementManagementApis       |   TMF651      | `agreement`                                                                     	|
-| APIPartyApis                  |   TMF632      | `individual`, `organization`                     			     	       		|
-| AppliedCustomerBillRateApis   |   TMF678      | `appliedCustomerBillingRate`                                               	|
-| CustomerBillApis              |   TMF678      | `customerBill`, `customerBillExtension`                  	            	|
-| CustomerManagementApis        |   TMF629      | `customer`                                                     	       		    	|
-| ProductCatalogManagementApis  |   TMF620      | `productOffering`, `productOfferingPrice`, `productSpecification`	|
-| ProductInventoryApis          |   TMF637      | `product`																		 	|
-| ResourceCatalogManagementApis |   TMF634      | `resourceSpecification`															|
-| ServiceCatalogManagementApis  |   TMF633      | `serviceSpecification`													     	|
-| UsageManagementApis           |   TMF635      | `usage`, `usageSpecification`	 										     	|
