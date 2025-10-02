@@ -17,7 +17,6 @@ public class ServiceCatalogManagementApis {
 
     private final Logger logger = LoggerFactory.getLogger(ServiceCatalogManagementApis.class);
     private ServiceSpecificationApi serviceSpecificationApi;
-
     
     /**
      * Constructor
@@ -30,13 +29,14 @@ public class ServiceCatalogManagementApis {
 
     
     /**
-     * This method retrieves a specific ServiceSpecification by ID
+     * This method retrieves a specific ServiceSpecification by id
      *
      * @param id - Identifier of the ServiceSpecification (required)
      * @param fields - Comma-separated properties to be provided in response (optional)<br>
      * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br>
      * - use fields == null to get all attributes
-     * @return ServiceSpecification
+	 * @return the {@link ServiceSpecification} with the given id,
+	 *         or {@code null} if no ServiceSpecification is found
      */
     public ServiceSpecification getServiceSpecification(String id, String fields) {
 		logger.info("Request: getServiceSpecification by id {}", id);

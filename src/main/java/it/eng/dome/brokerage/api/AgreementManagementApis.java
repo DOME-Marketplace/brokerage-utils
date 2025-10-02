@@ -52,7 +52,7 @@ public class AgreementManagementApis {
 	
 	
 	/**
-	 * This method updates the Agreement by ID
+	 * This method updates the Agreement by id
 	 * 
 	 * @param id - Identifier of the Agreement (required) 
 	 * @param agreementUpdate - AgreementUpdate object used to update the Agreement (required) 
@@ -74,7 +74,7 @@ public class AgreementManagementApis {
 	
 
 	/**
-	 * This method retrieves a specific Agreement by ID
+	 * This method retrieves a specific Agreement by id
 	 * 
 	 * @param id - Identifier of the Agreement (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 

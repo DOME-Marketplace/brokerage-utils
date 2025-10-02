@@ -40,7 +40,7 @@ public class AccountManagementApis {
 	
 	
 	/**
-	 * This method retrieves a specific PartyAccount by ID
+	 * This method retrieves a specific PartyAccount by id
 	 * 
 	 * @param id - Identifier of the PartyAccount (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
@@ -102,7 +102,7 @@ public class AccountManagementApis {
 	
 	
 	/**
-	 * This method retrieves a specific BillingAccount by ID
+	 * This method retrieves a specific BillingAccount by id
 	 * 
 	 * @param id - Identifier of the BillingAccount (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
@@ -165,8 +165,8 @@ public class AccountManagementApis {
 	/**
 	 * This method creates a BillFormat
 	 * 
-	 * @param BillFormatCreate - BillFormatCreate object used in the creation request of the BillFormat (required) 
-	 * @return id of BillFormat
+	 * @param billFormatCreate - BillFormatCreate object used in the creation request of the BillFormat (required) 
+	 * @return the id of the created BillFormat, or {@code null} if the creation failed
 	 */
 	public String createBillFormat(BillFormatCreate billFormatCreate) {	
 		logger.info("Create: BillFormat");
@@ -183,7 +183,7 @@ public class AccountManagementApis {
 	
 	
 	/**
-	 * This method updates the BillFormat by ID
+	 * This method updates the BillFormat by id
 	 * 
 	 * @param id - Identifier of the BillFormat (required) 
 	 * @param billFormatUpdate - BillFormatUpdate object used to update the BillFormat (required) 
@@ -205,7 +205,7 @@ public class AccountManagementApis {
 	
 
 	/**
-	 * This method retrieves a specific BillFormat by ID
+	 * This method retrieves a specific BillFormat by id
 	 * 
 	 * @param id - Identifier of the BillFormat (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 

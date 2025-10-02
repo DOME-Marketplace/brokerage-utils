@@ -112,9 +112,9 @@ public class AgreementManagementApisTest {
 		ac.setStatus("Approved");
 		ac.setVersion("1.0");
 
-		Agreement a = apis.createAgreement(ac);
+		String id = apis.createAgreement(ac);
 		
-		return a.getId();
+		return id;
 	}
 	
 	protected static Agreement TestGetAgreement(String id) {

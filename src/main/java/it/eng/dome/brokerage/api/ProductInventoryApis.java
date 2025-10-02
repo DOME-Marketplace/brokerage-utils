@@ -33,8 +33,8 @@ public class ProductInventoryApis {
 	/**
 	 * This method creates a Product
 	 * 
-	 * @param ProductCreate - ProductCreate object used in the creation request of the Product (required) 
-	 * @return productId
+	 * @param productCreate - ProductCreate object used in the creation request of the Product (required) 
+	 * @return the id of the created Product, or {@code null} if the creation failed
 	 */
 	public String createProduct(ProductCreate productCreate) {		
 		try {
@@ -43,6 +43,7 @@ public class ProductInventoryApis {
 			logger.info("Product saved successfully with id: {}", product.getId());
 			return product.getId();
 		} catch (ApiException e) {
+			logger.info("Product not saved: {}", productCreate.toString());
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
@@ -50,23 +51,24 @@ public class ProductInventoryApis {
 	
 	
 	/**
-	 * This method retrieves a specific Product by ID
+	 * This method retrieves a specific Product by id
 	 * 
-	 * @param productId - Identifier of the Product (required)
+	 * @param id - Identifier of the Product (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,periodCoverage')<br> 
 	 * - use fields == null to get all attributes
-	 * @return Product
+	 * @return the {@link Product} with the given id,
+	 *         or {@code null} if no Product is found
 	 */
-	public Product getProduct(String productId, String fields) {
-		logger.info("Request: getProduct by id {}", productId);
+	public Product getProduct(String id, String fields) {
+		logger.info("Request: getProduct by id {}", id);
 		
 		try {
 			if (fields != null) {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			return productApi.retrieveProduct(productId, fields);
+			return productApi.retrieveProduct(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
@@ -75,17 +77,18 @@ public class ProductInventoryApis {
 	
 	
 	/**
-	 * This method updates the Product by ID
+	 * This method updates the Product by id
 	 * 
-	 * @param productId - Identifier of the Product (required) 
+	 * @param id - Identifier of the Product (required) 
 	 * @param productUpdate - ProductUpdate object used to update the Product (required) 
-	 * @return boolean
+	 * @return {@code true} if the update was successful,
+	 *         {@code false} otherwise
 	 */
-	public boolean updateProduct(String productId, ProductUpdate productUpdate) {
-		logger.info("Request: updateProduct by id {}", productId);
+	public boolean updateProduct(String id, ProductUpdate productUpdate) {
+		logger.info("Request: updateProduct by id {}", id);
 		
 		try {
-			Product product = productApi.patchProduct(productId, productUpdate);
+			Product product = productApi.patchProduct(id, productUpdate);
 			logger.info("Update successfully Product with id: {}", product.getId());
 			return true;
 		} catch (ApiException e) {

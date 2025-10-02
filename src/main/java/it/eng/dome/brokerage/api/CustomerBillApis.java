@@ -32,28 +32,30 @@ public class CustomerBillApis {
 	
 	
 	/**
-	 * This method retrieves a specific CustomerBill by ID
+	 * This method retrieves a specific CustomerBill by id
 	 *  
-	 * @param customerBillId - Identifier of the CustomerBill (required)
+	 * @param id - Identifier of the CustomerBill (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'state,paymentDueDate')<br> 
 	 * - use fields == null to get all attributes
-	 * @return CustomerBill
+	 * @return the {@link CustomerBill} with the given id,
+	 *         or {@code null} if no CustomerBill is found
 	 */
-	public CustomerBill getCustomerBill(String customerBillId, String fields) {
-		logger.info("Request: getCustomerBill by id {}", customerBillId);
+	public CustomerBill getCustomerBill(String id, String fields) {
+		logger.info("Request: getCustomerBill by id {}", id);
 		
 		try {
 			if (fields != null) {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			return customerBill.retrieveCustomerBill(customerBillId, fields);
+			return customerBill.retrieveCustomerBill(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
 	}
+	
 	
 	/**
 	 * This method retrieves a paginated list of CustomerBill
@@ -89,14 +91,15 @@ public class CustomerBillApis {
 		}   
 	}
 	
+	
 	/**
 	 * This method creates a CustomerBill
 	 * 
 	 * @param customerBillCreate - CustomerBillCreate object used in the creation request of the CustomerBill (required) 
-	 * @return customerBillId
+	 * @return the id of the created CustomerBill, or {@code null} if the creation failed
 	 */
 	public String createCustomerBill(CustomerBillCreate customerBillCreate) {
-		logger.info("Request: createCustomerBill");
+		logger.info("Request: CustomerBill");
 		try {
 			CustomerBill customerBill = customerBillExtension.createCustomerBill(customerBillCreate);
 			logger.info("CustomerBill saved successfully with id: {}", customerBill.getId());

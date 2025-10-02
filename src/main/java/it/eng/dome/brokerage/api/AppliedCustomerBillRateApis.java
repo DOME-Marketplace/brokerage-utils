@@ -17,7 +17,7 @@ import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRateUpdate;
 public class AppliedCustomerBillRateApis {
 
 	private final Logger logger = LoggerFactory.getLogger(AppliedCustomerBillRateApis.class);	
-	private AppliedCustomerBillingRateApi appliedCustomerBillingRate;
+	private AppliedCustomerBillingRateApi appliedCustomerBillingRateApi;
 
 	/**
 	 * Constructor
@@ -25,28 +25,29 @@ public class AppliedCustomerBillRateApis {
 	 */
 	public AppliedCustomerBillRateApis(ApiClient apiClientTMF678){
 		logger.info("Init AppliedCustomerBillRateApis - apiClientTMF678 basePath: {}", apiClientTMF678.getBasePath());
-		appliedCustomerBillingRate = new AppliedCustomerBillingRateApi(apiClientTMF678);	
+		appliedCustomerBillingRateApi = new AppliedCustomerBillingRateApi(apiClientTMF678);	
 	}
 
 	
 	/**
-	 * This method retrieves a specific AppliedCustomerBillingRate by ID
+	 * This method retrieves a specific AppliedCustomerBillingRate by id
 	 *  
-	 * @param applyId - Identifier of the AppliedCustomerBillingRate (required)
+	 * @param id - Identifier of the AppliedCustomerBillingRate (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
 	 * - use fields == null to get all attributes
-	 * @return AppliedCustomerBillingRate
+	 * @return the {@link AppliedCustomerBillingRate} with the given id,
+	 *         or {@code null} if no AppliedCustomerBillingRate is found
 	 */
-	public AppliedCustomerBillingRate getAppliedCustomerBillingRate(String applyId, String fields) {
-		logger.info("Request: getAppliedCustomerBillingRate by id {}", applyId);
+	public AppliedCustomerBillingRate getAppliedCustomerBillingRate(String id, String fields) {
+		logger.info("Request: getAppliedCustomerBillingRate by id {}", id);
 		
 		try {
 			if (fields != null) {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			return appliedCustomerBillingRate.retrieveAppliedCustomerBillingRate(applyId, fields);
+			return appliedCustomerBillingRateApi.retrieveAppliedCustomerBillingRate(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
@@ -76,7 +77,7 @@ public class AppliedCustomerBillRateApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<AppliedCustomerBillingRate> items = appliedCustomerBillingRate.listAppliedCustomerBillingRate(fields, offset, limit, filter);
+			List<AppliedCustomerBillingRate> items = appliedCustomerBillingRateApi.listAppliedCustomerBillingRate(fields, offset, limit, filter);
 			boolean hasNext = items.size() == limit;
 			
 			return new Page<>(items, offset, limit, hasNext);
@@ -89,17 +90,18 @@ public class AppliedCustomerBillRateApis {
 
 	
 	/**
-	 * This method updates the AppliedCustomerBillingRate by ID
+	 * This method updates the AppliedCustomerBillingRate by id
 	 * 
-	 * @param appliedId - Identifier of the AppliedCustomerBillingRate (required) 
+	 * @param id - Identifier of the AppliedCustomerBillingRate (required) 
 	 * @param appliedCustomerBillingRateUpdate - AppliedCustomerBillingRateUpdate object used to update the AppliedCustomerBillingRate (required) 
-	 * @return boolean
+	 * @return {@code true} if the update was successful,
+	 *         {@code false} otherwise
 	 */
-	public boolean updateAppliedCustomerBillingRate(String appliedId, AppliedCustomerBillingRateUpdate appliedCustomerBillingRateUpdate) {
-		logger.info("Request: updateAppliedCustomerBillingRate by id {}", appliedId);
+	public boolean updateAppliedCustomerBillingRate(String id, AppliedCustomerBillingRateUpdate appliedCustomerBillingRateUpdate) {
+		logger.info("Request: updateAppliedCustomerBillingRate by id {}", id);
 		
 		try {
-			AppliedCustomerBillingRate billUpdate = appliedCustomerBillingRate.updateAppliedCustomerBillingRate(appliedId, appliedCustomerBillingRateUpdate);
+			AppliedCustomerBillingRate billUpdate = appliedCustomerBillingRateApi.updateAppliedCustomerBillingRate(id, appliedCustomerBillingRateUpdate);
 			logger.info("Update successfully AppliedCustomerBillingRate with id: {}", billUpdate.getId());
 			return true;
 		} catch (ApiException e) {
@@ -112,13 +114,13 @@ public class AppliedCustomerBillRateApis {
 	 * This method creates an AppliedCustomerBillingRate
 	 * 
 	 * @param appliedCustomerBillingRateCreate - AppliedCustomerBillingRateCreate object used in the creation request of the AppliedCustomerBillingRate (required) 
-	 * @return appliedId
+	 * @return the id of the created AppliedCustomerBillingRate, or {@code null} if the creation failed
 	 */
 	public String createAppliedCustomerBillingRate(AppliedCustomerBillingRateCreate appliedCustomerBillingRateCreate) {
 		logger.info("Create: AppliedCustomerBillingRate");
 		
 		try {
-			AppliedCustomerBillingRate applied = appliedCustomerBillingRate.createAppliedCustomerBillingRate(appliedCustomerBillingRateCreate);
+			AppliedCustomerBillingRate applied = appliedCustomerBillingRateApi.createAppliedCustomerBillingRate(appliedCustomerBillingRateCreate);
 			logger.info("AppliedCustomerBillingRate saved successfully with id: {}", applied.getId());
 			return applied.getId();
 		} catch (ApiException e) {

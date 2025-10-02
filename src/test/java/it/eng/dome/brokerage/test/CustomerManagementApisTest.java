@@ -110,9 +110,9 @@ public class CustomerManagementApisTest {
 		cc.setStatus("Approved");
 		cc.setStatusReason("Account details checked");
 
-		Customer c = apis.createCustomer(cc);
+		String id = apis.createCustomer(cc);
 
-		return c.getId();
+		return id;
 	}
 		
 	protected static Customer TestGetCustomer(String id) {

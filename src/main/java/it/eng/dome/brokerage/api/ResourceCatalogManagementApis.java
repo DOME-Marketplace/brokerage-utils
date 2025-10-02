@@ -29,23 +29,24 @@ public class ResourceCatalogManagementApis {
 	
 	
 	/**
-	 * This method retrieves a specific ResourceSpecification by ID
+	 * This method retrieves a specific ResourceSpecification by id
 	 * 
-	 * @param resourceSpecificationId - Identifier of the ResourceSpecification (required) 
+	 * @param id - Identifier of the ResourceSpecification (required) 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br> 
 	 * - use fields == null to get all attributes
-	 * @return ResourceSpecification
+	 * @return the {@link ResourceSpecification} with the given id,
+	 *         or {@code null} if no ResourceSpecification is found
 	 */
-	public ResourceSpecification getResourceSpecification(String resourceSpecificationId, String fields) {
-		logger.info("Request: getResourceSpecification by id {}", resourceSpecificationId);
+	public ResourceSpecification getResourceSpecification(String id, String fields) {
+		logger.info("Request: getResourceSpecification by id {}", id);
 		
 		try {
 			if (fields != null) {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			return  resourceSpecificationApi.retrieveResourceSpecification(resourceSpecificationId, fields);
+			return  resourceSpecificationApi.retrieveResourceSpecification(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;

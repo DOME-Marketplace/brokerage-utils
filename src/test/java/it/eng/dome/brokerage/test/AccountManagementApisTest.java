@@ -7,6 +7,8 @@ import it.eng.dome.brokerage.api.AccountManagementApis;
 import it.eng.dome.brokerage.api.page.PaginationUtils;
 import it.eng.dome.tmforum.tmf666.v4.ApiClient;
 import it.eng.dome.tmforum.tmf666.v4.Configuration;
+import it.eng.dome.tmforum.tmf666.v4.model.BillFormatCreate;
+import it.eng.dome.tmforum.tmf666.v4.model.BillFormatUpdate;
 import it.eng.dome.tmforum.tmf666.v4.model.BillingAccount;
 
 
@@ -26,7 +28,7 @@ public class AccountManagementApisTest {
 		/**
 		 * BillingAccount
 		 */
-		TestGetAllBillingAccounts();
+//		TestGetAllBillingAccounts();
 		//TestGetFilteredBillingAccounts();
 		TestGetBillAccountById();
 				
@@ -34,7 +36,11 @@ public class AccountManagementApisTest {
 		/**
 		 * BillFormat
 		 */
-		//TestGetAllBillFormats();
+//		TestCreateBillFormat();
+		
+//		String id = "urn:ngsi-ld:bill-format:4380af04-bd03-45b0-b956-bfa3f0240fc6";
+//		TestUpdateBillFormat(id);
+//		TestGetAllBillFormats();
 		//TestGetBillFormatById();
 		
 	}
@@ -148,6 +154,35 @@ public class AccountManagementApisTest {
 		);		
 		
 		System.out.println("BillFormat found: " + count);
+	}
+	
+	protected static void TestCreateBillFormat() {
+
+		ApiClient apiClientTmf666 = Configuration.getDefaultApiClient();
+		apiClientTmf666.setBasePath(tmfEndpoint + "/" + tmf666AccountPath);
+
+		AccountManagementApis apis = new AccountManagementApis(apiClientTmf666);
+		
+		BillFormatCreate bc = new BillFormatCreate();
+		bc.setName("Test bill format");
+		bc.setDescription("This is an example!");
+		
+		String id = apis.createBillFormat(bc);
+		System.out.println("BillFormat ID: " + id);
+		
+	}
+	
+	protected static boolean TestUpdateBillFormat(String id) {
+
+		ApiClient apiClientTmf666 = Configuration.getDefaultApiClient();
+		apiClientTmf666.setBasePath(tmfEndpoint + "/" + tmf666AccountPath);
+
+		AccountManagementApis apis = new AccountManagementApis(apiClientTmf666);
+		
+		BillFormatUpdate bfu = new BillFormatUpdate();
+		bfu.setDescription("Bill Format update via Java");
+		
+		return apis.updateBillFormat(id, bfu);
 	}
 	
 }

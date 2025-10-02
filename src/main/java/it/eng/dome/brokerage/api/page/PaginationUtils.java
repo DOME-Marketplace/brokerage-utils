@@ -27,20 +27,26 @@ public class PaginationUtils {
                 }
 
                 Page<T> page =  fetcher.fetch(fields, offset, pageSize, filter);
-
-                currentBatch = page.getContent();
-                if (currentBatch.isEmpty()) {
-                    finished = true;
-                    return false;
-                }
-
-                offset += pageSize;
-                index = 0;
-
-                if (!page.hasNext()) {
-                    finished = true;
-                }
-
+                //TODO -> error INTERNAL_SERVER_ERROR
+				if (page == null) {
+//					finished = true;
+//					return false;
+					offset += pageSize;
+	                index = 0;
+				}else {
+	                currentBatch = page.getContent();
+	                if (currentBatch.isEmpty()) {
+	                    finished = true;
+	                    return false;
+	                }
+	
+	                offset += pageSize;
+	                index = 0;
+	
+	                if (!page.hasNext()) {
+	                    finished = true;
+	                }
+				}
                 return true;
             }
 

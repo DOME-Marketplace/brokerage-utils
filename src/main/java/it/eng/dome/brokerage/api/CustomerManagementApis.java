@@ -34,15 +34,18 @@ public class CustomerManagementApis {
 	/**
 	 * This method creates a Customer
 	 * 
-	 * @param CustomerCreate - CustomerCreate object used in the creation request of the Customer (required) 
-	 * @return Customer
+	 * @param customerCreate - CustomerCreate object used in the creation request of the Customer (required) 
+	 * @return the id of the created Customer, or {@code null} if the creation failed
 	 */
-	public Customer createCustomer(CustomerCreate customerCreate) {	
+	public String createCustomer(CustomerCreate customerCreate) {	
 		logger.info("Create: Customer");
 		
 		try {
-			return customerApi.createCustomer(customerCreate);
+			Customer customer = customerApi.createCustomer(customerCreate);
+			logger.info("Customer saved successfully with id: {}", customer.getId());
+			return customer.getId();
 		} catch (ApiException e) {
+			logger.info("Customer not saved: {}", customerCreate.toString());
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
@@ -50,17 +53,18 @@ public class CustomerManagementApis {
 	
 	
 	/**
-	 * This method updates the Customer by ID
+	 * This method updates the Customer by id
 	 * 
-	 * @param customerId - Identifier of the Customer (required) 
+	 * @param id - Identifier of the Customer (required) 
 	 * @param customerUpdate - CustomerUpdate object used to update the Customer (required) 
-	 * @return boolean
+	 * @return {@code true} if the update was successful,
+	 *         {@code false} otherwise
 	 */
-	public boolean updateCustomer(String customerId, CustomerUpdate customerUpdate) {
-		logger.info("Request: updateCustomer by id {}", customerId);
+	public boolean updateCustomer(String id, CustomerUpdate customerUpdate) {
+		logger.info("Request: updateCustomer by id {}", id);
 		
 		try {
-			Customer customer = customerApi.patchCustomer(customerId, customerUpdate);
+			Customer customer = customerApi.patchCustomer(id, customerUpdate);
 			logger.info("Update successfully Customer with id: {}", customer.getId());
 			return true;
 		} catch (ApiException e) {
@@ -71,23 +75,24 @@ public class CustomerManagementApis {
 	
 
 	/**
-	 * This method retrieves a specific Customer by ID
+	 * This method retrieves a specific Customer by id
 	 * 
-	 * @param customerId - Identifier of the Customer (required)
+	 * @param id - Identifier of the Customer (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
 	 * - use fields == null to get all attributes
-	 * @return Customer
+	 * @return the {@link Customer} with the given id,
+	 *         or {@code null} if no Customer is found
 	 */
-	public Customer getCustomer(String customerId, String fields) {
-		logger.info("Request: getCustomer by id {}", customerId);
+	public Customer getCustomer(String id, String fields) {
+		logger.info("Request: getCustomer by id {}", id);
 		
 		try {
 			if (fields != null) {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			return customerApi.retrieveCustomer(customerId, fields);
+			return customerApi.retrieveCustomer(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;

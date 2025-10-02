@@ -71,9 +71,9 @@ public class ProductCatalogManagementApisTest {
 		tp.setEndDateTime(OffsetDateTime.now().plusDays(10));
 		poc.setValidFor(tp);
 		
-		ProductOffering po = apis.createProductOffering(poc);
-		System.out.println("ProductOffering id: " + po.getId());
-		return po.getId();
+		String id = apis.createProductOffering(poc);
+		System.out.println("ProductOffering id: " + id);
+		return id;
 	}
 	
 	protected static void TestGetAllProductOffering() {

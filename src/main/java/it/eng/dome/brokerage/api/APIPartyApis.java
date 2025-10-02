@@ -31,24 +31,26 @@ public class APIPartyApis {
 		individualApi = new IndividualApi(apiClientTMF632);
 	}
 	
+	
 	/**
-	 * This method retrieves a specific Organization by ID
+	 * This method retrieves a specific Organization by id
 	 * 
-	 * @param organizationId - Identifier of the ProductOfferingPrice (required) 
+	 * @param id - Identifier of the Organization (required) 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,tradingName')<br> 
 	 * - use fields == null to get all attributes
-	 * @return Organization
+	 * @return the {@link Organization} with the given id,
+	 *         or {@code null} if no Organization is found
 	 */
-	public Organization getOrganization(String organizationId, String fields) {	
-		logger.info("Request: getOrganization by id {}", organizationId);
+	public Organization getOrganization(String id, String fields) {	
+		logger.info("Request: getOrganization by id {}", id);
 		
 		try {
 			if (fields != null) {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			return organizationApi.retrieveOrganization(organizationId, fields);
+			return organizationApi.retrieveOrganization(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
@@ -91,23 +93,24 @@ public class APIPartyApis {
 
 	
 	/**
-	 * This method retrieves a specific Individual by ID
+	 * This method retrieves a specific Individual by id
 	 * 
-	 * @param individualId - Identifier of the ProductOfferingPrice (required) 
+	 * @param id - Identifier of the Individual (required) 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'familyName,gender')<br> 
 	 * - use fields == null to get all attributes
-	 * @return Individual
+	 * @return the {@link Individual} with the given id,
+	 *         or {@code null} if no Individual is found
 	 */
-	public Individual getIndividual(String individualId, String fields) {	
-		logger.info("Request: getIndividual by id {}", individualId);
+	public Individual getIndividual(String id, String fields) {	
+		logger.info("Request: getIndividual by id {}", id);
 		
 		try {
 			if (fields != null) {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			return individualApi.retrieveIndividual(individualId, fields);
+			return individualApi.retrieveIndividual(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;

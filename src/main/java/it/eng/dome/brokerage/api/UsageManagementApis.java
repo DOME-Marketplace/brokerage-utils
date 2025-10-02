@@ -38,10 +38,10 @@ public class UsageManagementApis {
 	
 		
 	/**
-	 * This method creates an Usage
+	 * This method creates a Usage
 	 * 
-	 * @param UsageCreate - UsageCreate object used in the creation request of the Usage (required) 
-	 * @return id
+	 * @param usageCreate - UsageCreate object used in the creation request of the Usage (required) 
+	 * @return the id of the created Usage, or {@code null} if the creation failed
 	 */
 	public String createUsage(UsageCreate usageCreate) {	
 		logger.info("Create: Usage");
@@ -59,17 +59,18 @@ public class UsageManagementApis {
 	
 	
 	/**
-	 * This method updates the Usage by ID
+	 * This method updates the Usage by id
 	 * 
-	 * @param usageId - Identifier of the Usage (required) 
+	 * @param id - Identifier of the Usage (required) 
 	 * @param usageUpdate - UsageUpdate object used to update the Usage (required) 
-	 * @return boolean
+	 * @return {@code true} if the update was successful,
+	 *         {@code false} otherwise
 	 */
-	public boolean updateUsage(String usageId, UsageUpdate usageUpdate) {
-		logger.info("Request: updateUsage");
+	public boolean updateUsage(String id, UsageUpdate usageUpdate) {
+		logger.info("Request: updateUsage by id {}", id);
 		
 		try {
-			Usage usage = usageApi.patchUsage(usageId, usageUpdate);
+			Usage usage = usageApi.patchUsage(id, usageUpdate);
 			logger.info("Update successfully Usage with id: {}", usage.getId());
 			return true;
 		} catch (ApiException e) {
@@ -77,15 +78,17 @@ public class UsageManagementApis {
 			return false;
 		}
 	}
+	
 
 	/**
-	 * This method retrieves a specific Usage by ID
+	 * This method retrieves a specific Usage by id
 	 * 
 	 * @param id - Identifier of the Usage (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'status,usageType')<br> 
 	 * - use fields == null to get all attributes
-	 * @return Usage
+	 * @return the {@link Usage} with the given id,
+	 *         or {@code null} if no Usage is found
 	 */
 	public Usage getUsage(String id, String fields) {
 		logger.info("Request: getUsage by id {}", id);
@@ -137,13 +140,12 @@ public class UsageManagementApis {
 		}   
 	}
 	
-	
-	
+		
 	/**
-	 * This method creates an UsageSpecification
+	 * This method creates a UsageSpecification
 	 * 
-	 * @param UsageCreate - UsageSpecificationCreate object used in the creation request of the UsageSpecification (required) 
-	 * @return id
+	 * @param usageSpecificationCreate - UsageSpecificationCreate object used in the creation request of the UsageSpecification (required) 
+	 * @return the id of the created UsageSpecification, or {@code null} if the creation failed
 	 */
 	public String createUsageSpecification(UsageSpecificationCreate usageSpecificationCreate) {		
 		logger.info("Create: UsageSpecification");
@@ -161,17 +163,18 @@ public class UsageManagementApis {
 	
 	
 	/**
-	 * This method updates the UsageSpecification by ID
+	 * This method updates the UsageSpecification by id
 	 * 
-	 * @param specificationId - Identifier of the UsageSpecification (required) 
+	 * @param id - Identifier of the UsageSpecification (required) 
 	 * @param usageSpecificationUpdate - UsageSpecificationUpdate object used to update the UsageSpecification (required) 
-	 * @return boolean
+	 * @return {@code true} if the update was successful,
+	 *         {@code false} otherwise
 	 */
-	public boolean updateUsageSpecification(String specificationId, UsageSpecificationUpdate usageSpecificationUpdate) {
-		logger.info("Request: updateUsageSpecification");
+	public boolean updateUsageSpecification(String id, UsageSpecificationUpdate usageSpecificationUpdate) {
+		logger.info("Request: updateUsageSpecification by id {}", id);
 		
 		try {
-			UsageSpecification usageSpecification = usageSpecificationApi.patchUsageSpecification(specificationId, usageSpecificationUpdate);
+			UsageSpecification usageSpecification = usageSpecificationApi.patchUsageSpecification(id, usageSpecificationUpdate);
 			logger.info("Update successfully UsageSpecification with id: {}", usageSpecification.getId());
 			return true;
 		} catch (ApiException e) {
@@ -182,13 +185,14 @@ public class UsageManagementApis {
 	
 	
 	/**
-	 * This method retrieves a specific UsageSpecification by ID
+	 * This method retrieves a specific UsageSpecification by id
 	 * 
 	 * @param id - Identifier of the UsageSpecification (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,version')<br> 
 	 * - use fields == null to get all attributes
-	 * @return UsageSpecification
+	 * @return the {@link UsageSpecification} with the given id,
+	 *         or {@code null} if no UsageSpecification is found
 	 */
 	public UsageSpecification getUsageSpecification(String id, String fields) {
 		logger.info("Request: getUsageSpecification by id {}", id);
