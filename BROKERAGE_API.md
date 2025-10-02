@@ -9,6 +9,11 @@ Here is a list of wrapped APIs to manage **TMForum** object.
 |            API Class          | TMF Reference |                      Object Reference Management                                     	|  
 |-------------------------------|:-------------:|:----------- --------------------------------------------------------------------------|
 | AccountManagementApis         |   TMF666      | `billFormat`, `billingAccount`, `partyAccount`                         	|
+
+
+
+|  TMF Release |      Implementation Note       |                      |
+|--------------|:------------------------------:|:--------------------------------------------------------------------------------------|
 | AgreementManagementApis       |   TMF651      | `agreement`                                                                     	|
 | APIPartyApis                  |   TMF632      | `individual`, `organization`                     			     	       		|
 | AppliedCustomerBillRateApis   |   TMF678      | `appliedCustomerBillingRate`                                               	|
