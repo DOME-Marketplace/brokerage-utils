@@ -2,7 +2,7 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
-### <code>3.0.0</code> :calendar: 02/10/2025
+### <code>2.2.0</code> :calendar: 02/10/2025
 **Improvements**
 * Replace the *recursive* features, when listing objects, with **paginations** in all *Brokerage APIs* classes
 
