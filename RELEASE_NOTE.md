@@ -4,10 +4,10 @@
 
 ### <code>2.2.0</code> :calendar: 03/10/2025
 **Improvements**
-* Remove the *recursive* functionality when retrieving the list of TMForum objects and implement new features
-* - `streamAll`: lazy stream processing.
-* - `fetchByBatch`: batch-by-batch processing.
-* - `fetchAll`: eager full loading.
+* Remove the *recursive* functionality when retrieving the list of **TMForum objects**, and implement new features:
+  - `streamAll`: lazy stream processing.
+  - `fetchByBatch`: batch-by-batch processing.
+  - `fetchAll`: eager full loading.
 
 
 ### <code>2.1.7</code> :calendar: 29/09/2025
