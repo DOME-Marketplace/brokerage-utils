@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.eng.dome.brokerage.api.page.Page;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
 import it.eng.dome.tmforum.tmf678.v4.ApiException;
 import it.eng.dome.tmforum.tmf678.v4.api.AppliedCustomerBillingRateApi;
@@ -55,7 +54,7 @@ public class AppliedCustomerBillRateApis {
 	}
 	
 	/**
-	 * This method retrieves a paginated list of AppliedCustomerBillingRate
+	 * This method retrieves a list of AppliedCustomerBillingRate
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
@@ -63,10 +62,10 @@ public class AppliedCustomerBillRateApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of AppliedCustomerBillingRate
+	 * @return a {@link List} containing a subset of AppliedCustomerBillingRate
 	 */
-	public Page<AppliedCustomerBillingRate> listAppliedCustomerBillingRates(String fields, int offset, int limit, Map<String, String> filter) {
-		logger.info("Request: listAppliedCustomerBillingRatePage");
+	public List<AppliedCustomerBillingRate> listAppliedCustomerBillingRates(String fields, int offset, int limit, Map<String, String> filter) {
+		logger.info("Request: listAppliedCustomerBillingRates");
 		
 		try {
 			
@@ -77,10 +76,7 @@ public class AppliedCustomerBillRateApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<AppliedCustomerBillingRate> items = appliedCustomerBillingRateApi.listAppliedCustomerBillingRate(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return appliedCustomerBillingRateApi.listAppliedCustomerBillingRate(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());

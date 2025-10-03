@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.eng.dome.brokerage.api.page.Page;
 import it.eng.dome.tmforum.tmf634.v4.ApiClient;
 import it.eng.dome.tmforum.tmf634.v4.ApiException;
 import it.eng.dome.tmforum.tmf634.v4.api.ResourceSpecificationApi;
@@ -55,7 +54,7 @@ public class ResourceCatalogManagementApis {
 	
 	
 	/**
-	 * This method retrieves a paginated list of ResourceSpecification
+	 * This method retrieves a list of ResourceSpecification
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br>
@@ -63,9 +62,9 @@ public class ResourceCatalogManagementApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of ResourceSpecification
+	 * @return a {@link List} containing a subset of ResourceSpecification
 	 */
-	public Page<ResourceSpecification> listResourceSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<ResourceSpecification> listResourceSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listResourceSpecifications");
 		
 		try {
@@ -77,10 +76,7 @@ public class ResourceCatalogManagementApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<ResourceSpecification> items = resourceSpecificationApi.listResourceSpecification(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return resourceSpecificationApi.listResourceSpecification(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());

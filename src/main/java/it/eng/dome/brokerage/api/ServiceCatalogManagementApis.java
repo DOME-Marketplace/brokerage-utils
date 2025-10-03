@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.eng.dome.brokerage.api.page.Page;
 import it.eng.dome.tmforum.tmf633.v4.ApiClient;
 import it.eng.dome.tmforum.tmf633.v4.ApiException;
 import it.eng.dome.tmforum.tmf633.v4.api.ServiceSpecificationApi;
@@ -54,7 +53,7 @@ public class ServiceCatalogManagementApis {
     }
     
     /**
-	 * This method retrieves a paginated list of ServiceSpecification
+	 * This method retrieves a list of ServiceSpecification
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br>
@@ -62,9 +61,9 @@ public class ServiceCatalogManagementApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of ServiceSpecification
+	 * @return a {@link List} containing a subset of ServiceSpecification
 	 */
-	public Page<ServiceSpecification> listServiceSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<ServiceSpecification> listServiceSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listServiceSpecifications");
 		
 		try {
@@ -76,10 +75,7 @@ public class ServiceCatalogManagementApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<ServiceSpecification> items = serviceSpecificationApi.listServiceSpecification(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return serviceSpecificationApi.listServiceSpecification(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());

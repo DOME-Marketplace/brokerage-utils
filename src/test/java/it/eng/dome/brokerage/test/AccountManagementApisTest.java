@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import it.eng.dome.brokerage.api.AccountManagementApis;
-import it.eng.dome.brokerage.api.page.PaginationUtils;
+import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf666.v4.ApiClient;
 import it.eng.dome.tmforum.tmf666.v4.Configuration;
 import it.eng.dome.tmforum.tmf666.v4.model.BillFormatCreate;
@@ -54,7 +54,7 @@ public class AccountManagementApisTest {
 		AccountManagementApis apis = new AccountManagementApis(apiClientTmf666);			
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listPartyAccounts, 	// method reference
 	        null,                       // fields
 	        null, 				    	// filter
@@ -77,7 +77,7 @@ public class AccountManagementApisTest {
 		AccountManagementApis apis = new AccountManagementApis(apiClientTmf666);		
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listBillingAccounts, 	// method reference
 	        null,                       // fields
 	        null, 				    	// filter
@@ -101,7 +101,7 @@ public class AccountManagementApisTest {
 		AccountManagementApis apis = new AccountManagementApis(apiClientTmf666);		
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listBillingAccounts, 	// method reference
 	        null,                       // fields
 	        Map.of("relatedParty.id", "urn:ngsi-ld:organization:c9fcb8fa-3d7b-4fb8-b999-01ca987ceb16"), // filter
@@ -141,7 +141,7 @@ public class AccountManagementApisTest {
 		AccountManagementApis apis = new AccountManagementApis(apiClientTmf666);
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listBillFormats, 		// method reference
 	        null,                       // fields
 	        null, 				    	// filter

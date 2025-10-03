@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.eng.dome.brokerage.api.page.Page;
 import it.eng.dome.tmforum.tmf632.v4.ApiClient;
 import it.eng.dome.tmforum.tmf632.v4.ApiException;
 import it.eng.dome.tmforum.tmf632.v4.api.IndividualApi;
@@ -58,7 +57,7 @@ public class APIPartyApis {
 	}
 		
 	/**
-	 * This method retrieves a paginated list of Organization
+	 * This method retrieves a list of Organization
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,tradingName')<br> 
@@ -66,9 +65,9 @@ public class APIPartyApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of Organization
+	 * @return a {@link List} containing a subset of Organization
 	 */
-	public Page<Organization> listOrganizations(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<Organization> listOrganizations(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listOrganizations");
 		
 		try {
@@ -80,10 +79,7 @@ public class APIPartyApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<Organization> items = organizationApi.listOrganization(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return organizationApi.listOrganization(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
@@ -119,7 +115,7 @@ public class APIPartyApis {
 	
 	
 	/**
-	 * This method retrieves a paginated list of Individual
+	 * This method retrieves a list of Individual
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'familyName,gender')<br> 
@@ -127,9 +123,9 @@ public class APIPartyApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of Individual
+	 * @return a {@link List} containing a subset of Individual
 	 */
-	public Page<Individual> listIndividuals(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<Individual> listIndividuals(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listIndividuals");
 		
 		try {
@@ -141,10 +137,7 @@ public class APIPartyApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<Individual> items = individualApi.listIndividual(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return individualApi.listIndividual(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());

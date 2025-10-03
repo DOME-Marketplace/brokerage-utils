@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.eng.dome.brokerage.api.page.Page;
 import it.eng.dome.tmforum.tmf620.v4.ApiClient;
 import it.eng.dome.tmforum.tmf620.v4.ApiException;
 import it.eng.dome.tmforum.tmf620.v4.api.ProductOfferingApi;
@@ -107,7 +106,7 @@ public class ProductCatalogManagementApis {
 	
 	
 	/**
-	 * This method retrieves a paginated list of ProductOffering
+	 * This method retrieves a list of ProductOffering
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,lifecycleStatus')<br>
@@ -115,9 +114,9 @@ public class ProductCatalogManagementApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of ProductOffering
+	 * @return a {@link List} containing a subset of ProductOffering
 	 */
-	public Page<ProductOffering> listProductOfferings(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<ProductOffering> listProductOfferings(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listProductOfferings");
 		
 		try {
@@ -129,10 +128,7 @@ public class ProductCatalogManagementApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<ProductOffering> items = productOfferingApi.listProductOffering(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return productOfferingApi.listProductOffering(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
@@ -168,7 +164,7 @@ public class ProductCatalogManagementApis {
 	
 	
 	/**
-	 * This method retrieves a paginated list of ProductOfferingPrice
+	 * This method retrieves a list of ProductOfferingPrice
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,version')<br>
@@ -176,9 +172,9 @@ public class ProductCatalogManagementApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of ProductOfferingPrice
+	 * @return a {@link List} containing a subset of ProductOfferingPrice
 	 */
-	public Page<ProductOfferingPrice> listProductOfferingPrices(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<ProductOfferingPrice> listProductOfferingPrices(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listProductOfferingPrices");
 		
 		try {
@@ -190,10 +186,7 @@ public class ProductCatalogManagementApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<ProductOfferingPrice> items = productOfferingPriceApi.listProductOfferingPrice(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return productOfferingPriceApi.listProductOfferingPrice(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
@@ -229,7 +222,7 @@ public class ProductCatalogManagementApis {
 	
 	
 	/**
-	 * This method retrieves a paginated list of ProductSpecification
+	 * This method retrieves a list of ProductSpecification
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br> 
@@ -237,9 +230,9 @@ public class ProductCatalogManagementApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br> 
-	 * @return a {@link Page} containing a subset of ProductSpecification
+	 * @return a {@link List} containing a subset of ProductSpecification
 	 */
-	public Page<ProductSpecification> listProductSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<ProductSpecification> listProductSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listProductSpecifications");
 		
 		try {
@@ -251,10 +244,7 @@ public class ProductCatalogManagementApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<ProductSpecification> items = productSpecificationApi.listProductSpecification(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return productSpecificationApi.listProductSpecification(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());

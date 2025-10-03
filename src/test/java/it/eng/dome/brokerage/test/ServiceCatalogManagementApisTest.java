@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import it.eng.dome.brokerage.api.ServiceCatalogManagementApis;
-import it.eng.dome.brokerage.api.page.PaginationUtils;
+import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf633.v4.ApiClient;
 import it.eng.dome.tmforum.tmf633.v4.Configuration;
 import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
@@ -39,7 +39,7 @@ public class ServiceCatalogManagementApisTest {
         ServiceCatalogManagementApis apis = new ServiceCatalogManagementApis(apiClientTmf634); 
         AtomicInteger count = new AtomicInteger(0);
 
-        PaginationUtils.streamAll(
+        FetchUtils.streamAll(
                 apis::listServiceSpecifications,
                 null,
                 null,
@@ -59,7 +59,7 @@ public class ServiceCatalogManagementApisTest {
 
         ServiceCatalogManagementApis apis = new ServiceCatalogManagementApis(apiClientTmf634);        
 		
-        List<ServiceSpecification> serviceSpecifications = PaginationUtils.streamAll(
+        List<ServiceSpecification> serviceSpecifications = FetchUtils.streamAll(
 	        apis::listServiceSpecifications,		// method reference
 	        null,                       			// fields
 	        null, 									// filter
@@ -89,7 +89,7 @@ public class ServiceCatalogManagementApisTest {
         ServiceCatalogManagementApis apis = new ServiceCatalogManagementApis(apiClientTmf634);        
         AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+        FetchUtils.streamAll(
 	        apis::listServiceSpecifications,		// method reference
 	        null,                       			// fields
 	        null, 									// filter

@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.eng.dome.brokerage.api.page.Page;
 import it.eng.dome.tmforum.tmf651.v4.ApiClient;
 import it.eng.dome.tmforum.tmf651.v4.ApiException;
 import it.eng.dome.tmforum.tmf651.v4.api.AgreementApi;
@@ -100,7 +99,7 @@ public class AgreementManagementApis {
 	
 	
 	/**
-	 * This method retrieves a paginated list of Agreement
+	 * This method retrieves a list of Agreement
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,status')<br>
@@ -108,9 +107,9 @@ public class AgreementManagementApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of Agreement
+	 * @return a {@link List} containing a subset of Agreement
 	 */
-	public Page<Agreement> listAgreements(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<Agreement> listAgreements(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listAgreements");
 		
 		try {
@@ -122,10 +121,7 @@ public class AgreementManagementApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<Agreement> items = agreementApi.listAgreement(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return agreementApi.listAgreement(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());

@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.eng.dome.brokerage.api.page.Page;
 import it.eng.dome.tmforum.tmf635.v4.ApiClient;
 import it.eng.dome.tmforum.tmf635.v4.ApiException;
 import it.eng.dome.tmforum.tmf635.v4.api.UsageApi;
@@ -107,7 +106,7 @@ public class UsageManagementApis {
 	
 	
 	/**
-	 * This method retrieves a paginated list of Usage
+	 * This method retrieves a list of Usage
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'status,usageType')<br> 
@@ -115,9 +114,9 @@ public class UsageManagementApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of Usage
+	 * @return a {@link List} containing a subset of Usage
 	 */
-	public Page<Usage> listUsages(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<Usage> listUsages(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listUsages");
 		
 		try {
@@ -129,10 +128,7 @@ public class UsageManagementApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<Usage> items = usageApi.listUsage(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return usageApi.listUsage(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
@@ -212,7 +208,7 @@ public class UsageManagementApis {
 	
 	
 	/**
-	 * This method retrieves a paginated list of UsageSpecification
+	 * This method retrieves a list of UsageSpecification
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,version')<br> 
@@ -220,9 +216,9 @@ public class UsageManagementApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of UsageSpecification
+	 * @return a {@link List} containing a subset of UsageSpecification
 	 */
-	public Page<UsageSpecification> listUsageSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<UsageSpecification> listUsageSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listUsageSpecifications");
 		
 		try {
@@ -234,10 +230,7 @@ public class UsageManagementApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<UsageSpecification> items = usageSpecificationApi.listUsageSpecification(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return usageSpecificationApi.listUsageSpecification(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());

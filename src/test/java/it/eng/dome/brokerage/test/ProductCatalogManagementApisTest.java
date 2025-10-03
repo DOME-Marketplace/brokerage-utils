@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import it.eng.dome.brokerage.api.ProductCatalogManagementApis;
-import it.eng.dome.brokerage.api.page.PaginationUtils;
+import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf620.v4.ApiClient;
 import it.eng.dome.tmforum.tmf620.v4.Configuration;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
@@ -84,7 +84,7 @@ public class ProductCatalogManagementApisTest {
 		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);		
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listProductOfferings,		// method reference
 	        null,                       	// fields
 	        null, 				    		// filter
@@ -107,7 +107,7 @@ public class ProductCatalogManagementApisTest {
 		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);		
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listProductOfferings,				// method reference
 	        null,                       			// fields
 	        Map.of("lifecycleStatus","Obsolete"), 	// filter //Obsolete, Retired, Launched
@@ -157,7 +157,7 @@ public class ProductCatalogManagementApisTest {
 		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);		
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listProductOfferingPrices,	// method reference
 	        null,                       		// fields
 	        null, 				    			// filter
@@ -195,7 +195,7 @@ public class ProductCatalogManagementApisTest {
 		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);		
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listProductSpecifications,	// method reference
 	        null,                       		// fields
 	        null, 				    			// filter

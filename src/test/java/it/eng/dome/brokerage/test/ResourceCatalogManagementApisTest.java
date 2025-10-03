@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import it.eng.dome.brokerage.api.ResourceCatalogManagementApis;
-import it.eng.dome.brokerage.api.page.PaginationUtils;
+import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf634.v4.ApiClient;
 import it.eng.dome.tmforum.tmf634.v4.Configuration;
 import it.eng.dome.tmforum.tmf634.v4.model.ResourceSpecification;
@@ -44,7 +44,7 @@ public class ResourceCatalogManagementApisTest {
 		ResourceCatalogManagementApis apis = new ResourceCatalogManagementApis(apiClientTmf634);
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listResourceSpecifications,	// method reference
 	        null,                       		// fields
 	        null, 				    			// filter
@@ -68,7 +68,7 @@ public class ResourceCatalogManagementApisTest {
 		ResourceCatalogManagementApis apis = new ResourceCatalogManagementApis(apiClientTmf634);
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listResourceSpecifications,		// method reference
 	        null,                       			// fields
 	        Map.of("lifecycleStatus", "Obsolete"), 	// filter

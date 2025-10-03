@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import it.eng.dome.brokerage.api.UsageManagementApis;
-import it.eng.dome.brokerage.api.page.PaginationUtils;
+import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf635.v4.ApiClient;
 import it.eng.dome.tmforum.tmf635.v4.Configuration;
 import it.eng.dome.tmforum.tmf635.v4.model.TimePeriod;
@@ -101,7 +101,7 @@ public class UsageManagementApisTest {
 		UsageManagementApis apis = new UsageManagementApis(apiClientTmf635);		
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listUsageSpecifications, 	// method reference
 	        null,                       	// fields
 	        null, 				    		// filter
@@ -148,7 +148,7 @@ public class UsageManagementApisTest {
 		UsageManagementApis apis = new UsageManagementApis(apiClientTmf635);
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listUsages, 				// method reference
 	        null,                       	// fields
 	        null, 				   		// filter
@@ -230,7 +230,7 @@ public class UsageManagementApisTest {
 		filter.put("usageDate.lt", tp.getEndDateTime().toString());
 		filter.put("usageDate.gt", tp.getStartDateTime().toString());
 				
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listUsages, 				// method reference
 	        null,                       	// fields
 	        filter, 				   		// filter

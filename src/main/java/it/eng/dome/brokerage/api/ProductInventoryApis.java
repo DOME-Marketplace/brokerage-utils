@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.eng.dome.brokerage.api.page.Page;
 import it.eng.dome.tmforum.tmf637.v4.ApiClient;
 import it.eng.dome.tmforum.tmf637.v4.ApiException;
 import it.eng.dome.tmforum.tmf637.v4.api.ProductApi;
@@ -99,7 +98,7 @@ public class ProductInventoryApis {
 	
 	
 	/**
-	 * This method retrieves a paginated list of Product
+	 * This method retrieves a list of Product
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br>
@@ -107,9 +106,9 @@ public class ProductInventoryApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of Product
+	 * @return a {@link List} containing a subset of Product
 	 */
-	public Page<Product> listProducts(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<Product> listProducts(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listAgreements");
 		
 		try {
@@ -121,10 +120,7 @@ public class ProductInventoryApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<Product> items = productApi.listProduct(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return productApi.listProduct(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());

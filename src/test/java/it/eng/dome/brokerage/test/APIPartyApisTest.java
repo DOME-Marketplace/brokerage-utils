@@ -3,7 +3,7 @@ package it.eng.dome.brokerage.test;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import it.eng.dome.brokerage.api.APIPartyApis;
-import it.eng.dome.brokerage.api.page.PaginationUtils;
+import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf632.v4.ApiClient;
 import it.eng.dome.tmforum.tmf632.v4.Configuration;
 import it.eng.dome.tmforum.tmf632.v4.model.Individual;
@@ -38,7 +38,7 @@ public class APIPartyApisTest {
 		APIPartyApis apis = new APIPartyApis(apiClientTmf637);
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listOrganizations,    // method reference
 	        null,                       // fields
 	        null,            			// filter
@@ -76,7 +76,7 @@ public class APIPartyApisTest {
 		APIPartyApis apis = new APIPartyApis(apiClientTmf637);
 		AtomicInteger count = new AtomicInteger(0);
 	
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listIndividuals,      // method reference
 	        null,                       // fields
 	        null,              			// filter

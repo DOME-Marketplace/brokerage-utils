@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.eng.dome.brokerage.api.page.Page;
 import it.eng.dome.tmforum.tmf629.v4.ApiClient;
 import it.eng.dome.tmforum.tmf629.v4.ApiException;
 import it.eng.dome.tmforum.tmf629.v4.api.CustomerApi;
@@ -109,9 +108,9 @@ public class CustomerManagementApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of Customer
+	 * @return a {@link List} containing a subset of Customer
 	 */
-	public Page<Customer> listCustomers(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<Customer> listCustomers(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listCustomers");
 		
 		try {
@@ -123,10 +122,7 @@ public class CustomerManagementApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<Customer> items = customerApi.listCustomer(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return customerApi.listCustomer(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());

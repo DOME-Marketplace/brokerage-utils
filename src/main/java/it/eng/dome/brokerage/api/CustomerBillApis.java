@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.eng.dome.brokerage.api.page.Page;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
 import it.eng.dome.tmforum.tmf678.v4.ApiException;
 import it.eng.dome.tmforum.tmf678.v4.api.CustomerBillApi;
@@ -66,9 +65,9 @@ public class CustomerBillApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of CustomerBill
+	 * @return a {@link List} containing a subset of CustomerBill
 	 */
-	public Page<CustomerBill> listCustomerBills(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<CustomerBill> listCustomerBills(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listCustomerBills");
 		
 		try {
@@ -80,10 +79,7 @@ public class CustomerBillApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<CustomerBill> items = customerBill.listCustomerBill(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return customerBill.listCustomerBill(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());

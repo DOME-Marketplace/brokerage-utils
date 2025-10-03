@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import it.eng.dome.brokerage.api.CustomerBillApis;
-import it.eng.dome.brokerage.api.page.PaginationUtils;
+import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
 import it.eng.dome.tmforum.tmf678.v4.Configuration;
 
@@ -35,7 +35,7 @@ public class CustomerBillApisTest {
 		filter.put("state", "new");
 		filter.put("amountDue.tmfValue.gt", "0");
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listCustomerBills, 	// method reference
 	        null,                       // fields
 	        filter, 				    // filter

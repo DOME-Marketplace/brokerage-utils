@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import it.eng.dome.brokerage.api.CustomerManagementApis;
-import it.eng.dome.brokerage.api.page.PaginationUtils;
+import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf629.v4.ApiClient;
 import it.eng.dome.tmforum.tmf629.v4.Configuration;
 import it.eng.dome.tmforum.tmf629.v4.model.Customer;
@@ -54,7 +54,7 @@ public class CustomerManagementApisTest {
 		CustomerManagementApis apis = new CustomerManagementApis(apiClientTmf629);
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listCustomers, 	// method reference
 	        null,                       // fields
 	        null, 				    	// filter
@@ -82,7 +82,7 @@ public class CustomerManagementApisTest {
 		filter.put("status", "Approved");
 		String fields = "name,status";
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 	        apis::listCustomers, 		// method reference
 	        fields,                     // fields
 	        filter, 				    // filter

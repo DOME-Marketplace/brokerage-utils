@@ -5,11 +5,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import it.eng.dome.brokerage.api.AppliedCustomerBillRateApis;
-import it.eng.dome.brokerage.api.page.PaginationUtils;
+import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
 import it.eng.dome.tmforum.tmf678.v4.Configuration;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
@@ -25,7 +26,12 @@ public class AppliedCustomerBillRateApisTest {
 	
 	public static void main(String[] args) {
 		
-		TestAppliedCustomerBillRate();
+		//TestAppliedCustomerBillRate();
+		
+		//TestAppliedCustomerBillRateFetch();
+		
+		TestAppliedCustomerBillRateFetchAll();
+
 		
 		//TestAppliedCustomerBillRateById();
 		
@@ -37,6 +43,52 @@ public class AppliedCustomerBillRateApisTest {
 	}
 
 	
+	public static void TestAppliedCustomerBillRateFetch() {
+		
+		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+		
+		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+		AtomicInteger count = new AtomicInteger(0);
+
+		FetchUtils.fetchByBatch(
+			apis::listAppliedCustomerBillingRates, 
+			null, 
+			Map.of("isBilled", "true"), 
+			10,
+			batch -> {
+			    batch.forEach(rate -> {
+			    	System.out.println(count.incrementAndGet() + " " + rate.getId() + " → " + rate.getName());
+			    });
+			}
+		);
+		
+		System.out.println("AppliedCustomerBillingRate found: " + count.get());
+	}
+	
+	
+	public static void TestAppliedCustomerBillRateFetchAll() {
+		
+		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+		
+		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+		
+		List<AppliedCustomerBillingRate> applied = FetchUtils.fetchAll(
+		    apis::listAppliedCustomerBillingRates,
+		    null,
+		    Map.of("isBilled", "true"),
+		    10
+		);
+		
+		int count = 0;
+		for (AppliedCustomerBillingRate apply : applied) {
+			System.out.println(++count + " " + apply.getId() + " → " + apply.getName());
+		}
+		
+		System.out.println("AppliedCustomerBillingRate found: " + applied.size());
+	}
+	
 	public static void TestAppliedCustomerBillRate() {
 		
 		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
@@ -45,7 +97,7 @@ public class AppliedCustomerBillRateApisTest {
 		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 		        apis::listAppliedCustomerBillingRates,    // method reference
 		        null,                                     // fields
 		        Map.of("isBilled", "true"),               // filter
@@ -93,7 +145,7 @@ public class AppliedCustomerBillRateApisTest {
 		filter.put("periodCoverage.startDateTime.eq", tp.getStartDateTime().toString());
 		filter.put("product.id", "urn:ngsi-ld:product:f942601c-1902-4b09-a498-23d844d21972");
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 		        apis::listAppliedCustomerBillingRates,    // method reference
 		        "isBilled,type",                          // fields
 		        filter,    								  // filter
@@ -151,7 +203,7 @@ public class AppliedCustomerBillRateApisTest {
 		
 		AtomicInteger count = new AtomicInteger(0);
 		
-		PaginationUtils.streamAll(
+		FetchUtils.streamAll(
 		        apis::listAppliedCustomerBillingRates,    // method reference
 		        "isBilled,type",                          // fields
 		        filter,    								  // filter

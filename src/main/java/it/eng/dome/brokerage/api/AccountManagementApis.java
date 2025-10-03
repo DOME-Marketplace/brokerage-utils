@@ -6,7 +6,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import it.eng.dome.brokerage.api.page.Page;
 import it.eng.dome.tmforum.tmf666.v4.ApiClient;
 import it.eng.dome.tmforum.tmf666.v4.ApiException;
 import it.eng.dome.tmforum.tmf666.v4.api.BillFormatApi;
@@ -66,7 +65,7 @@ public class AccountManagementApis {
 	
 		
 	/**
-	 * This method retrieves a paginated list of PartyAccount
+	 * This method retrieves a list of PartyAccount
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'href,name')<br> 
@@ -74,9 +73,9 @@ public class AccountManagementApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of PartyAccount
+	 * @return a {@link List} containing a subset of PartyAccount
 	 */
-	public Page<PartyAccount> listPartyAccounts(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<PartyAccount> listPartyAccounts(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listPartyAccounts");
 		
 		try {
@@ -88,10 +87,7 @@ public class AccountManagementApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<PartyAccount> items = partyAccountApi.listPartyAccount(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return partyAccountApi.listPartyAccount(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
@@ -128,7 +124,7 @@ public class AccountManagementApis {
 	
 	
 	/**
-	 * This method retrieves a paginated list of BillingAccount
+	 * This method retrieves a list of BillingAccount
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'state,name')<br>
@@ -136,9 +132,9 @@ public class AccountManagementApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of BillingAccount
+	 * @return a {@link List} containing a subset of BillingAccount
 	 */
-	public Page<BillingAccount> listBillingAccounts(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<BillingAccount> listBillingAccounts(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listBillingAccounts");
 		
 		try {
@@ -150,10 +146,7 @@ public class AccountManagementApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<BillingAccount> items = billingAccountApi.listBillingAccount(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return billingAccountApi.listBillingAccount(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
@@ -231,7 +224,7 @@ public class AccountManagementApis {
 	
 	
 	/**
-	 * This method retrieves a paginated list of BillFormat
+	 * This method retrieves a list of BillFormat
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'href,name')<br>
@@ -239,9 +232,9 @@ public class AccountManagementApis {
      * @param offset - the index of the first item to return (used for pagination)
      * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link Page} containing a subset of BillFormat
+	 * @return a {@link List} containing a subset of BillFormat
 	 */
-	public Page<BillFormat> listBillFormats(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<BillFormat> listBillFormats(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listBillFormats");
 		
 		try {
@@ -253,10 +246,7 @@ public class AccountManagementApis {
 				logger.debug("Selected attributes: [{}]", fields);
 			}
 			
-			List<BillFormat> items = billFormatApi.listBillFormat(fields, offset, limit, filter);
-			boolean hasNext = items.size() == limit;
-			
-			return new Page<>(items, offset, limit, hasNext);
+			return billFormatApi.listBillFormat(fields, offset, limit, filter);
 			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
