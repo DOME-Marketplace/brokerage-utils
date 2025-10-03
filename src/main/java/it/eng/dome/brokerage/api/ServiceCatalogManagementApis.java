@@ -66,8 +66,7 @@ public class ServiceCatalogManagementApis {
 	public List<ServiceSpecification> listServiceSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listServiceSpecifications");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}

@@ -119,8 +119,7 @@ public class UsageManagementApis {
 	public List<Usage> listUsages(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listUsages");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
@@ -221,8 +220,7 @@ public class UsageManagementApis {
 	public List<UsageSpecification> listUsageSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listUsageSpecifications");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}

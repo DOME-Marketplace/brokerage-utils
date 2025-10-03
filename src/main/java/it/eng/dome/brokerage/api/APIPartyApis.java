@@ -70,8 +70,7 @@ public class APIPartyApis {
 	public List<Organization> listOrganizations(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listOrganizations");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
@@ -128,8 +127,7 @@ public class APIPartyApis {
 	public List<Individual> listIndividuals(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listIndividuals");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}

@@ -112,8 +112,7 @@ public class AgreementManagementApis {
 	public List<Agreement> listAgreements(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listAgreements");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}

@@ -67,8 +67,7 @@ public class AppliedCustomerBillRateApis {
 	public List<AppliedCustomerBillingRate> listAppliedCustomerBillingRates(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listAppliedCustomerBillingRates");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}

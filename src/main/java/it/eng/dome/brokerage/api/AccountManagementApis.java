@@ -78,8 +78,7 @@ public class AccountManagementApis {
 	public List<PartyAccount> listPartyAccounts(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listPartyAccounts");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
@@ -137,8 +136,7 @@ public class AccountManagementApis {
 	public List<BillingAccount> listBillingAccounts(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listBillingAccounts");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
@@ -237,8 +235,7 @@ public class AccountManagementApis {
 	public List<BillFormat> listBillFormats(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listBillFormats");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}

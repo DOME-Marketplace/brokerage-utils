@@ -113,8 +113,7 @@ public class CustomerManagementApis {
 	public List<Customer> listCustomers(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listCustomers");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}

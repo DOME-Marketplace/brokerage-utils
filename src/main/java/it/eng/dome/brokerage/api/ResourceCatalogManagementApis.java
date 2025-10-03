@@ -67,8 +67,7 @@ public class ResourceCatalogManagementApis {
 	public List<ResourceSpecification> listResourceSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listResourceSpecifications");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}

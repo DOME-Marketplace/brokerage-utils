@@ -119,8 +119,7 @@ public class ProductCatalogManagementApis {
 	public List<ProductOffering> listProductOfferings(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listProductOfferings");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
@@ -177,8 +176,7 @@ public class ProductCatalogManagementApis {
 	public List<ProductOfferingPrice> listProductOfferingPrices(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listProductOfferingPrices");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
@@ -235,8 +233,7 @@ public class ProductCatalogManagementApis {
 	public List<ProductSpecification> listProductSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
 		logger.info("Request: listProductSpecifications");
 		
-		try {
-			
+		try {			
 			if (filter != null && !filter.isEmpty()) {
 				logger.debug("Params used in the query-string filter: {}", filter);
 			}
