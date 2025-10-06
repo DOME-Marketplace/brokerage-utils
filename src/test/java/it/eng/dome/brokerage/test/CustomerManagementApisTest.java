@@ -1,24 +1,36 @@
 package it.eng.dome.brokerage.test;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import it.eng.dome.brokerage.api.CustomerManagementApis;
+import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf629.v4.ApiClient;
 import it.eng.dome.tmforum.tmf629.v4.Configuration;
 import it.eng.dome.tmforum.tmf629.v4.model.Customer;
 import it.eng.dome.tmforum.tmf629.v4.model.CustomerCreate;
 import it.eng.dome.tmforum.tmf629.v4.model.CustomerUpdate;
 
-public class CustomerTest {
+public class CustomerManagementApisTest {
 	final static String tmf629CustomerPath = "tmf-api/customerManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
 
 	public static void main(String[] args) {
 
 		/**
-		 * Create Customer
+		 * Get All Customers
+		 */
+		TestGetAllCustomers();
+
+		/**
+		 * Get Filtered Customers
+		 */
+//		TestGetFilteredCustomers();
+		
+		
+		/**
+		 * Create Customer and Get by ID
 		 */
 //		String id = TestCreateCustomer();
 //		if (id != null) {
@@ -32,49 +44,59 @@ public class CustomerTest {
 //		String id = "urn:ngsi-ld:customer:5c49b0ec-5c5b-4c88-a85a-7e408624fec8";
 //		TestUpdateCustomer(id);
 
-		/**
-		 * Get All Customers
-		 */
-//		TestGetAllCustomers();
-		
-		/**
-		 * Get Filtered Customers
-		 */
-//		TestGetFilteredCustomers();
-
 	}
-
-	protected static void TestGetFilteredCustomers() {
-
-		ApiClient apiClientTmf629 = Configuration.getDefaultApiClient();
-		apiClientTmf629.setBasePath(tmfEndpoint + "/" + tmf629CustomerPath);
-
-		CustomerManagementApis apis = new CustomerManagementApis(apiClientTmf629);
-
-		Map<String, String> filter = new HashMap<String, String>();
-		filter.put("status", "Approved");
-		List<Customer> customers = apis.getAllCustomers(null, filter);
-
-		int count = 0;
-		for (Customer customer : customers) {
-			System.out.println(++count + " => " + customer.getId() + " " + customer.getStatus() + " " + customer.getStatusReason());
-		}
-	}
-
+	
 	protected static void TestGetAllCustomers() {
 
 		ApiClient apiClientTmf629 = Configuration.getDefaultApiClient();
 		apiClientTmf629.setBasePath(tmfEndpoint + "/" + tmf629CustomerPath);
 
 		CustomerManagementApis apis = new CustomerManagementApis(apiClientTmf629);
-
-		List<Customer> customers = apis.getAllCustomers(null, null);
-
-		int count = 0;
-		for (Customer customer : customers) {
-			System.out.println(++count + " => " + customer.getId() + " " + customer.getStatus() + " " + customer.getStatusReason());
-		}
+		AtomicInteger count = new AtomicInteger(0);
+		
+		FetchUtils.streamAll(
+	        apis::listCustomers, 	// method reference
+	        null,                       // fields
+	        null, 				    	// filter
+	        100                         // pageSize
+		) 
+		.forEach(customer -> { 
+			count.incrementAndGet();
+			System.out.println(count + " " + customer.getId() + " → " + customer.getName() + " / " + customer.getStatus());
+			}
+		);		
+		
+		System.out.println("Customer found: " + count);
 	}
+	
+	
+	protected static void TestGetFilteredCustomers() {
+
+		ApiClient apiClientTmf629 = Configuration.getDefaultApiClient();
+		apiClientTmf629.setBasePath(tmfEndpoint + "/" + tmf629CustomerPath);
+
+		CustomerManagementApis apis = new CustomerManagementApis(apiClientTmf629);
+		AtomicInteger count = new AtomicInteger(0);
+		
+		Map<String, String> filter = new HashMap<String, String>();
+		filter.put("status", "Approved");
+		String fields = "name,status";
+		
+		FetchUtils.streamAll(
+	        apis::listCustomers, 		// method reference
+	        fields,                     // fields
+	        filter, 				    // filter
+	        100                         // pageSize
+		) 
+		.forEach(customer -> { 
+			count.incrementAndGet();
+			System.out.println(count + " " + customer.getId() + " → " + customer.getName() + " / " + customer.getStatus());
+			}
+		);		
+		
+		System.out.println("Customer found: " + count);
+	}
+	
 	
 	protected static String TestCreateCustomer() {
 
@@ -84,16 +106,15 @@ public class CustomerTest {
 		CustomerManagementApis apis = new CustomerManagementApis(apiClientTmf629);
 
 		CustomerCreate cc = new CustomerCreate();
-		cc.setName("My customer");
+		cc.setName("Just a simple test");
 		cc.setStatus("Approved");
 		cc.setStatusReason("Account details checked");
 
-		Customer c = apis.createCustomer(cc);
+		String id = apis.createCustomer(cc);
 
-		return c.getId();
+		return id;
 	}
-	
-	
+		
 	protected static Customer TestGetCustomer(String id) {
 
 		ApiClient apiClientTmf629 = Configuration.getDefaultApiClient();
@@ -102,6 +123,7 @@ public class CustomerTest {
 		CustomerManagementApis apis = new CustomerManagementApis(apiClientTmf629);
 		return apis.getCustomer(id, null);
 	}
+	
 	
 	protected static boolean TestUpdateCustomer(String id) {
 
@@ -112,7 +134,7 @@ public class CustomerTest {
 		
 		CustomerUpdate cu = new CustomerUpdate();
 		cu.setStatus("Rejected");
-		cu.setStatusReason("Customer cannot update");
+		cu.setStatusReason("The customer cannot be updated");
 		
 		return apis.updateCustomer(id, cu);
 	}

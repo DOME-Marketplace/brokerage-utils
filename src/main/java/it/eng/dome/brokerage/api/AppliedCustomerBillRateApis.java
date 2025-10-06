@@ -1,6 +1,5 @@
 package it.eng.dome.brokerage.api;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,22 +9,14 @@ import org.slf4j.LoggerFactory;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
 import it.eng.dome.tmforum.tmf678.v4.ApiException;
 import it.eng.dome.tmforum.tmf678.v4.api.AppliedCustomerBillingRateApi;
-import it.eng.dome.tmforum.tmf678.v4.api.CustomerBillApi;
-import it.eng.dome.tmforum.tmf678.v4.api.CustomerBillExtensionApi;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRateCreate;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRateUpdate;
-import it.eng.dome.tmforum.tmf678.v4.model.CustomerBill;
-import it.eng.dome.tmforum.tmf678.v4.model.CustomerBillCreate;
 
 public class AppliedCustomerBillRateApis {
-	
-	private final Logger logger = LoggerFactory.getLogger(AppliedCustomerBillRateApis.class);
-	private final int LIMIT = 100;
-	
-	private AppliedCustomerBillingRateApi appliedCustomerBillingRate;
-	private CustomerBillExtensionApi customerBillExtension;
-	private CustomerBillApi customerBill;
+
+	private final Logger logger = LoggerFactory.getLogger(AppliedCustomerBillRateApis.class);	
+	private AppliedCustomerBillingRateApi appliedCustomerBillingRateApi;
 
 	/**
 	 * Constructor
@@ -33,25 +24,29 @@ public class AppliedCustomerBillRateApis {
 	 */
 	public AppliedCustomerBillRateApis(ApiClient apiClientTMF678){
 		logger.info("Init AppliedCustomerBillRateApis - apiClientTMF678 basePath: {}", apiClientTMF678.getBasePath());
-		appliedCustomerBillingRate = new AppliedCustomerBillingRateApi(apiClientTMF678);	
-		customerBillExtension = new CustomerBillExtensionApi(apiClientTMF678);
-		customerBill = new CustomerBillApi(apiClientTMF678);
+		appliedCustomerBillingRateApi = new AppliedCustomerBillingRateApi(apiClientTMF678);	
 	}
-	
 
+	
 	/**
-	 * This method retrieves a specific AppliedCustomerBillingRate by ID
+	 * This method retrieves a specific AppliedCustomerBillingRate by id
 	 *  
-	 * @param applyId - Identifier of the AppliedCustomerBillingRate (required)
+	 * @param id - Identifier of the AppliedCustomerBillingRate (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
 	 * - use fields == null to get all attributes
-	 * @return AppliedCustomerBillingRate
+	 * @return the {@link AppliedCustomerBillingRate} with the given id,
+	 *         or {@code null} if no AppliedCustomerBillingRate is found
 	 */
-	public AppliedCustomerBillingRate getAppliedCustomerBillingRate(String applyId, String fields) {
+	public AppliedCustomerBillingRate getAppliedCustomerBillingRate(String id, String fields) {
+		logger.info("Request: getAppliedCustomerBillingRate by id {}", id);
+		
 		try {
+			if (fields != null) {
+				logger.debug("Selected attributes: [{}]", fields);
+			}
 			
-			return appliedCustomerBillingRate.retrieveAppliedCustomerBillingRate(applyId, fields);
+			return appliedCustomerBillingRateApi.retrieveAppliedCustomerBillingRate(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
@@ -59,40 +54,50 @@ public class AppliedCustomerBillRateApis {
 	}
 	
 	/**
-	 * This method retrieves the list of AppliedCustomerBillingRate
+	 * This method retrieves a list of AppliedCustomerBillingRate
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
 	 * - use fields == null to get all attributes	
+     * @param offset - the index of the first item to return (used for pagination)
+     * @param limit - the maximum number of items to return
 	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return List&lt;AppliedCustomerBillingRate&gt;
+	 * @return a {@link List} containing a subset of AppliedCustomerBillingRate
 	 */
-	
-	public List<AppliedCustomerBillingRate> getAllAppliedCustomerBillingRates(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllAppliedCustomerBillingRates");
-		List<AppliedCustomerBillingRate> all = new ArrayList<AppliedCustomerBillingRate>();
+	public List<AppliedCustomerBillingRate> listAppliedCustomerBillingRates(String fields, int offset, int limit, Map<String, String> filter) {
+		logger.info("Request: listAppliedCustomerBillingRates");
 		
-		if (filter != null && !filter.isEmpty()) {
-			logger.debug("Params used in the query-string filter: {}", filter);
-		}
-		
-		getAllApplied(all, fields, 0, filter);
-		logger.info("Number of AppliedCustomerBillingRates: {}", all.size());
-		return all;
+		try {			
+			if (filter != null && !filter.isEmpty()) {
+				logger.debug("Params used in the query-string filter: {}", filter);
+			}
+			if (fields != null) {
+				logger.debug("Selected attributes: [{}]", fields);
+			}
+			
+			return appliedCustomerBillingRateApi.listAppliedCustomerBillingRate(fields, offset, limit, filter);
+			
+		} catch (ApiException e) {
+			logger.error("Error: {}", e.getResponseBody());
+			return null;
+		}   
 	}
+
 	
 	/**
-	 * This method updates the AppliedCustomerBillingRate by Id
+	 * This method updates the AppliedCustomerBillingRate by id
 	 * 
-	 * @param appliedId - Identifier of the AppliedCustomerBillingRate (required) 
+	 * @param id - Identifier of the AppliedCustomerBillingRate (required) 
 	 * @param appliedCustomerBillingRateUpdate - AppliedCustomerBillingRateUpdate object used to update the AppliedCustomerBillingRate (required) 
-	 * @return boolean
+	 * @return {@code true} if the update was successful,
+	 *         {@code false} otherwise
 	 */
-	public boolean updateAppliedCustomerBillingRate(String appliedId, AppliedCustomerBillingRateUpdate appliedCustomerBillingRateUpdate) {
-		logger.info("Request: updateAppliedCustomerBillingRate");
+	public boolean updateAppliedCustomerBillingRate(String id, AppliedCustomerBillingRateUpdate appliedCustomerBillingRateUpdate) {
+		logger.info("Request: updateAppliedCustomerBillingRate by id {}", id);
+		
 		try {
-			AppliedCustomerBillingRate billUpdate = appliedCustomerBillingRate.updateAppliedCustomerBillingRate(appliedId, appliedCustomerBillingRateUpdate);
-			logger.info("Update AppliedCustomerBillingRate with id: {}", billUpdate.getId());
+			AppliedCustomerBillingRate billUpdate = appliedCustomerBillingRateApi.updateAppliedCustomerBillingRate(id, appliedCustomerBillingRateUpdate);
+			logger.info("Update successfully AppliedCustomerBillingRate with id: {}", billUpdate.getId());
 			return true;
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
@@ -104,117 +109,19 @@ public class AppliedCustomerBillRateApis {
 	 * This method creates an AppliedCustomerBillingRate
 	 * 
 	 * @param appliedCustomerBillingRateCreate - AppliedCustomerBillingRateCreate object used in the creation request of the AppliedCustomerBillingRate (required) 
-	 * @return AppliedCustomerBillingRate
+	 * @return the id of the created AppliedCustomerBillingRate, or {@code null} if the creation failed
 	 */
-	public AppliedCustomerBillingRate createAppliedCustomerBillingRate(AppliedCustomerBillingRateCreate appliedCustomerBillingRateCreate) {
-		try {
-			AppliedCustomerBillingRate applied = appliedCustomerBillingRate.createAppliedCustomerBillingRate(appliedCustomerBillingRateCreate);
-			return applied;
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
-	
-	/**
-	 * This method retrieves the list of CustomerBill
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'state,paymentDueDate')<br> 
-	 * - use fields == null to get all attributes	
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return List&lt;CustomerBill&gt;
-	 */
-	
-	public List<CustomerBill> getAllCustomerBills(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllCustomerBills");
-		List<CustomerBill> all = new ArrayList<CustomerBill>();
+	public String createAppliedCustomerBillingRate(AppliedCustomerBillingRateCreate appliedCustomerBillingRateCreate) {
+		logger.info("Create: AppliedCustomerBillingRate");
 		
-		if (filter != null && !filter.isEmpty()) {
-			logger.debug("Params used in the query-string filter: {}", filter);
-		}
-		
-		getAllCustomer(all, fields, 0, filter);
-		logger.info("Number of CustomerBills: {}", all.size());
-		return all;
-	}
-	
-
-	/**
-	 * This method retrieves a specific CustomerBill by ID
-	 *  
-	 * @param customerBillId - Identifier of the CustomerBill (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'state,paymentDueDate')<br> 
-	 * - use fields == null to get all attributes
-	 * @return CustomerBill
-	 */
-	public CustomerBill getCustomerBill(String customerBillId, String fields) {
 		try {
-			
-			return customerBill.retrieveCustomerBill(customerBillId, fields);
+			AppliedCustomerBillingRate applied = appliedCustomerBillingRateApi.createAppliedCustomerBillingRate(appliedCustomerBillingRateCreate);
+			logger.info("AppliedCustomerBillingRate saved successfully with id: {}", applied.getId());
+			return applied.getId();
 		} catch (ApiException e) {
+			logger.info("AppliedCustomerBillingRate not saved: {}", appliedCustomerBillingRateCreate.toString());
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
-	}
-	
-	
-	/**
-	 * This method creates a CustomerBill
-	 * 
-	 * @param customerBillCreate - CustomerBillCreate object used in the creation request of the CustomerBill (required) 
-	 * @return customerBillId
-	 */
-	public String createCustomerBill(CustomerBillCreate customerBillCreate) {
-		logger.info("Request: createCustomerBill");
-		try {
-			CustomerBill customerBill = customerBillExtension.createCustomerBill(customerBillCreate);
-			logger.info("CustomerBill saved with id: {}", customerBill.getId());
-			return customerBill.getId();
-		} catch (ApiException e) {
-			logger.info("CustomerBill not saved: {}", customerBillCreate.toString());
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
-	
-	/*
-	 * Internal method to get all AppliedCustomerBillingRate in recursive way
-	 */
-	private void getAllApplied(List<AppliedCustomerBillingRate> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
-
-		try {
-			List<AppliedCustomerBillingRate> appliedList = appliedCustomerBillingRate.listAppliedCustomerBillingRate(fields, offset, LIMIT, filter);
-
-			if (!appliedList.isEmpty()) {
-				list.addAll(appliedList);
-				getAllApplied(list, fields, start + 1, filter);
-			}else {
-				return;
-			}
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
-	}
-	
-	private void getAllCustomer(List<CustomerBill> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
-
-		try {
-			List<CustomerBill> appliedList = customerBill.listCustomerBill(fields, offset, LIMIT, filter);
-
-			if (!appliedList.isEmpty()) {
-				list.addAll(appliedList);
-				getAllCustomer(list, fields, start + 1, filter);
-			}else {
-				return;
-			}
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
 	}
 }

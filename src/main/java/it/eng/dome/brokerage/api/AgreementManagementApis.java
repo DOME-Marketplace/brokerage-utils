@@ -1,6 +1,5 @@
 package it.eng.dome.brokerage.api;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +16,6 @@ import it.eng.dome.tmforum.tmf651.v4.model.AgreementUpdate;
 
 public class AgreementManagementApis {
 	private final Logger logger = LoggerFactory.getLogger(AgreementManagementApis.class);
-	private final int LIMIT = 100;
-
 	private AgreementApi agreementApi;
 
 	/**
@@ -35,13 +32,18 @@ public class AgreementManagementApis {
 	/**
 	 * This method creates a Agreement
 	 * 
-	 * @param AgreementCreate - AgreementCreate object used in the creation request of the Agreement (required) 
-	 * @return Agreement
+	 * @param agreementCreate - AgreementCreate object used in the creation request of the Agreement (required) 
+	 * @return the id of the created Agreement, or {@code null} if the creation failed
 	 */
-	public Agreement createAgreement(AgreementCreate agreementCreate) {		
+	public String createAgreement(AgreementCreate agreementCreate) {		
+		logger.info("Create: Agreement");
+		
 		try {
-			return agreementApi.createAgreement(agreementCreate);
+			Agreement agreement = agreementApi.createAgreement(agreementCreate);
+			logger.info("Agreement saved successfully with id: {}", agreement.getId());
+			return agreement.getId();
 		} catch (ApiException e) {
+			logger.info("Agreement not saved: {}", agreementCreate.toString());
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
@@ -49,79 +51,81 @@ public class AgreementManagementApis {
 	
 	
 	/**
-	 * This method updates the Agreement by Id
+	 * This method updates the Agreement by id
 	 * 
-	 * @param agreementId - Identifier of the Agreement (required) 
+	 * @param id - Identifier of the Agreement (required) 
 	 * @param agreementUpdate - AgreementUpdate object used to update the Agreement (required) 
-	 * @return boolean
+	 * @return {@code true} if the update was successful,
+	 *         {@code false} otherwise
 	 */
-	public boolean updateAgreement(String agreementId, AgreementUpdate agreementUpdate) {
-		logger.info("Request: updateAgreement");
+	public boolean updateAgreement(String id, AgreementUpdate agreementUpdate) {
+		logger.info("Request: updateAgreement by id {}", id);
+		
 		try {
-			Agreement agreement = agreementApi.patchAgreement(agreementId, agreementUpdate);
-			logger.info("Update Agreement with id: {}", agreement.getId());
+			Agreement agreement = agreementApi.patchAgreement(id, agreementUpdate);
+			logger.info("Update successfully Agreement with id: {}", agreement.getId());
 			return true;
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return false;
 		}
 	}
+	
 
 	/**
-	 * This method retrieves a specific Agreement by ID
+	 * This method retrieves a specific Agreement by id
 	 * 
-	 * @param agreementId - Identifier of the Agreement (required)
+	 * @param id - Identifier of the Agreement (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
 	 * - use fields == null to get all attributes
-	 * @return Agreement
+	 * @return the {@link Agreement} with the given id,
+	 *         or {@code null} if no Agreement is found
 	 */
-	public Agreement getAgreement(String agreementId, String fields) {
+	public Agreement getAgreement(String id, String fields) {
+		logger.info("Request: getAgreement by id {}", id);
+		
 		try {
-			return agreementApi.retrieveAgreement(agreementId, fields);
+			if (fields != null) {
+				logger.debug("Selected attributes: [{}]", fields);
+			}
+			
+			return agreementApi.retrieveAgreement(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
 	}
 	
+	
 	/**
-	 * This method retrieves the list of Agreement
+	 * This method retrieves a list of Agreement
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br> 
-	 * @return List&lt;Agreement&gt;
+	 * - use this string to get specific fields (separated by comma: i.e. 'name,status')<br>
+	 * - use fields == null to get all attributes		
+     * @param offset - the index of the first item to return (used for pagination)
+     * @param limit - the maximum number of items to return
+	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
+	 * @return a {@link List} containing a subset of Agreement
 	 */
-	public List<Agreement> getAllAgreements(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllAgreements");
-		List<Agreement> all = new ArrayList<Agreement>();
+	public List<Agreement> listAgreements(String fields, int offset, int limit, Map<String, String> filter) {
+		logger.info("Request: listAgreements");
 		
-		if (filter != null && !filter.isEmpty()) {
-			logger.debug("Params used in the query-string filter: {}", filter);
-		}
-		
-		getAllAgreements(all, fields, 0, filter);
-		logger.info("Number of Agreements: {}", all.size());
-		return all;
-	}
-		
-	private void getAllAgreements(List<Agreement> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
-
-		try {
-			List<Agreement> agreementList =  agreementApi.listAgreement(fields, offset, LIMIT, filter);
-
-			if (!agreementList.isEmpty()) {
-				list.addAll(agreementList);
-				getAllAgreements(list, fields, start + 1, filter);				
-			}else {
-				return;
+		try {			
+			if (filter != null && !filter.isEmpty()) {
+				logger.debug("Params used in the query-string filter: {}", filter);
 			}
+			if (fields != null) {
+				logger.debug("Selected attributes: [{}]", fields);
+			}
+			
+			return agreementApi.listAgreement(fields, offset, limit, filter);
+			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
+			return null;
+		}   
 	}
+	
 }

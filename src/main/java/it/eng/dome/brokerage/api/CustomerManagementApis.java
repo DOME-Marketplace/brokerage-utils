@@ -1,6 +1,5 @@
 package it.eng.dome.brokerage.api;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +17,6 @@ import it.eng.dome.tmforum.tmf629.v4.model.CustomerUpdate;
 public class CustomerManagementApis {
 
 	private final Logger logger = LoggerFactory.getLogger(CustomerManagementApis.class);
-	private final int LIMIT = 100;
-
 	private CustomerApi customerApi;
 
 	/**
@@ -36,13 +33,18 @@ public class CustomerManagementApis {
 	/**
 	 * This method creates a Customer
 	 * 
-	 * @param CustomerCreate - CustomerCreate object used in the creation request of the Customer (required) 
-	 * @return Customer
+	 * @param customerCreate - CustomerCreate object used in the creation request of the Customer (required) 
+	 * @return the id of the created Customer, or {@code null} if the creation failed
 	 */
-	public Customer createCustomer(CustomerCreate customerCreate) {		
+	public String createCustomer(CustomerCreate customerCreate) {	
+		logger.info("Create: Customer");
+		
 		try {
-			return customerApi.createCustomer(customerCreate);
+			Customer customer = customerApi.createCustomer(customerCreate);
+			logger.info("Customer saved successfully with id: {}", customer.getId());
+			return customer.getId();
 		} catch (ApiException e) {
+			logger.info("Customer not saved: {}", customerCreate.toString());
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
@@ -50,80 +52,81 @@ public class CustomerManagementApis {
 	
 	
 	/**
-	 * This method updates the Customer by Id
+	 * This method updates the Customer by id
 	 * 
-	 * @param customerId - Identifier of the Customer (required) 
+	 * @param id - Identifier of the Customer (required) 
 	 * @param customerUpdate - CustomerUpdate object used to update the Customer (required) 
-	 * @return boolean
+	 * @return {@code true} if the update was successful,
+	 *         {@code false} otherwise
 	 */
-	public boolean updateCustomer(String customerId, CustomerUpdate customerUpdate) {
-		logger.info("Request: updateCustomer");
+	public boolean updateCustomer(String id, CustomerUpdate customerUpdate) {
+		logger.info("Request: updateCustomer by id {}", id);
+		
 		try {
-			Customer customer = customerApi.patchCustomer(customerId, customerUpdate);
-			logger.info("Update Customer with id: {}", customer.getId());
+			Customer customer = customerApi.patchCustomer(id, customerUpdate);
+			logger.info("Update successfully Customer with id: {}", customer.getId());
 			return true;
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return false;
 		}
 	}
+	
 
 	/**
-	 * This method retrieves a specific Customer by ID
+	 * This method retrieves a specific Customer by id
 	 * 
-	 * @param customerId - Identifier of the Customer (required)
+	 * @param id - Identifier of the Customer (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
 	 * - use fields == null to get all attributes
-	 * @return Customer
+	 * @return the {@link Customer} with the given id,
+	 *         or {@code null} if no Customer is found
 	 */
-	public Customer getCustomer(String customerId, String fields) {
+	public Customer getCustomer(String id, String fields) {
+		logger.info("Request: getCustomer by id {}", id);
+		
 		try {
-			return customerApi.retrieveCustomer(customerId, fields);
+			if (fields != null) {
+				logger.debug("Selected attributes: [{}]", fields);
+			}
+			
+			return customerApi.retrieveCustomer(id, fields);
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
 			return null;
 		}
 	}
 	
+	
 	/**
-	 * This method retrieves the list of UsCustomerage
+	 * This method retrieves a paginated list of Customer
 	 * 
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br> 
-	 * @return List&lt;Customer&gt;
+	 * - use this string to get specific fields (separated by comma: i.e. 'name,status')<br>
+	 * - use fields == null to get all attributes		
+     * @param offset - the index of the first item to return (used for pagination)
+     * @param limit - the maximum number of items to return
+	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
+	 * @return a {@link List} containing a subset of Customer
 	 */
-	public List<Customer> getAllCustomers(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllCustomers");
-		List<Customer> all = new ArrayList<Customer>();
+	public List<Customer> listCustomers(String fields, int offset, int limit, Map<String, String> filter) {
+		logger.info("Request: listCustomers");
 		
-		if (filter != null && !filter.isEmpty()) {
-			logger.debug("Params used in the query-string filter: {}", filter);
-		}
-		
-		getAllCustomers(all, fields, 0, filter);
-		logger.info("Number of Customers: {}", all.size());
-		return all;
-	}
-		
-	private void getAllCustomers(List<Customer> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
-
-		try {
-			List<Customer> customerList =  customerApi.listCustomer(fields, offset, LIMIT, filter);
-
-			if (!customerList.isEmpty()) {
-				list.addAll(customerList);
-				getAllCustomers(list, fields, start + 1, filter);				
-			}else {
-				return;
+		try {			
+			if (filter != null && !filter.isEmpty()) {
+				logger.debug("Params used in the query-string filter: {}", filter);
 			}
+			if (fields != null) {
+				logger.debug("Selected attributes: [{}]", fields);
+			}
+			
+			return customerApi.listCustomer(fields, offset, limit, filter);
+			
 		} catch (ApiException e) {
 			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
+			return null;
+		}   
 	}
-	
+		
 }
