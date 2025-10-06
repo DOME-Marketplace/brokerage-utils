@@ -2,6 +2,11 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.1.8</code> :calendar: 06/10/2025
+**Feature**
+* Add `AbstractHealthService` class for all **Billing Services** to retrieve `Info` and `Health` objects.
+
+
 ### <code>2.1.7</code> :calendar: 29/09/2025
 **Feature**
 * Add `ServiceSpecificationApis` class of *TMF633 specification* to manage a **ServiceSpecification** object.
