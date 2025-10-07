@@ -35,52 +35,58 @@ public class AppliedCustomerBillRateApis {
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
 	 * - use fields == null to get all attributes
-	 * @return the {@link AppliedCustomerBillingRate} with the given id,
-	 *         or {@code null} if no AppliedCustomerBillingRate is found
+	 * @return the {@link AppliedCustomerBillingRate} with the given id, or {@code null} if no AppliedCustomerBillingRate is found
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public AppliedCustomerBillingRate getAppliedCustomerBillingRate(String id, String fields) {
-		logger.info("Request: getAppliedCustomerBillingRate by id {}", id);
-		
-		try {
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return appliedCustomerBillingRateApi.retrieveAppliedCustomerBillingRate(id, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
 	
 	/**
-	 * This method retrieves a list of AppliedCustomerBillingRate
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
-	 * - use fields == null to get all attributes	
-     * @param offset - the index of the first item to return (used for pagination)
-     * @param limit - the maximum number of items to return
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link List} containing a subset of AppliedCustomerBillingRate
+	 * Retrieves a specific {@link AppliedCustomerBillingRate} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code AppliedCustomerBillingRate} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "product,periodCoverage"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link AppliedCustomerBillingRate} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public List<AppliedCustomerBillingRate> listAppliedCustomerBillingRates(String fields, int offset, int limit, Map<String, String> filter) {
-		logger.info("Request: listAppliedCustomerBillingRates");
+	public AppliedCustomerBillingRate getAppliedCustomerBillingRate(String id, String fields) throws ApiException {
+		logger.info("Request: getAppliedCustomerBillingRate by id {}", id);
+				
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
 		
-		try {			
-			if (filter != null && !filter.isEmpty()) {
-				logger.debug("Params used in the query-string filter: {}", filter);
-			}
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
+		return appliedCustomerBillingRateApi.retrieveAppliedCustomerBillingRate(id, fields);		
+	}
+	
+		
+	/**
+	 * Retrieves a list of {@link AppliedCustomerBillingRate} resources.
+	 * <p>
+	 * This method queries the AppliedCustomerBillingRate API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "product,periodCoverage"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link AppliedCustomerBillingRate} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
+	 */
+	public List<AppliedCustomerBillingRate> listAppliedCustomerBillingRates(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listAppliedCustomerBillingRates");
 			
-			return appliedCustomerBillingRateApi.listAppliedCustomerBillingRate(fields, offset, limit, filter);
-			
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}   
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return appliedCustomerBillingRateApi.listAppliedCustomerBillingRate(fields, offset, limit, filter);
 	}
 
 	
@@ -88,40 +94,35 @@ public class AppliedCustomerBillRateApis {
 	 * This method updates the AppliedCustomerBillingRate by id
 	 * 
 	 * @param id - Identifier of the AppliedCustomerBillingRate (required) 
-	 * @param appliedCustomerBillingRateUpdate - AppliedCustomerBillingRateUpdate object used to update the AppliedCustomerBillingRate (required) 
-	 * @return {@code true} if the update was successful,
-	 *         {@code false} otherwise
+	 * @param appliedCustomerBillingRateUpdate - AppliedCustomerBillingRateUpdate object used to update the AppliedCustomerBillingRate (required) e
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public boolean updateAppliedCustomerBillingRate(String id, AppliedCustomerBillingRateUpdate appliedCustomerBillingRateUpdate) {
+	public void updateAppliedCustomerBillingRate(String id, AppliedCustomerBillingRateUpdate appliedCustomerBillingRateUpdate) throws ApiException {
 		logger.info("Request: updateAppliedCustomerBillingRate by id {}", id);
+
+		AppliedCustomerBillingRate billUpdate = appliedCustomerBillingRateApi.updateAppliedCustomerBillingRate(id, appliedCustomerBillingRateUpdate);
 		
-		try {
-			AppliedCustomerBillingRate billUpdate = appliedCustomerBillingRateApi.updateAppliedCustomerBillingRate(id, appliedCustomerBillingRateUpdate);
-			logger.info("Update successfully AppliedCustomerBillingRate with id: {}", billUpdate.getId());
-			return true;
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return false;
+		boolean success = (billUpdate != null && billUpdate.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated AppliedCustomerBillingRate with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for AppliedCustomerBillingRate id: {}", id);
 		}
 	}
+	
 	
 	/**
 	 * This method creates an AppliedCustomerBillingRate
 	 * 
 	 * @param appliedCustomerBillingRateCreate - AppliedCustomerBillingRateCreate object used in the creation request of the AppliedCustomerBillingRate (required) 
 	 * @return the id of the created AppliedCustomerBillingRate, or {@code null} if the creation failed
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
 	 */
-	public String createAppliedCustomerBillingRate(AppliedCustomerBillingRateCreate appliedCustomerBillingRateCreate) {
+	public String createAppliedCustomerBillingRate(AppliedCustomerBillingRateCreate appliedCustomerBillingRateCreate) throws ApiException {
 		logger.info("Create: AppliedCustomerBillingRate");
-		
-		try {
-			AppliedCustomerBillingRate applied = appliedCustomerBillingRateApi.createAppliedCustomerBillingRate(appliedCustomerBillingRateCreate);
-			logger.info("AppliedCustomerBillingRate saved successfully with id: {}", applied.getId());
-			return applied.getId();
-		} catch (ApiException e) {
-			logger.info("AppliedCustomerBillingRate not saved: {}", appliedCustomerBillingRateCreate.toString());
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
+
+		AppliedCustomerBillingRate applied = appliedCustomerBillingRateApi.createAppliedCustomerBillingRate(appliedCustomerBillingRateCreate);
+		logger.info("AppliedCustomerBillingRate saved successfully with id: {}", applied.getId());
+		return applied.getId();		
 	}
 }

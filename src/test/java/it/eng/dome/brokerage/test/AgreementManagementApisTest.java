@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import it.eng.dome.brokerage.api.AgreementManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf651.v4.ApiClient;
+import it.eng.dome.tmforum.tmf651.v4.ApiException;
 import it.eng.dome.tmforum.tmf651.v4.Configuration;
 import it.eng.dome.tmforum.tmf651.v4.model.Agreement;
 import it.eng.dome.tmforum.tmf651.v4.model.AgreementCreate;
@@ -23,21 +24,21 @@ public class AgreementManagementApisTest {
 		/**
 		 * Get All Agreements
 		 */
-		//TestGetAllAgreements();
+		TestGetAllAgreements();
 		
 		/**
 		 * Get Filtered Agreements
 		 */
-		TestGetFilteredAgreements();
+//		TestGetFilteredAgreements();
 
 		/**
 		 * Create Agreement
 		 */
-		/*String id = TestCreateAgreement();
-		if (id != null) {
-			Agreement c = TestGetAgreement(id);
-			System.out.println(c.getId() + " " + c.getStatus() + " " + c.getVersion());
-		}*/
+//		String id = TestCreateAgreement();
+//		if (id != null) {
+//			Agreement c = TestGetAgreement(id);
+//			System.out.println(c.getId() + " " + c.getStatus() + " " + c.getVersion());
+//		}
 		
 		/**
 		 * Update Agreement
@@ -108,11 +109,16 @@ public class AgreementManagementApisTest {
 		AgreementManagementApis apis = new AgreementManagementApis(apiClientTmf651);
 
 		AgreementCreate ac = new AgreementCreate();
-		ac.setName("Add new agreement via Java Test");
+		ac.setName("New Agreement Test");
 		ac.setStatus("Approved");
 		ac.setVersion("1.0");
 
-		String id = apis.createAgreement(ac);
+		String id = null;
+		try {
+			id = apis.createAgreement(ac);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 		
 		return id;
 	}
@@ -124,10 +130,15 @@ public class AgreementManagementApisTest {
 
 		AgreementManagementApis apis = new AgreementManagementApis(apiClientTmf651);
 		
-		return apis.getAgreement(id, null);
+		try {
+			return apis.getAgreement(id, null);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+			return null;
+		}
 	}
 	
-	protected static boolean TestUpdateAgreement(String id) {
+	protected static void TestUpdateAgreement(String id) {
 
 		ApiClient apiClientTmf651 = Configuration.getDefaultApiClient();
 		apiClientTmf651.setBasePath(tmfEndpoint + "/" + tmf651CustomerPath);
@@ -136,9 +147,13 @@ public class AgreementManagementApisTest {
 		
 		AgreementUpdate au = new AgreementUpdate();
 		au.setStatus("Rejected");
-		au.setVersion("3.0");
+		au.setVersion("2.0");
 		
-		return apis.updateAgreement(id, au);
+		try {
+			apis.updateAgreement(id, au);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 	}
 	
 }

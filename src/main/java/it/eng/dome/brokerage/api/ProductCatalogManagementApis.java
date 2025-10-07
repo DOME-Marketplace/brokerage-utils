@@ -37,23 +37,69 @@ public class ProductCatalogManagementApis {
 	
 	
 	/**
+	 * Retrieves a specific {@link ProductOffering} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code ProductOffering} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "name,lifecycleStatus"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link ProductOffering} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 */
+	public ProductOffering getProductOffering(String id, String fields) throws ApiException {
+		logger.info("Request: getProductOffering by id {}", id);
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+
+		return productOfferingApi.retrieveProductOffering(id, fields);
+	}
+
+		
+	/**
+	 * Retrieves a list of {@link ProductOffering} resources.
+	 * <p>
+	 * This method queries the ProductOffering API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,lifecycleStatus"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link ProductOffering} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
+	 */
+	public List<ProductOffering> listProductOfferings(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listProductOfferings");
+				
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return productOfferingApi.listProductOffering(fields, offset, limit, filter);
+	}
+	
+	/**
 	 * This method creates an ProductOffering
 	 * 
 	 * @param productOfferingCreate - ProductOfferingCreate object used in the creation request of the ProductOffering (required) 
 	 * @return the id of the created ProductOffering, or {@code null} if the creation failed
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
 	 */
-	public String createProductOffering(ProductOfferingCreate productOfferingCreate) {		
+	public String createProductOffering(ProductOfferingCreate productOfferingCreate) throws ApiException {		
 		logger.info("Create: ProductOffering");
+
+		ProductOffering offering = productOfferingApi.createProductOffering(productOfferingCreate);
+		logger.info("ProductOffering saved successfully with id: {}", offering.getId());
 		
-		try {
-			ProductOffering offering = productOfferingApi.createProductOffering(productOfferingCreate);
-			logger.info("ProductOffering saved successfully with id: {}", offering.getId());
-			return offering.getId();
-		} catch (ApiException e) {
-			logger.info("ProductOffering not saved: {}", productOfferingCreate.toString());
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
+		return offering.getId();
 	}
 	
 	
@@ -62,134 +108,70 @@ public class ProductCatalogManagementApis {
 	 * 
 	 * @param id - Identifier of the ProductOffering (required) 
 	 * @param productOfferingUpdate - ProductOfferingUpdate object used to update the ProductOffering (required) 
-	 * @return {@code true} if the update was successful,
-	 *         {@code false} otherwise
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
 	 */
-	public boolean updateProductOffering(String id, ProductOfferingUpdate productOfferingUpdate) {
+	public void updateProductOffering(String id, ProductOfferingUpdate productOfferingUpdate) throws ApiException {
 		logger.info("Request: updateProductOffering by id {}", id);
 		
-		try {
-			ProductOffering productOffering = productOfferingApi.patchProductOffering(id, productOfferingUpdate);
-			logger.info("Update successfully ProductOffering with id: {}", productOffering.getId());
-			return true;
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return false;
-		}
-	}
-	
+		ProductOffering productOffering = productOfferingApi.patchProductOffering(id, productOfferingUpdate);
 
-	/**
-	 * This method retrieves a specific ProductOffering by id
-	 * 
-	 * @param id - Identifier of the ProductOffering (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,lifecycleStatus')<br> 
-	 * - use fields == null to get all attributes
-	 * @return the {@link ProductOffering} with the given id,
-	 *         or {@code null} if no ProductOffering is found
-	 */
-	public ProductOffering getProductOffering(String id, String fields) {
-		logger.info("Request: getProductOffering by id {}", id);
-
-		try {
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-
-			return productOfferingApi.retrieveProductOffering(id, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
+		boolean success = (productOffering != null && productOffering.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated ProductOffering with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for ProductOffering id: {}", id);
 		}
 	}
 	
 	
 	/**
-	 * This method retrieves a list of ProductOffering
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,lifecycleStatus')<br>
-	 * - use fields == null to get all attributes		
-     * @param offset - the index of the first item to return (used for pagination)
-     * @param limit - the maximum number of items to return
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link List} containing a subset of ProductOffering
+	 * Retrieves a specific {@link ProductOfferingPrice} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code ProductOfferingPrice} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "name,version"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link ProductOfferingPrice} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public List<ProductOffering> listProductOfferings(String fields, int offset, int limit, Map<String, String> filter) {
-		logger.info("Request: listProductOfferings");
-		
-		try {			
-			if (filter != null && !filter.isEmpty()) {
-				logger.debug("Params used in the query-string filter: {}", filter);
-			}
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return productOfferingApi.listProductOffering(fields, offset, limit, filter);
-			
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}   
-	}
-	
-	
-	/**
-	 * This method retrieves a specific ProductOfferingPrice by id
-	 * 
-	 * @param id - Identifier of the ProductOfferingPrice (required) 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,version')<br> 
-	 * - use fields == null to get all attributes
-	 * @return the {@link ProductOfferingPrice} with the given id,
-	 *         or {@code null} if no ProductOfferingPrice is found
-	 */
-	public ProductOfferingPrice getProductOfferingPrice(String id, String fields) {
+	public ProductOfferingPrice getProductOfferingPrice(String id, String fields) throws ApiException {
 		logger.info("Request: getProductOfferingPrice by id {}", id);
-		
-		try {
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return  productOfferingPriceApi.retrieveProductOfferingPrice(id, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
 		}
+		
+		return productOfferingPriceApi.retrieveProductOfferingPrice(id, fields);
 	}
 	
-	
+
 	/**
-	 * This method retrieves a list of ProductOfferingPrice
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,version')<br>
-	 * - use fields == null to get all attributes		
-     * @param offset - the index of the first item to return (used for pagination)
-     * @param limit - the maximum number of items to return
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link List} containing a subset of ProductOfferingPrice
+	 * Retrieves a list of {@link ProductOfferingPrice} resources.
+	 * <p>
+	 * This method queries the ProductOfferingPrice API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,version"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link ProductOfferingPrice} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
-	public List<ProductOfferingPrice> listProductOfferingPrices(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<ProductOfferingPrice> listProductOfferingPrices(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
 		logger.info("Request: listProductOfferingPrices");
 		
-		try {			
-			if (filter != null && !filter.isEmpty()) {
-				logger.debug("Params used in the query-string filter: {}", filter);
-			}
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return productOfferingPriceApi.listProductOfferingPrice(fields, offset, limit, filter);
-			
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}   
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return productOfferingPriceApi.listProductOfferingPrice(fields, offset, limit, filter);  
 	}
 	
 	
@@ -200,52 +182,47 @@ public class ProductCatalogManagementApis {
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br> 
 	 * - use fields == null to get all attributes
-	 * @return the {@link ProductSpecification} with the given id,
-	 *         or {@code null} if no ProductSpecification is found
+	 * @return the {@link ProductSpecification} with the given id, or {@code null} if no ProductSpecification is found
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public ProductSpecification getProductSpecification(String id, String fields) {
+	public ProductSpecification getProductSpecification(String id, String fields) throws ApiException {
 		logger.info("Request: getProductSpecification by id {}", id);
-		
-		try {
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return  productSpecificationApi.retrieveProductSpecification(id, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
+	
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
 		}
+		
+		return productSpecificationApi.retrieveProductSpecification(id, fields);
 	}
 	
-	
+		
 	/**
-	 * This method retrieves a list of ProductSpecification
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br> 
-	 * - use fields == null to get all attributes		
-     * @param offset - the index of the first item to return (used for pagination)
-     * @param limit - the maximum number of items to return
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br> 
-	 * @return a {@link List} containing a subset of ProductSpecification
+	 * Retrieves a list of {@link ProductSpecification} resources.
+	 * <p>
+	 * This method queries the ProductSpecification API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,description"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link ProductSpecification} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
-	public List<ProductSpecification> listProductSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<ProductSpecification> listProductSpecifications(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
 		logger.info("Request: listProductSpecifications");
 		
-		try {			
-			if (filter != null && !filter.isEmpty()) {
-				logger.debug("Params used in the query-string filter: {}", filter);
-			}
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return productSpecificationApi.listProductSpecification(fields, offset, limit, filter);
-			
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}   
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return productSpecificationApi.listProductSpecification(fields, offset, limit, filter);
 	}
+	
 }

@@ -30,116 +30,106 @@ public class APIPartyApis {
 		individualApi = new IndividualApi(apiClientTMF632);
 	}
 	
-	
+
 	/**
-	 * This method retrieves a specific Organization by id
-	 * 
-	 * @param id - Identifier of the Organization (required) 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,tradingName')<br> 
-	 * - use fields == null to get all attributes
-	 * @return the {@link Organization} with the given id,
-	 *         or {@code null} if no Organization is found
+	 * Retrieves a specific {@link Organization} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code Organization} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "name,tradingName"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link Organization} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public Organization getOrganization(String id, String fields) {	
+	public Organization getOrganization(String id, String fields) throws ApiException {	
 		logger.info("Request: getOrganization by id {}", id);
-		
-		try {
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return organizationApi.retrieveOrganization(id, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
 		}
+		
+		return organizationApi.retrieveOrganization(id, fields);
 	}
 		
+	
 	/**
-	 * This method retrieves a list of Organization
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,tradingName')<br> 
-	 * - use fields == null to get all attributes	
-     * @param offset - the index of the first item to return (used for pagination)
-     * @param limit - the maximum number of items to return
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link List} containing a subset of Organization
+	 * Retrieves a list of {@link Organization} resources.
+	 * <p>
+	 * This method queries the Organization API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,tradingName"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link Organization} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
-	public List<Organization> listOrganizations(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<Organization> listOrganizations(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
 		logger.info("Request: listOrganizations");
+					
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
 		
-		try {			
-			if (filter != null && !filter.isEmpty()) {
-				logger.debug("Params used in the query-string filter: {}", filter);
-			}
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return organizationApi.listOrganization(fields, offset, limit, filter);
-			
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}   
+		return organizationApi.listOrganization(fields, offset, limit, filter);
 	}
 
 	
 	/**
-	 * This method retrieves a specific Individual by id
-	 * 
-	 * @param id - Identifier of the Individual (required) 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'familyName,gender')<br> 
-	 * - use fields == null to get all attributes
-	 * @return the {@link Individual} with the given id,
-	 *         or {@code null} if no Individual is found
+	 * Retrieves a specific {@link Individual} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code Individual} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "familyName,gender"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link Individual} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public Individual getIndividual(String id, String fields) {	
+	public Individual getIndividual(String id, String fields) throws ApiException {	
 		logger.info("Request: getIndividual by id {}", id);
-		
-		try {
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return individualApi.retrieveIndividual(id, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
 		}
+		
+		return individualApi.retrieveIndividual(id, fields);
 	}
 	
 	
 	/**
-	 * This method retrieves a list of Individual
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'familyName,gender')<br> 
-	 * - use fields == null to get all attributes	
-     * @param offset - the index of the first item to return (used for pagination)
-     * @param limit - the maximum number of items to return
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link List} containing a subset of Individual
+	 * Retrieves a list of {@link Individual} resources.
+	 * <p>
+	 * This method queries the Individual API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "familyName,gender"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link Individual} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
-	public List<Individual> listIndividuals(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<Individual> listIndividuals(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
 		logger.info("Request: listIndividuals");
+			
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
 		
-		try {			
-			if (filter != null && !filter.isEmpty()) {
-				logger.debug("Params used in the query-string filter: {}", filter);
-			}
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return individualApi.listIndividual(fields, offset, limit, filter);
-			
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}   
+		return individualApi.listIndividual(fields, offset, limit, filter);
 	}
+	
 }

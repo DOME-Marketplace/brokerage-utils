@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import it.eng.dome.brokerage.api.ProductCatalogManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf620.v4.ApiClient;
+import it.eng.dome.tmforum.tmf620.v4.ApiException;
 import it.eng.dome.tmforum.tmf620.v4.Configuration;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingCreate;
@@ -37,7 +38,7 @@ public class ProductCatalogManagementApisTest {
 		/**
 		 * ProductOfferingPrice
 		 */
-		TestGetAllProductOfferingPrice();
+//		TestGetAllProductOfferingPrice();
 //		String id = "urn:ngsi-ld:product-offering-price:356144e6-03de-4a80-9d37-953d0f4ec83c";
 //		TestGetProductOfferingPrice(id);
 		
@@ -71,7 +72,13 @@ public class ProductCatalogManagementApisTest {
 		tp.setEndDateTime(OffsetDateTime.now().plusDays(10));
 		poc.setValidFor(tp);
 		
-		String id = apis.createProductOffering(poc);
+		String id = null;
+		try {
+			id = apis.createProductOffering(poc);
+		} catch (ApiException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.out.println("ProductOffering id: " + id);
 		return id;
 	}
@@ -122,7 +129,7 @@ public class ProductCatalogManagementApisTest {
 		System.out.println("ProductOffering found: " + count);
 	}
 	
-	protected static boolean TestUpdateProductOffering(String id) {
+	protected static void TestUpdateProductOffering(String id) {
 
 		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
 		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductCatalogPath);
@@ -132,7 +139,11 @@ public class ProductCatalogManagementApisTest {
 		ProductOfferingUpdate pou = new ProductOfferingUpdate();
 		pou.setLifecycleStatus("Launched");
 		
-		return apis.updateProductOffering(id, pou);
+		try {
+			apis.updateProductOffering(id, pou);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 	}
 	
 	protected static void TestGetProductOffering(String id) {
@@ -142,9 +153,13 @@ public class ProductCatalogManagementApisTest {
 
 		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);
 		
-		ProductOffering po = apis.getProductOffering(id, null);
-		if (po != null) {
-			System.out.println(po.getId() + " " + po.getName() + " " + po.getLifecycleStatus());
+		try {
+			ProductOffering po = apis.getProductOffering(id, null);
+			if (po != null) {
+				System.out.println(po.getId() + " " + po.getName() + " " + po.getLifecycleStatus());
+			}
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
 		}
 	}
 	
@@ -180,9 +195,13 @@ public class ProductCatalogManagementApisTest {
 		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);	
 		String fields = "name,version,priceType";
 				
-		ProductOfferingPrice pos = apis.getProductOfferingPrice(id, fields);
-		if (pos != null) {
-			System.out.println(pos.getId() + " " + pos.getName() + " " + pos.getPriceType());
+		try {
+			ProductOfferingPrice pos = apis.getProductOfferingPrice(id, fields);
+			if (pos != null) {
+				System.out.println(pos.getId() + " " + pos.getName() + " " + pos.getPriceType());
+			}
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
 		}
 	}
 	
@@ -217,9 +236,13 @@ public class ProductCatalogManagementApisTest {
 
 		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);	
 				
-		ProductSpecification ps = apis.getProductSpecification(id, null);
-		if (ps != null) {
-			System.out.println(ps.getId() + " " + ps.getName() + " " + ps.getLifecycleStatus());
+		try {
+			ProductSpecification ps = apis.getProductSpecification(id, null);
+			if (ps != null) {
+				System.out.println(ps.getId() + " " + ps.getName() + " " + ps.getLifecycleStatus());
+			}
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
 		}
 	}
 }

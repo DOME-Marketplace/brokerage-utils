@@ -31,59 +31,53 @@ public class CustomerBillApis {
 	
 	
 	/**
-	 * This method retrieves a specific CustomerBill by id
-	 *  
-	 * @param id - Identifier of the CustomerBill (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'state,paymentDueDate')<br> 
-	 * - use fields == null to get all attributes
-	 * @return the {@link CustomerBill} with the given id,
-	 *         or {@code null} if no CustomerBill is found
+	 * Retrieves a specific {@link CustomerBill} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code CustomerBill} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "state,paymentDueDate"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link CustomerBill} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public CustomerBill getCustomerBill(String id, String fields) {
+	public CustomerBill getCustomerBill(String id, String fields) throws ApiException {
 		logger.info("Request: getCustomerBill by id {}", id);
 		
-		try {
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return customerBill.retrieveCustomerBill(id, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
 		}
+		
+		return customerBill.retrieveCustomerBill(id, fields);
 	}
 	
 	
 	/**
-	 * This method retrieves a paginated list of CustomerBill
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'state,paymentDueDate')<br> 
-	 * - use fields == null to get all attributes		
-     * @param offset - the index of the first item to return (used for pagination)
-     * @param limit - the maximum number of items to return
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link List} containing a subset of CustomerBill
+	 * Retrieves a list of {@link CustomerBill} resources.
+	 * <p>
+	 * This method queries the CustomerBill API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "state,paymentDueDate"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link CustomerBill} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
-	public List<CustomerBill> listCustomerBills(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<CustomerBill> listCustomerBills(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
 		logger.info("Request: listCustomerBills");
 		
-		try {			
-			if (filter != null && !filter.isEmpty()) {
-				logger.debug("Params used in the query-string filter: {}", filter);
-			}
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return customerBill.listCustomerBill(fields, offset, limit, filter);
-			
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}   
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return customerBill.listCustomerBill(fields, offset, limit, filter);
 	}
 	
 	
@@ -92,18 +86,14 @@ public class CustomerBillApis {
 	 * 
 	 * @param customerBillCreate - CustomerBillCreate object used in the creation request of the CustomerBill (required) 
 	 * @return the id of the created CustomerBill, or {@code null} if the creation failed
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public String createCustomerBill(CustomerBillCreate customerBillCreate) {
+	public String createCustomerBill(CustomerBillCreate customerBillCreate) throws ApiException {
 		logger.info("Request: CustomerBill");
-		try {
-			CustomerBill customerBill = customerBillExtension.createCustomerBill(customerBillCreate);
-			logger.info("CustomerBill saved successfully with id: {}", customerBill.getId());
-			return customerBill.getId();
-		} catch (ApiException e) {
-			logger.info("CustomerBill not saved: {}", customerBillCreate.toString());
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
+
+		CustomerBill customerBill = customerBillExtension.createCustomerBill(customerBillCreate);
+		logger.info("CustomerBill saved successfully with id: {}", customerBill.getId());
+		return customerBill.getId();
 	}
 
 }

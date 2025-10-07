@@ -26,20 +26,20 @@ public class AppliedCustomerBillRateApisTest {
 	
 	public static void main(String[] args) {
 		
-		//TestAppliedCustomerBillRate();
+		TestAppliedCustomerBillRate();
 		
-		//TestAppliedCustomerBillRateFetch();
+//		TestAppliedCustomerBillRateFetch();
 		
-		TestAppliedCustomerBillRateFetchAll();
+//		TestAppliedCustomerBillRateFetchAll();
 
 		
-		//TestAppliedCustomerBillRateById();
+//		TestAppliedCustomerBillRateById();
 		
-		//TestAppliedCustomerBillRateFilter();
+//		TestAppliedCustomerBillRateFilter();
 		
-		//TestAppliedCustomerBillRateRevenueBilled();
+//		TestAppliedCustomerBillRateRevenueBilled();
 		
-		//TestCreateApplyRelatedParty();
+//		TestCreateApplyRelatedParty();
 	}
 
 	
@@ -74,19 +74,23 @@ public class AppliedCustomerBillRateApisTest {
 		
 		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
 		
-		List<AppliedCustomerBillingRate> applied = FetchUtils.fetchAll(
-		    apis::listAppliedCustomerBillingRates,
-		    null,
-		    Map.of("isBilled", "true"),
-		    10
-		);
-		
-		int count = 0;
-		for (AppliedCustomerBillingRate apply : applied) {
-			System.out.println(++count + " " + apply.getId() + " → " + apply.getName());
+		try {
+			List<AppliedCustomerBillingRate> applied = FetchUtils.fetchAll(
+			    apis::listAppliedCustomerBillingRates,
+			    null,
+			    null, // Map.of("isBilled", "true"),
+			    10
+			);
+			
+			int count = 0;
+			for (AppliedCustomerBillingRate apply : applied) {
+				System.out.println(++count + " " + apply.getId() + " → " + apply.getName());
+			}
+			
+			System.out.println("AppliedCustomerBillingRate found: " + applied.size());
+		}catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
 		}
-		
-		System.out.println("AppliedCustomerBillingRate found: " + applied.size());
 	}
 	
 	public static void TestAppliedCustomerBillRate() {
@@ -121,10 +125,14 @@ public class AppliedCustomerBillRateApisTest {
 		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
 		
 		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
-		AppliedCustomerBillingRate apply = apis.getAppliedCustomerBillingRate("urn:ngsi-ld:applied-customer-billing-rate:bc1c48ab-4cd1-4df0-a698-052c6c687129", null);
-		if (apply != null) {
-			System.out.println(apply.getName());
-		}		
+		try {
+			AppliedCustomerBillingRate apply = apis.getAppliedCustomerBillingRate("urn:ngsi-ld:applied-customer-billing-rate:bc1c48ab-4cd1-4df0-a698-052c6c687129", null);
+			if (apply != null) {
+				System.out.println(apply.getName());
+			}	
+		} catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 	}
 
 
@@ -232,8 +240,8 @@ public class AppliedCustomerBillRateApisTest {
 			System.out.println("Applied id: " + id);
 			return id;
 			
-		} catch (IOException e) {
-			System.out.println("Error: " + e.getMessage());
+		} catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
 		}
 
 		return null;

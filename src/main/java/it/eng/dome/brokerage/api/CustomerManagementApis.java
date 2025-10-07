@@ -31,23 +31,69 @@ public class CustomerManagementApis {
 
 	
 	/**
+	 * Retrieves a specific {@link Customer} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code Customer} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "status,name"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link Customer} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 */
+	public Customer getCustomer(String id, String fields) throws ApiException {
+		logger.info("Request: getCustomer by id {}", id);
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return customerApi.retrieveCustomer(id, fields);
+	}
+	
+	
+	/**
+	 * Retrieves a list of {@link Customer} resources.
+	 * <p>
+	 * This method queries the Customer API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,status"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link Customer} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
+	 */
+	public List<Customer> listCustomers(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listCustomers");
+		
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return customerApi.listCustomer(fields, offset, limit, filter);
+	}
+	
+	
+	/**
 	 * This method creates a Customer
 	 * 
 	 * @param customerCreate - CustomerCreate object used in the creation request of the Customer (required) 
 	 * @return the id of the created Customer, or {@code null} if the creation failed
+	 * @throws @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public String createCustomer(CustomerCreate customerCreate) {	
+	public String createCustomer(CustomerCreate customerCreate) throws ApiException {	
 		logger.info("Create: Customer");
-		
-		try {
-			Customer customer = customerApi.createCustomer(customerCreate);
-			logger.info("Customer saved successfully with id: {}", customer.getId());
-			return customer.getId();
-		} catch (ApiException e) {
-			logger.info("Customer not saved: {}", customerCreate.toString());
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
+
+		Customer customer = customerApi.createCustomer(customerCreate);
+		logger.info("Customer saved successfully with id: {}", customer.getId());
+		return customer.getId();
 	}
 	
 	
@@ -56,77 +102,19 @@ public class CustomerManagementApis {
 	 * 
 	 * @param id - Identifier of the Customer (required) 
 	 * @param customerUpdate - CustomerUpdate object used to update the Customer (required) 
-	 * @return {@code true} if the update was successful,
-	 *         {@code false} otherwise
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
 	 */
-	public boolean updateCustomer(String id, CustomerUpdate customerUpdate) {
+	public void updateCustomer(String id, CustomerUpdate customerUpdate) throws ApiException {
 		logger.info("Request: updateCustomer by id {}", id);
 		
-		try {
-			Customer customer = customerApi.patchCustomer(id, customerUpdate);
-			logger.info("Update successfully Customer with id: {}", customer.getId());
-			return true;
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return false;
-		}
-	}
-	
+		Customer customer = customerApi.patchCustomer(id, customerUpdate);
 
-	/**
-	 * This method retrieves a specific Customer by id
-	 * 
-	 * @param id - Identifier of the Customer (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @return the {@link Customer} with the given id,
-	 *         or {@code null} if no Customer is found
-	 */
-	public Customer getCustomer(String id, String fields) {
-		logger.info("Request: getCustomer by id {}", id);
-		
-		try {
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return customerApi.retrieveCustomer(id, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
+		boolean success = (customer != null && customer.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated Customer with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for Customer id: {}", id);
 		}
 	}
-	
-	
-	/**
-	 * This method retrieves a paginated list of Customer
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,status')<br>
-	 * - use fields == null to get all attributes		
-     * @param offset - the index of the first item to return (used for pagination)
-     * @param limit - the maximum number of items to return
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link List} containing a subset of Customer
-	 */
-	public List<Customer> listCustomers(String fields, int offset, int limit, Map<String, String> filter) {
-		logger.info("Request: listCustomers");
-		
-		try {			
-			if (filter != null && !filter.isEmpty()) {
-				logger.debug("Params used in the query-string filter: {}", filter);
-			}
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
 			
-			return customerApi.listCustomer(fields, offset, limit, filter);
-			
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}   
-	}
-		
 }

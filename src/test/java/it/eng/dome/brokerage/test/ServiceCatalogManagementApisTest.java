@@ -20,7 +20,7 @@ public class ServiceCatalogManagementApisTest {
          */
 //        TestGetAllServiceSpecification();        
 //        TestGetListServiceSpecification();
-        TestExitListServiceSpecification();
+//        TestExitListServiceSpecification();
 
 
         /**
@@ -111,9 +111,13 @@ public class ServiceCatalogManagementApisTest {
 
         ServiceCatalogManagementApis apis = new ServiceCatalogManagementApis(apiClientTmf633);
 
-        ServiceSpecification ss = apis.getServiceSpecification(id, null);
-        if (ss != null) {
-            System.out.println(ss.getId() + " " + ss.getName() + " " + ss.getLifecycleStatus());
-        }
+        try {
+	        ServiceSpecification ss = apis.getServiceSpecification(id, null);
+	        if (ss != null) {
+	            System.out.println(ss.getId() + " " + ss.getName() + " " + ss.getLifecycleStatus());
+	        }
+        } catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
+		}
     }
 }

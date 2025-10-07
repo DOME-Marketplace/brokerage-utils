@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import it.eng.dome.brokerage.api.CustomerManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf629.v4.ApiClient;
+import it.eng.dome.tmforum.tmf629.v4.ApiException;
 import it.eng.dome.tmforum.tmf629.v4.Configuration;
 import it.eng.dome.tmforum.tmf629.v4.model.Customer;
 import it.eng.dome.tmforum.tmf629.v4.model.CustomerCreate;
@@ -27,8 +28,7 @@ public class CustomerManagementApisTest {
 		 * Get Filtered Customers
 		 */
 //		TestGetFilteredCustomers();
-		
-		
+				
 		/**
 		 * Create Customer and Get by ID
 		 */
@@ -106,11 +106,16 @@ public class CustomerManagementApisTest {
 		CustomerManagementApis apis = new CustomerManagementApis(apiClientTmf629);
 
 		CustomerCreate cc = new CustomerCreate();
-		cc.setName("Just a simple test");
-		cc.setStatus("Approved");
-		cc.setStatusReason("Account details checked");
+		cc.setName("This is a new test");
+		cc.setStatus("Rejected");
+		cc.setStatusReason("Account retired");
 
-		String id = apis.createCustomer(cc);
+		String id = null;
+		try {
+			id = apis.createCustomer(cc);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 
 		return id;
 	}
@@ -121,11 +126,16 @@ public class CustomerManagementApisTest {
 		apiClientTmf629.setBasePath(tmfEndpoint + "/" + tmf629CustomerPath);
 
 		CustomerManagementApis apis = new CustomerManagementApis(apiClientTmf629);
-		return apis.getCustomer(id, null);
+		try {
+			return apis.getCustomer(id, null);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+			return null;
+		}
 	}
 	
 	
-	protected static boolean TestUpdateCustomer(String id) {
+	protected static void TestUpdateCustomer(String id) {
 
 		ApiClient apiClientTmf629 = Configuration.getDefaultApiClient();
 		apiClientTmf629.setBasePath(tmfEndpoint + "/" + tmf629CustomerPath);
@@ -136,7 +146,11 @@ public class CustomerManagementApisTest {
 		cu.setStatus("Rejected");
 		cu.setStatusReason("The customer cannot be updated");
 		
-		return apis.updateCustomer(id, cu);
+		try {
+			apis.updateCustomer(id, cu);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 	}
 
 }

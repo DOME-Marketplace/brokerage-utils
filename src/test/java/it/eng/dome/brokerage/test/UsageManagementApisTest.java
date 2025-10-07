@@ -10,6 +10,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import it.eng.dome.brokerage.api.UsageManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf635.v4.ApiClient;
+import it.eng.dome.tmforum.tmf635.v4.ApiException;
 import it.eng.dome.tmforum.tmf635.v4.Configuration;
 import it.eng.dome.tmforum.tmf635.v4.model.TimePeriod;
 import it.eng.dome.tmforum.tmf635.v4.model.Usage;
@@ -81,14 +82,20 @@ public class UsageManagementApisTest {
 		UsageSpecificationCreate usc = new UsageSpecificationCreate();
 		usc.setDescription("The UsageSpecification");
 		usc.setName("Just a new UsageSpecification");
-		usc.setVersion("1.0.0");
+		usc.setVersion("1.2.5");
 		TimePeriod tp = new TimePeriod();
 		tp.setStartDateTime(OffsetDateTime.now());
 		tp.setEndDateTime(OffsetDateTime.now().plusDays(10));
 		usc.setValidFor(tp);
 		usc.setLastUpdate(OffsetDateTime.now());
 		
-		String id = apis.createUsageSpecification(usc);	
+		String id = null;
+		try {
+			id = apis.createUsageSpecification(usc);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}	
+		
 		System.out.println("ID: " + id);
 		return id;
 	}
@@ -122,10 +129,15 @@ public class UsageManagementApisTest {
 		apiClientTmf635.setBasePath(tmfEndpoint + "/" + tmf635UsagePath);
 
 		UsageManagementApis apis = new UsageManagementApis(apiClientTmf635);
-		return apis.getUsageSpecification(id, null);
+		try {
+			return apis.getUsageSpecification(id, null);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+			return null;
+		}
 	}
 	
-	protected static boolean TestUpdateUsageSpecification(String id) {
+	protected static void TestUpdateUsageSpecification(String id) {
 
 		ApiClient apiClientTmf635 = Configuration.getDefaultApiClient();
 		apiClientTmf635.setBasePath(tmfEndpoint + "/" + tmf635UsagePath);
@@ -134,10 +146,14 @@ public class UsageManagementApisTest {
 		
 		UsageSpecificationUpdate usu = new UsageSpecificationUpdate();
 		usu.setDescription("Just update");
-		usu.setVersion("1.0.1");
+		usu.setVersion("1.0.7");
 		usu.setLastUpdate(OffsetDateTime.now());
 		
-		return apis.updateUsageSpecification(id, usu);
+		try {
+			apis.updateUsageSpecification(id, usu);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 	}
 	
 	protected static void TestGetAllUsages() {
@@ -169,10 +185,15 @@ public class UsageManagementApisTest {
 		apiClientTmf635.setBasePath(tmfEndpoint + "/" + tmf635UsagePath);
 
 		UsageManagementApis apis = new UsageManagementApis(apiClientTmf635);
-		return apis.getUsage(id, null);
+		try {
+			return apis.getUsage(id, null);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+			return null;
+		}
 	}
 
-	protected static boolean TestUpdateUsage(String id) {
+	protected static void TestUpdateUsage(String id) {
 
 		ApiClient apiClientTmf635 = Configuration.getDefaultApiClient();
 		apiClientTmf635.setBasePath(tmfEndpoint + "/" + tmf635UsagePath);
@@ -183,7 +204,11 @@ public class UsageManagementApisTest {
 		uu.setDescription("Update usage");
 		uu.setStatus(UsageStatusType.REJECTED);
 		
-		return apis.updateUsage(id, uu);
+		try {
+			apis.updateUsage(id, uu);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 	}
 	
 	protected static String TestCreateUsage() {
@@ -202,13 +227,19 @@ public class UsageManagementApisTest {
 		UsageCharacteristic uch = new UsageCharacteristic();
 		uch.setId("a0ba-b214-234a-ba15");
 		uch.setName("endDate");
-		uch.setValue("2025-10-01T13:55:18.707725700Z");
-		uch.setValueType("value");
+		uch.setValue("2025-10-21T13:55:18.707725700Z");
+		uch.setValueType("test");
 		List<UsageCharacteristic> listUch = new ArrayList<UsageCharacteristic>();
 		listUch.add(uch);
 		uc.setUsageCharacteristic(listUch);
 
-		String id = apis.createUsage(uc);
+		String id = null;
+		try {
+			id = apis.createUsage(uc);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
+		
 		System.out.println("Usage id: " + id);
 		return id;
 	}

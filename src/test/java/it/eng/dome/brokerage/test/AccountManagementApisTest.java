@@ -6,7 +6,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import it.eng.dome.brokerage.api.AccountManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf666.v4.ApiClient;
+import it.eng.dome.tmforum.tmf666.v4.ApiException;
 import it.eng.dome.tmforum.tmf666.v4.Configuration;
+import it.eng.dome.tmforum.tmf666.v4.model.BillFormat;
 import it.eng.dome.tmforum.tmf666.v4.model.BillFormatCreate;
 import it.eng.dome.tmforum.tmf666.v4.model.BillFormatUpdate;
 import it.eng.dome.tmforum.tmf666.v4.model.BillingAccount;
@@ -22,15 +24,15 @@ public class AccountManagementApisTest {
 		/**
 		 * PartyAccount
 		 */
-		//TestGetAllPartyAccounts();
+//		TestGetAllPartyAccounts();
 
 		
 		/**
 		 * BillingAccount
 		 */
 //		TestGetAllBillingAccounts();
-		//TestGetFilteredBillingAccounts();
-		TestGetBillAccountById();
+//		TestGetFilteredBillingAccounts();
+//		TestGetBillAccountById();
 				
 		
 		/**
@@ -38,10 +40,10 @@ public class AccountManagementApisTest {
 		 */
 //		TestCreateBillFormat();
 		
-//		String id = "urn:ngsi-ld:bill-format:4380af04-bd03-45b0-b956-bfa3f0240fc6";
+		String id = "urn:ngsi-ld:bill-format:c3b254fc-2d6b-42ca-ade1-133d554351bb";
 //		TestUpdateBillFormat(id);
 //		TestGetAllBillFormats();
-		//TestGetBillFormatById();
+		TestGetBillFormatById(id);
 		
 	}
 	
@@ -53,7 +55,7 @@ public class AccountManagementApisTest {
 
 		AccountManagementApis apis = new AccountManagementApis(apiClientTmf666);			
 		AtomicInteger count = new AtomicInteger(0);
-		
+	
 		FetchUtils.streamAll(
 	        apis::listPartyAccounts, 	// method reference
 	        null,                       // fields
@@ -126,10 +128,14 @@ public class AccountManagementApisTest {
 
 		String id = "urn:ngsi-ld:billing-account:3bf025cb-1b58-48be-b0ae-bb0967d09d3b";
 		String fields = "name,relatedParty";
-		BillingAccount bf = apis.getBillingAccount(id, fields);
-		
-		if (bf != null) {
-			System.out.println("BillingAccount name: " + bf.getName() + " " + bf.getRelatedParty().size());
+		try {
+			BillingAccount bf = apis.getBillingAccount(id, fields);
+			
+			if (bf != null) {
+				System.out.println("BillingAccount name: " + bf.getName() + " " + bf.getRelatedParty().size());
+			}
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
 		}
 	}
 	
@@ -164,15 +170,20 @@ public class AccountManagementApisTest {
 		AccountManagementApis apis = new AccountManagementApis(apiClientTmf666);
 		
 		BillFormatCreate bc = new BillFormatCreate();
-		bc.setName("Test bill format");
-		bc.setDescription("This is an example!");
+		bc.setName("Test for bill format");
+		bc.setDescription("This is an example using Java Test!");
 		
-		String id = apis.createBillFormat(bc);
-		System.out.println("BillFormat ID: " + id);
+		try {
+			String id = apis.createBillFormat(bc);
+			System.out.println("BillFormat ID: " + id);
+			
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 		
 	}
 	
-	protected static boolean TestUpdateBillFormat(String id) {
+	protected static void TestUpdateBillFormat(String id) {
 
 		ApiClient apiClientTmf666 = Configuration.getDefaultApiClient();
 		apiClientTmf666.setBasePath(tmfEndpoint + "/" + tmf666AccountPath);
@@ -180,9 +191,29 @@ public class AccountManagementApisTest {
 		AccountManagementApis apis = new AccountManagementApis(apiClientTmf666);
 		
 		BillFormatUpdate bfu = new BillFormatUpdate();
-		bfu.setDescription("Bill Format update via Java");
-		
-		return apis.updateBillFormat(id, bfu);
+		bfu.setDescription("Bill Format update via Java API just now!");
+		try {	
+			apis.updateBillFormat(id, bfu);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 	}
 	
+	
+	protected static void TestGetBillFormatById(String id) {
+
+		ApiClient apiClientTmf666 = Configuration.getDefaultApiClient();
+		apiClientTmf666.setBasePath(tmfEndpoint + "/" + tmf666AccountPath);
+
+		AccountManagementApis apis = new AccountManagementApis(apiClientTmf666);
+
+		try {	
+			BillFormat bf = apis.getBillFormat(id, null);
+			if (bf != null) {
+				System.out.println("BillingAccount name: " + bf.getName() + " " + bf.getDescription());
+			}
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
 }

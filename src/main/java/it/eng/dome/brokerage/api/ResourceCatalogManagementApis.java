@@ -28,59 +28,53 @@ public class ResourceCatalogManagementApis {
 	
 	
 	/**
-	 * This method retrieves a specific ResourceSpecification by id
-	 * 
-	 * @param id - Identifier of the ResourceSpecification (required) 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br> 
-	 * - use fields == null to get all attributes
-	 * @return the {@link ResourceSpecification} with the given id,
-	 *         or {@code null} if no ResourceSpecification is found
+	 * Retrieves a specific {@link ResourceSpecification} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code ResourceSpecification} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "name,description"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link ResourceSpecification} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public ResourceSpecification getResourceSpecification(String id, String fields) {
+	public ResourceSpecification getResourceSpecification(String id, String fields) throws ApiException {
 		logger.info("Request: getResourceSpecification by id {}", id);
-		
-		try {
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return  resourceSpecificationApi.retrieveResourceSpecification(id, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
 		}
+		
+		return resourceSpecificationApi.retrieveResourceSpecification(id, fields);
 	}
 	
 	
 	/**
-	 * This method retrieves a list of ResourceSpecification
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br>
-	 * - use fields == null to get all attributes		
-     * @param offset - the index of the first item to return (used for pagination)
-     * @param limit - the maximum number of items to return
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link List} containing a subset of ResourceSpecification
+	 * Retrieves a list of {@link ResourceSpecification} resources.
+	 * <p>
+	 * This method queries the ResourceSpecification API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,description"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link ResourceSpecification} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
-	public List<ResourceSpecification> listResourceSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<ResourceSpecification> listResourceSpecifications(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
 		logger.info("Request: listResourceSpecifications");
+					
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
 		
-		try {			
-			if (filter != null && !filter.isEmpty()) {
-				logger.debug("Params used in the query-string filter: {}", filter);
-			}
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return resourceSpecificationApi.listResourceSpecification(fields, offset, limit, filter);
-			
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}   
+		return resourceSpecificationApi.listResourceSpecification(fields, offset, limit, filter);
 	}
 	
 }

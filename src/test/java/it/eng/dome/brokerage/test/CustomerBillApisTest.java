@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import it.eng.dome.brokerage.api.CustomerBillApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
+import it.eng.dome.tmforum.tmf678.v4.ApiException;
 import it.eng.dome.tmforum.tmf678.v4.Configuration;
 
 public class CustomerBillApisTest {
@@ -58,8 +59,12 @@ public class CustomerBillApisTest {
 		CustomerBillApis apis = new CustomerBillApis(apiClientTmf678);
 			
 		// get by ID
-		String id = "urn:ngsi-ld:customer-bill:f3fc3b17-7cb8-4e92-b49e-e3b4067226da";
-		System.out.println("detail of state: " + apis.getCustomerBill(id, null).getState().getValue());
+		String id = "urn:ngsi-ld:customer-bill:3adf91fe-4896-4820-8ae8-db29864e03a3";
+		try {
+			System.out.println("detail of state: " + apis.getCustomerBill(id, null).getState().getValue());
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 	}
 	
 

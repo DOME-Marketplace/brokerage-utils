@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import it.eng.dome.brokerage.api.APIPartyApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf632.v4.ApiClient;
+import it.eng.dome.tmforum.tmf632.v4.ApiException;
 import it.eng.dome.tmforum.tmf632.v4.Configuration;
 import it.eng.dome.tmforum.tmf632.v4.model.Individual;
 import it.eng.dome.tmforum.tmf632.v4.model.Organization;
@@ -61,10 +62,17 @@ public class APIPartyApisTest {
 		APIPartyApis apis = new APIPartyApis(apiClientTmf637);
 		
 		String id = "urn:ngsi-ld:organization:38817de3-8c3e-4141-a344-86ffd915cc3b";
-		Organization organization = apis.getOrganization(id, null);
-		if (organization != null) {
-			System.out.println(organization.getTradingName() );	
+		
+		try {
+			Organization organization = apis.getOrganization(id, null);
+			if (organization != null) {
+				System.out.println(organization.getTradingName() );	
+			}
+			
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
 		}
+		
 	}
 
 	
@@ -99,9 +107,14 @@ public class APIPartyApisTest {
 		APIPartyApis apis = new APIPartyApis(apiClientTmf637);
 		
 		String id = "urn:ngsi-ld:individual:88437d57-cdf3-4986-b91e-c793b4f4d1c3";
-		Individual individual = apis.getIndividual(id, null);
-		if (individual != null) {
-			System.out.println(individual.getFamilyName() );	
+		try {
+			Individual individual = apis.getIndividual(id, null);
+			if (individual != null) {
+				System.out.println(individual.getFamilyName() );	
+			}
+			
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
 		}
 	}
 }

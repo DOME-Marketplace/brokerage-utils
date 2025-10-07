@@ -30,23 +30,70 @@ public class AgreementManagementApis {
 
 	
 	/**
+	 * Retrieves a specific {@link Agreement} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code Agreement} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "status,name"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link Agreement} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 */
+	public Agreement getAgreement(String id, String fields) throws ApiException {
+		logger.info("Request: getAgreement by id {}", id);
+
+		if (fields != null) {
+				logger.debug("Selected attributes: [{}]", fields);
+			}
+			
+		return agreementApi.retrieveAgreement(id, fields);
+	}
+	
+	
+	/**
+	 * Retrieves a list of {@link Agreement} resources.
+	 * <p>
+	 * This method queries the Agreement API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,description"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return
+	 * @param limit  the maximum number of items to return
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link Agreement} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
+	 */
+	public List<Agreement> listAgreements(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listAgreements");
+
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return agreementApi.listAgreement(fields, offset, limit, filter);   
+	}
+	
+	
+	/**
 	 * This method creates a Agreement
 	 * 
 	 * @param agreementCreate - AgreementCreate object used in the creation request of the Agreement (required) 
 	 * @return the id of the created Agreement, or {@code null} if the creation failed
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
 	 */
-	public String createAgreement(AgreementCreate agreementCreate) {		
+	public String createAgreement(AgreementCreate agreementCreate) throws ApiException {		
 		logger.info("Create: Agreement");
 		
-		try {
-			Agreement agreement = agreementApi.createAgreement(agreementCreate);
-			logger.info("Agreement saved successfully with id: {}", agreement.getId());
-			return agreement.getId();
-		} catch (ApiException e) {
-			logger.info("Agreement not saved: {}", agreementCreate.toString());
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
+		Agreement agreement = agreementApi.createAgreement(agreementCreate);
+		logger.info("Agreement saved successfully with id: {}", agreement.getId());
+		
+		return agreement.getId();
 	}
 	
 	
@@ -55,77 +102,19 @@ public class AgreementManagementApis {
 	 * 
 	 * @param id - Identifier of the Agreement (required) 
 	 * @param agreementUpdate - AgreementUpdate object used to update the Agreement (required) 
-	 * @return {@code true} if the update was successful,
-	 *         {@code false} otherwise
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
 	 */
-	public boolean updateAgreement(String id, AgreementUpdate agreementUpdate) {
+	public void updateAgreement(String id, AgreementUpdate agreementUpdate) throws ApiException {
 		logger.info("Request: updateAgreement by id {}", id);
 		
-		try {
-			Agreement agreement = agreementApi.patchAgreement(id, agreementUpdate);
-			logger.info("Update successfully Agreement with id: {}", agreement.getId());
-			return true;
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return false;
-		}
-	}
-	
+		Agreement agreement = agreementApi.patchAgreement(id, agreementUpdate);
 
-	/**
-	 * This method retrieves a specific Agreement by id
-	 * 
-	 * @param id - Identifier of the Agreement (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @return the {@link Agreement} with the given id,
-	 *         or {@code null} if no Agreement is found
-	 */
-	public Agreement getAgreement(String id, String fields) {
-		logger.info("Request: getAgreement by id {}", id);
-		
-		try {
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return agreementApi.retrieveAgreement(id, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
+		boolean success = (agreement != null && agreement.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated Agreement with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for Agreement id: {}", id);
 		}
-	}
-	
-	
-	/**
-	 * This method retrieves a list of Agreement
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,status')<br>
-	 * - use fields == null to get all attributes		
-     * @param offset - the index of the first item to return (used for pagination)
-     * @param limit - the maximum number of items to return
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link List} containing a subset of Agreement
-	 */
-	public List<Agreement> listAgreements(String fields, int offset, int limit, Map<String, String> filter) {
-		logger.info("Request: listAgreements");
-		
-		try {			
-			if (filter != null && !filter.isEmpty()) {
-				logger.debug("Params used in the query-string filter: {}", filter);
-			}
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return agreementApi.listAgreement(fields, offset, limit, filter);
-			
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}   
 	}
 	
 }

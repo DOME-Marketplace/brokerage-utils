@@ -28,51 +28,76 @@ public class ProductInventoryApis {
 		productApi = new ProductApi(apiClientTMF637);
 	}
 	
+
+	/**
+	 * Retrieves a specific {@link Product} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code Product} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "name,periodCoverage"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link Product} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 */
+	public Product getProduct(String id, String fields) throws ApiException {
+		logger.info("Request: getProduct by id {}", id);
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return productApi.retrieveProduct(id, fields);
+	}
+	
+		
+	/**
+	 * Retrieves a list of {@link Product} resources.
+	 * <p>
+	 * This method queries the Product API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,description"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link Product} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
+	 */
+	public List<Product> listProducts(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listAgreements");
+		
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return productApi.listProduct(fields, offset, limit, filter);
+	}
+	
 	
 	/**
 	 * This method creates a Product
 	 * 
 	 * @param productCreate - ProductCreate object used in the creation request of the Product (required) 
 	 * @return the id of the created Product, or {@code null} if the creation failed
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
 	 */
-	public String createProduct(ProductCreate productCreate) {		
-		try {
+	public String createProduct(ProductCreate productCreate) throws ApiException {
+		logger.info("Create: Product");
 			
-			Product product = productApi.createProduct(productCreate);
-			logger.info("Product saved successfully with id: {}", product.getId());
-			return product.getId();
-		} catch (ApiException e) {
-			logger.info("Product not saved: {}", productCreate.toString());
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
-	
-	
-	/**
-	 * This method retrieves a specific Product by id
-	 * 
-	 * @param id - Identifier of the Product (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,periodCoverage')<br> 
-	 * - use fields == null to get all attributes
-	 * @return the {@link Product} with the given id,
-	 *         or {@code null} if no Product is found
-	 */
-	public Product getProduct(String id, String fields) {
-		logger.info("Request: getProduct by id {}", id);
+		Product product = productApi.createProduct(productCreate);
+		logger.info("Product saved successfully with id: {}", product.getId());
 		
-		try {
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return productApi.retrieveProduct(id, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
+		return product.getId();
 	}
+	
+	
+	
 	
 	
 	/**
@@ -80,51 +105,19 @@ public class ProductInventoryApis {
 	 * 
 	 * @param id - Identifier of the Product (required) 
 	 * @param productUpdate - ProductUpdate object used to update the Product (required) 
-	 * @return {@code true} if the update was successful,
-	 *         {@code false} otherwise
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public boolean updateProduct(String id, ProductUpdate productUpdate) {
+	public void updateProduct(String id, ProductUpdate productUpdate) throws ApiException {
 		logger.info("Request: updateProduct by id {}", id);
-		
-		try {
-			Product product = productApi.patchProduct(id, productUpdate);
-			logger.info("Update successfully Product with id: {}", product.getId());
-			return true;
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return false;
+
+		Product product = productApi.patchProduct(id, productUpdate);
+
+		boolean success = (product != null && product.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated Product with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for Product id: {}", id);
 		}
-	}
-	
-	
-	/**
-	 * This method retrieves a list of Product
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br>
-	 * - use fields == null to get all attributes		
-     * @param offset - the index of the first item to return (used for pagination)
-     * @param limit - the maximum number of items to return
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link List} containing a subset of Product
-	 */
-	public List<Product> listProducts(String fields, int offset, int limit, Map<String, String> filter) {
-		logger.info("Request: listAgreements");
-		
-		try {			
-			if (filter != null && !filter.isEmpty()) {
-				logger.debug("Params used in the query-string filter: {}", filter);
-			}
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return productApi.listProduct(fields, offset, limit, filter);
-			
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}   
 	}
 	
 }

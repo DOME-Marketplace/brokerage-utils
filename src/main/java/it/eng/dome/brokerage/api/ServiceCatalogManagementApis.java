@@ -26,60 +26,55 @@ public class ServiceCatalogManagementApis {
         serviceSpecificationApi = new ServiceSpecificationApi(apiClientTMF633);
     }
 
-    
-    /**
-     * This method retrieves a specific ServiceSpecification by id
-     *
-     * @param id - Identifier of the ServiceSpecification (required)
-     * @param fields - Comma-separated properties to be provided in response (optional)<br>
-     * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br>
-     * - use fields == null to get all attributes
-	 * @return the {@link ServiceSpecification} with the given id,
-	 *         or {@code null} if no ServiceSpecification is found
-     */
-    public ServiceSpecification getServiceSpecification(String id, String fields) {
+       
+	/**
+	 * Retrieves a specific {@link ServiceSpecification} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code ServiceSpecification} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "name,description"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link ServiceSpecification} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 */
+    public ServiceSpecification getServiceSpecification(String id, String fields) throws ApiException {
 		logger.info("Request: getServiceSpecification by id {}", id);
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
 		
-		try {
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-            return  serviceSpecificationApi.retrieveServiceSpecification(id, fields);
-        } catch (ApiException e) {
-            logger.error("Error: {}", e.getResponseBody(), e);
-            return null;
-        }
+        return serviceSpecificationApi.retrieveServiceSpecification(id, fields);
     }
     
-    /**
-	 * This method retrieves a list of ServiceSpecification
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,description')<br>
-	 * - use fields == null to get all attributes		
-     * @param offset - the index of the first item to return (used for pagination)
-     * @param limit - the maximum number of items to return
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return a {@link List} containing a subset of ServiceSpecification
+
+	/**
+	 * Retrieves a list of {@link ServiceSpecification} resources.
+	 * <p>
+	 * This method queries the ServiceSpecification API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,description"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link ServiceSpecification} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
-	public List<ServiceSpecification> listServiceSpecifications(String fields, int offset, int limit, Map<String, String> filter) {
+	public List<ServiceSpecification> listServiceSpecifications(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
 		logger.info("Request: listServiceSpecifications");
+					
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
 		
-		try {			
-			if (filter != null && !filter.isEmpty()) {
-				logger.debug("Params used in the query-string filter: {}", filter);
-			}
-			if (fields != null) {
-				logger.debug("Selected attributes: [{}]", fields);
-			}
-			
-			return serviceSpecificationApi.listServiceSpecification(fields, offset, limit, filter);
-			
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}   
+		return serviceSpecificationApi.listServiceSpecification(fields, offset, limit, filter);  
 	}
 
 }

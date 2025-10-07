@@ -25,7 +25,7 @@ public class ResourceCatalogManagementApisTest {
 		/**
 		 * Get ResourceSpecification Filtered
 		 */
-		TestGetAllResourceSpecificationFiltered();
+//		TestGetAllResourceSpecificationFiltered();
 		
 
 		/**
@@ -90,9 +90,15 @@ public class ResourceCatalogManagementApisTest {
 
 		ResourceCatalogManagementApis apis = new ResourceCatalogManagementApis(apiClientTmf634);
 				
-		ResourceSpecification rs = apis.getResourceSpecification(id, null);
-		if (rs != null) {
-			System.out.println(rs.getId() + " " + rs.getName() + " " + rs.getLifecycleStatus());
+		try {
+			ResourceSpecification rs = apis.getResourceSpecification(id, null);
+			if (rs != null) {
+				System.out.println(rs.getId() + " " + rs.getName() + " " + rs.getLifecycleStatus());
+			}
+	
+			rs = apis.getResourceSpecification(id, null);
+		} catch (it.eng.dome.tmforum.tmf634.v4.ApiException e) {
+			System.err.println("Error: " + e.getMessage());
 		}
 	}
 }
