@@ -54,7 +54,7 @@ public class CustomerManagementApis {
 	/**
 	 * Retrieves a list of {@link Customer} resources.
 	 * <p>
-	 * This method queries the Customer API and returns a paginated subset of results 
+	 * This method queries the Customer Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *
@@ -84,7 +84,7 @@ public class CustomerManagementApis {
 	/**
 	 * Creates a new {@link Customer} resource.
 	 * <p>
-	 * This method sends a creation request to the Billing Management API using
+	 * This method sends a creation request to the Customer Management API using
 	 * the provided {@link CustomerCreate} payload.
 	 * If the creation is successful, it returns the identifier of the newly created resource.
 	 * </p>
@@ -100,14 +100,18 @@ public class CustomerManagementApis {
 		logger.info("Customer saved successfully with id: {}", customer.getId());
 		return customer.getId();
 	}
-	
+
 	
 	/**
-	 * This method updates the Customer by id
-	 * 
-	 * @param id - Identifier of the Customer (required) 
-	 * @param customerUpdate - CustomerUpdate object used to update the Customer (required) 
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
+	 * Updates an existing {@link Customer} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Customer Management API to update
+	 * the specified {@link Customer} with the provided {@link CustomerUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link Customer} to update (required)
+	 * @param CustomerUpdate the {@link CustomerUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
 	 */
 	public void updateCustomer(String id, CustomerUpdate customerUpdate) throws ApiException {
 		logger.info("Request: updateCustomer by id {}", id);

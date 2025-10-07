@@ -55,7 +55,7 @@ public class APIPartyApis {
 	/**
 	 * Retrieves a list of {@link Organization} resources.
 	 * <p>
-	 * This method queries the Organization API and returns a paginated subset of results 
+	 * This method queries the API Party Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *
@@ -106,7 +106,7 @@ public class APIPartyApis {
 	/**
 	 * Retrieves a list of {@link Individual} resources.
 	 * <p>
-	 * This method queries the Individual API and returns a paginated subset of results 
+	 * This method queries the API Party Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *

@@ -51,7 +51,7 @@ public class ServiceCatalogManagementApis {
 	/**
 	 * Retrieves a list of {@link ServiceSpecification} resources.
 	 * <p>
-	 * This method queries the ServiceSpecification API and returns a paginated subset of results 
+	 * This method queries the Service Catalog Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *

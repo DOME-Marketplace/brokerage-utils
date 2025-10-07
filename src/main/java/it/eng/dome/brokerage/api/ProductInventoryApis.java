@@ -83,7 +83,7 @@ public class ProductInventoryApis {
 	/**
 	 * Creates a new {@link Product} resource.
 	 * <p>
-	 * This method sends a creation request to the Billing Management API using
+	 * This method sends a creation request to the Product Inventory Management API using
 	 * the provided {@link ProductCreate} payload.
 	 * If the creation is successful, it returns the identifier of the newly created resource.
 	 * </p>
@@ -102,15 +102,16 @@ public class ProductInventoryApis {
 	}
 	
 	
-	
-	
-	
 	/**
-	 * This method updates the Product by id
-	 * 
-	 * @param id - Identifier of the Product (required) 
-	 * @param productUpdate - ProductUpdate object used to update the Product (required) 
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 * Updates an existing {@link Product} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Product Inventory Management API to update
+	 * the specified {@link Product} with the provided {@link ProductUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link Product} to update (required)
+	 * @param ProductUpdate the {@link ProductUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
 	 */
 	public void updateProduct(String id, ProductUpdate productUpdate) throws ApiException {
 		logger.info("Request: updateProduct by id {}", id);

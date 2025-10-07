@@ -62,7 +62,7 @@ public class AccountManagementApis {
 	/**
 	 * Retrieves a list of {@link PartyAccount} resources.
 	 * <p>
-	 * This method queries the PartyAccount API and returns a paginated subset of results 
+	 * This method queries the Account Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *
@@ -113,7 +113,7 @@ public class AccountManagementApis {
 	/**
 	 * Retrieves a list of {@link BillingAccount} resources.
 	 * <p>
-	 * This method queries the BillingAccount API and returns a paginated subset of results 
+	 * This method queries the Account Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *
@@ -163,11 +163,15 @@ public class AccountManagementApis {
 	
 	
 	/**
-	 * This method updates the BillFormat by id
-	 * 
-	 * @param id - Identifier of the BillFormat (required) 
-	 * @param billFormatUpdate - BillFormatUpdate object used to update the BillFormat (required) 
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
+	 * Updates an existing {@link BillFormat} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Account Management API to update
+	 * the specified {@link BillFormat} with the provided {@link BillFormatUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link BillFormat} to update (required)
+	 * @param billFormatUpdate the {@link BillFormatUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
 	 */
 	public void updateBillFormat(String id, BillFormatUpdate billFormatUpdate) throws ApiException {
 		logger.info("Request: updateBillFormat by id {}", id);

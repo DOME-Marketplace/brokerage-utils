@@ -60,7 +60,7 @@ public class ProductCatalogManagementApis {
 	/**
 	 * Retrieves a list of {@link ProductOffering} resources.
 	 * <p>
-	 * This method queries the ProductOffering API and returns a paginated subset of results 
+	 * This method queries the Product Catalog Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *
@@ -90,7 +90,7 @@ public class ProductCatalogManagementApis {
 	/**
 	 * Creates a new {@link ProductOffering} resource.
 	 * <p>
-	 * This method sends a creation request to the Billing Management API using
+	 * This method sends a creation request to the Product Catalog Management API using
 	 * the provided {@link ProductOfferingCreate} payload.
 	 * If the creation is successful, it returns the identifier of the newly created resource.
 	 * </p>
@@ -110,11 +110,15 @@ public class ProductCatalogManagementApis {
 	
 	
 	/**
-	 * This method updates the ProductOffering by id
-	 * 
-	 * @param id - Identifier of the ProductOffering (required) 
-	 * @param productOfferingUpdate - ProductOfferingUpdate object used to update the ProductOffering (required) 
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
+	 * Updates an existing {@link ProductOffering} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Product Catalog Management API to update
+	 * the specified {@link ProductOffering} with the provided {@link ProductOfferingUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link ProductOffering} to update (required)
+	 * @param ProductOfferingUpdate the {@link ProductOfferingUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
 	 */
 	public void updateProductOffering(String id, ProductOfferingUpdate productOfferingUpdate) throws ApiException {
 		logger.info("Request: updateProductOffering by id {}", id);
@@ -154,7 +158,7 @@ public class ProductCatalogManagementApis {
 	/**
 	 * Retrieves a list of {@link ProductOfferingPrice} resources.
 	 * <p>
-	 * This method queries the ProductOfferingPrice API and returns a paginated subset of results 
+	 * This method queries the Product Catalog Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *
@@ -205,7 +209,7 @@ public class ProductCatalogManagementApis {
 	/**
 	 * Retrieves a list of {@link ProductSpecification} resources.
 	 * <p>
-	 * This method queries the ProductSpecification API and returns a paginated subset of results 
+	 * This method queries the Product Catalog Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *

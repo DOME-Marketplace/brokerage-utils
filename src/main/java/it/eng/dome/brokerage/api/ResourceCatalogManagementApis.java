@@ -51,7 +51,7 @@ public class ResourceCatalogManagementApis {
 	/**
 	 * Retrieves a list of {@link ResourceSpecification} resources.
 	 * <p>
-	 * This method queries the ResourceSpecification API and returns a paginated subset of results 
+	 * This method queries the Resource Catalog Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *

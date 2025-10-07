@@ -63,7 +63,7 @@ public class AppliedCustomerBillRateApis {
 	/**
 	 * Retrieves a list of {@link AppliedCustomerBillingRate} resources.
 	 * <p>
-	 * This method queries the AppliedCustomerBillingRate API and returns a paginated subset of results 
+	 * This method queries the AppliedCustomerBillingRate Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *
@@ -91,11 +91,15 @@ public class AppliedCustomerBillRateApis {
 
 	
 	/**
-	 * This method updates the AppliedCustomerBillingRate by id
-	 * 
-	 * @param id - Identifier of the AppliedCustomerBillingRate (required) 
-	 * @param appliedCustomerBillingRateUpdate - AppliedCustomerBillingRateUpdate object used to update the AppliedCustomerBillingRate (required) e
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 * Updates an existing {@link AppliedCustomerBillingRate} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the AppliedCustomerBillingRate Management API to update
+	 * the specified {@link AppliedCustomerBillingRate} with the provided {@link AppliedCustomerBillingRateUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link AppliedCustomerBillingRate} to update (required)
+	 * @param AppliedCustomerBillingRateUpdate the {@link AppliedCustomerBillingRateUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
 	 */
 	public void updateAppliedCustomerBillingRate(String id, AppliedCustomerBillingRateUpdate appliedCustomerBillingRateUpdate) throws ApiException {
 		logger.info("Request: updateAppliedCustomerBillingRate by id {}", id);
@@ -114,7 +118,7 @@ public class AppliedCustomerBillRateApis {
 	/**
 	 * Creates a new {@link AppliedCustomerBillingRate} resource.
 	 * <p>
-	 * This method sends a creation request to the AppliedCustomerBillingRate API using
+	 * This method sends a creation request to the AppliedCustomerBillingRate Management API using
 	 * the provided {@link AppliedCustomerBillingRateCreate} payload.
 	 * If the creation is successful, it returns the identifier of the newly created resource.
 	 * </p>

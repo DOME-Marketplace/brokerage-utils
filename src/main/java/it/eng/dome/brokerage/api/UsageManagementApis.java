@@ -90,7 +90,7 @@ public class UsageManagementApis {
 	/**
 	 * Creates a new {@link Usage} resource.
 	 * <p>
-	 * This method sends a creation request to the Billing Management API using
+	 * This method sends a creation request to the Usage Management API using
 	 * the provided {@link UsageCreate} payload.
 	 * If the creation is successful, it returns the identifier of the newly created resource.
 	 * </p>
@@ -110,11 +110,15 @@ public class UsageManagementApis {
 	
 	
 	/**
-	 * This method updates the Usage by id
-	 * 
-	 * @param id - Identifier of the Usage (required) 
-	 * @param usageUpdate - UsageUpdate object used to update the Usage (required) 
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 * Updates an existing {@link Usage} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Usage Management API to update
+	 * the specified {@link Usage} with the provided {@link UsageUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link Usage} to update (required)
+	 * @param UsageUpdate the {@link UsageUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
 	 */
 	public void updateUsage(String id, UsageUpdate usageUpdate) throws ApiException {
 		logger.info("Request: updateUsage by id {}", id);
@@ -184,7 +188,7 @@ public class UsageManagementApis {
 	/**
 	 * Creates a new {@link UsageSpecification} resource.
 	 * <p>
-	 * This method sends a creation request to the Billing Management API using
+	 * This method sends a creation request to the Usage Management API using
 	 * the provided {@link UsageSpecificationCreate} payload.
 	 * If the creation is successful, it returns the identifier of the newly created resource.
 	 * </p>
@@ -201,14 +205,18 @@ public class UsageManagementApis {
 		
 		return usage.getId();
 	}
-	
-	
+
+
 	/**
-	 * This method updates the UsageSpecification by id
-	 * 
-	 * @param id - Identifier of the UsageSpecification (required) 
-	 * @param usageSpecificationUpdate - UsageSpecificationUpdate object used to update the UsageSpecification (required) 
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 * Updates an existing {@link UsageSpecification} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Usage Management API to update
+	 * the specified {@link UsageSpecification} with the provided {@link UsageSpecificationUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link UsageSpecification} to update (required)
+	 * @param UsageSpecificationUpdate the {@link UsageSpecificationUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
 	 */
 	public void updateUsageSpecification(String id, UsageSpecificationUpdate usageSpecificationUpdate) throws ApiException {
 		logger.info("Request: updateUsageSpecification by id {}", id);

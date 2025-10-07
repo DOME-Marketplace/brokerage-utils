@@ -54,7 +54,7 @@ public class CustomerBillApis {
 	/**
 	 * Retrieves a list of {@link CustomerBill} resources.
 	 * <p>
-	 * This method queries the CustomerBill API and returns a paginated subset of results 
+	 * This method queries the CustomerBill Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *
@@ -84,7 +84,7 @@ public class CustomerBillApis {
 	/**
 	 * Creates a new {@link CustomerBill} resource.
 	 * <p>
-	 * This method sends a creation request to the Billing Management API using
+	 * This method sends a creation request to the CustomerBill Management API using
 	 * the provided {@link CustomerBillCreate} payload.
 	 * If the creation is successful, it returns the identifier of the newly created resource.
 	 * </p>

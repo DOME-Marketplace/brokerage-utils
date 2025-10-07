@@ -53,7 +53,7 @@ public class AgreementManagementApis {
 	/**
 	 * Retrieves a list of {@link Agreement} resources.
 	 * <p>
-	 * This method queries the Agreement API and returns a paginated subset of results 
+	 * This method queries the Agreement Management API and returns a paginated subset of results 
 	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
 	 * </p>
 	 *
@@ -103,11 +103,15 @@ public class AgreementManagementApis {
 	
 	
 	/**
-	 * This method updates the Agreement by id
-	 * 
-	 * @param id - Identifier of the Agreement (required) 
-	 * @param agreementUpdate - AgreementUpdate object used to update the Agreement (required) 
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
+	 * Updates an existing {@link Agreement} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Agreement Management API to update
+	 * the specified {@link Agreement} with the provided {@link AgreementUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link Agreement} to update (required)
+	 * @param AgreementUpdate the {@link AgreementUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
 	 */
 	public void updateAgreement(String id, AgreementUpdate agreementUpdate) throws ApiException {
 		logger.info("Request: updateAgreement by id {}", id);
