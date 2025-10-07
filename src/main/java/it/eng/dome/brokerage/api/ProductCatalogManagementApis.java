@@ -86,12 +86,18 @@ public class ProductCatalogManagementApis {
 		return productOfferingApi.listProductOffering(fields, offset, limit, filter);
 	}
 	
+	
 	/**
-	 * This method creates an ProductOffering
+	 * Creates a new {@link ProductOffering} resource.
+	 * <p>
+	 * This method sends a creation request to the Billing Management API using
+	 * the provided {@link ProductOfferingCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
 	 * 
-	 * @param productOfferingCreate - ProductOfferingCreate object used in the creation request of the ProductOffering (required) 
-	 * @return the id of the created ProductOffering, or {@code null} if the creation failed
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
+	 * @param productOfferingCreate the {@link ProductOfferingCreate} object used to create the new ProductOffering (required)
+	 * @return the unique identifier ({@code id}) of the created {@link ProductOffering}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
 	 */
 	public String createProductOffering(ProductOfferingCreate productOfferingCreate) throws ApiException {		
 		logger.info("Create: ProductOffering");

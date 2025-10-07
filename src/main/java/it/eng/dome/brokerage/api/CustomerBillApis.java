@@ -82,11 +82,16 @@ public class CustomerBillApis {
 	
 	
 	/**
-	 * This method creates a CustomerBill
+	 * Creates a new {@link CustomerBill} resource.
+	 * <p>
+	 * This method sends a creation request to the Billing Management API using
+	 * the provided {@link CustomerBillCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
 	 * 
-	 * @param customerBillCreate - CustomerBillCreate object used in the creation request of the CustomerBill (required) 
-	 * @return the id of the created CustomerBill, or {@code null} if the creation failed
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 * @param customerBillCreate the {@link CustomerBillCreate} object used to create the new CustomerBill (required)
+	 * @return the unique identifier ({@code id}) of the created {@link CustomerBill}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
 	 */
 	public String createCustomerBill(CustomerBillCreate customerBillCreate) throws ApiException {
 		logger.info("Request: CustomerBill");

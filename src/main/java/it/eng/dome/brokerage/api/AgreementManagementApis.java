@@ -79,13 +79,18 @@ public class AgreementManagementApis {
 		return agreementApi.listAgreement(fields, offset, limit, filter);   
 	}
 	
-	
+
 	/**
-	 * This method creates a Agreement
+	 * Creates a new {@link Agreement} resource.
+	 * <p>
+	 * This method sends a creation request to the Agreement Management API using
+	 * the provided {@link AgreementCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
 	 * 
-	 * @param agreementCreate - AgreementCreate object used in the creation request of the Agreement (required) 
-	 * @return the id of the created Agreement, or {@code null} if the creation failed
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
+	 * @param agreementCreate the {@link AgreementCreate} object used to create the new Agreement (required)
+	 * @return the unique identifier ({@code id}) of the created {@link Agreement}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
 	 */
 	public String createAgreement(AgreementCreate agreementCreate) throws ApiException {		
 		logger.info("Create: Agreement");

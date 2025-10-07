@@ -141,10 +141,15 @@ public class AccountManagementApis {
 	
 		
 	/**
-	 * This method creates a BillFormat
+	 * Creates a new {@link BillFormat} resource.
+	 * <p>
+	 * This method sends a creation request to the Account Management API using
+	 * the provided {@link BillFormatCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
 	 * 
-	 * @param billFormatCreate - BillFormatCreate object used in the creation request of the BillFormat (required) 
-	 * @return the id of the created BillFormat, or {@code null} if the creation failed
+	 * @param billFormatCreate the {@link BillFormatCreate} object used to create the new BillFormat (required)
+	 * @return the unique identifier ({@code id}) of the created {@link BillFormat}
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
 	 */
 	public String createBillFormat(BillFormatCreate billFormatCreate) throws ApiException {	

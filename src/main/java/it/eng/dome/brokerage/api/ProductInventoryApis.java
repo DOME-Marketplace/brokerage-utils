@@ -81,11 +81,16 @@ public class ProductInventoryApis {
 	
 	
 	/**
-	 * This method creates a Product
+	 * Creates a new {@link Product} resource.
+	 * <p>
+	 * This method sends a creation request to the Billing Management API using
+	 * the provided {@link ProductCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
 	 * 
-	 * @param productCreate - ProductCreate object used in the creation request of the Product (required) 
-	 * @return the id of the created Product, or {@code null} if the creation failed
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
+	 * @param productCreate the {@link ProductCreate} object used to create the new Product (required)
+	 * @return the unique identifier ({@code id}) of the created {@link Product}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
 	 */
 	public String createProduct(ProductCreate productCreate) throws ApiException {
 		logger.info("Create: Product");

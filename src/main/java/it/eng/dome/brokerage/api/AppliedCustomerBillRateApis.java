@@ -110,13 +110,18 @@ public class AppliedCustomerBillRateApis {
 		}
 	}
 	
-	
+
 	/**
-	 * This method creates an AppliedCustomerBillingRate
+	 * Creates a new {@link AppliedCustomerBillingRate} resource.
+	 * <p>
+	 * This method sends a creation request to the AppliedCustomerBillingRate API using
+	 * the provided {@link AppliedCustomerBillingRateCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
 	 * 
-	 * @param appliedCustomerBillingRateCreate - AppliedCustomerBillingRateCreate object used in the creation request of the AppliedCustomerBillingRate (required) 
-	 * @return the id of the created AppliedCustomerBillingRate, or {@code null} if the creation failed
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
+	 * @param appliedCustomerBillingRateCreate the {@link AppliedCustomerBillingRateCreate} object used to create the new AppliedCustomerBillingRate (required)
+	 * @return the unique identifier ({@code id}) of the created {@link AppliedCustomerBillingRate}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
 	 */
 	public String createAppliedCustomerBillingRate(AppliedCustomerBillingRateCreate appliedCustomerBillingRateCreate) throws ApiException {
 		logger.info("Create: AppliedCustomerBillingRate");

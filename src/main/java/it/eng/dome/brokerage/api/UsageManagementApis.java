@@ -88,11 +88,16 @@ public class UsageManagementApis {
 	
 	
 	/**
-	 * This method creates a Usage
+	 * Creates a new {@link Usage} resource.
+	 * <p>
+	 * This method sends a creation request to the Billing Management API using
+	 * the provided {@link UsageCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
 	 * 
-	 * @param usageCreate - UsageCreate object used in the creation request of the Usage (required) 
-	 * @return the id of the created Usage, or {@code null} if the creation failed
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 * @param usageCreate the {@link UsageCreate} object used to create the new Usage (required)
+	 * @return the unique identifier ({@code id}) of the created {@link Usage}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
 	 */
 	public String createUsage(UsageCreate usageCreate) throws ApiException {	
 		logger.info("Create: Usage");
@@ -175,13 +180,18 @@ public class UsageManagementApis {
 		return usageSpecificationApi.listUsageSpecification(fields, offset, limit, filter);   
 	}
 	
-		
+
 	/**
-	 * This method creates a UsageSpecification
+	 * Creates a new {@link UsageSpecification} resource.
+	 * <p>
+	 * This method sends a creation request to the Billing Management API using
+	 * the provided {@link UsageSpecificationCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
 	 * 
-	 * @param usageSpecificationCreate - UsageSpecificationCreate object used in the creation request of the UsageSpecification (required) 
-	 * @return the id of the created UsageSpecification, or {@code null} if the creation failed
-	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 * @param usageSpecificationCreate the {@link UsageSpecificationCreate} object used to create the new UsageSpecification (required)
+	 * @return the unique identifier ({@code id}) of the created {@link UsageSpecification}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
 	 */
 	public String createUsageSpecification(UsageSpecificationCreate usageSpecificationCreate) throws ApiException {		
 		logger.info("Create: UsageSpecification");
