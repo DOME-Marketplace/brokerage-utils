@@ -19,7 +19,7 @@ import it.eng.dome.tmforum.tmf620.v4.model.TimePeriod;
 public class ProductCatalogManagementApisTest {
 
 	final static String tmf620ProductCatalogPath = "tmf-api/productCatalogManagement/v4";
-	final static String tmfEndpoint = "https://dome-dev.eng.it";
+	final static String tmfEndpoint = "https://tmf.dome-marketplace-sbx.org";
 	
 
 	public static void main(String[] args) {
@@ -29,7 +29,7 @@ public class ProductCatalogManagementApisTest {
 		 * ProductOffering
 		 */
 //		TestCreateProductOffering();
-//		TestGetAllProductOffering();
+		TestGetAllProductOffering();
 //		TestGetFilteredProductOffering();		
 //		String id = "urn:ngsi-ld:product-offering:d2d6e74e-1d18-478f-a435-6b56e6f44dd3";
 //		TestGetProductOffering(id);		
