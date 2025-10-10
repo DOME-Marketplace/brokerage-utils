@@ -19,7 +19,7 @@ import it.eng.dome.tmforum.tmf620.v4.model.TimePeriod;
 public class ProductCatalogManagementApisTest {
 
 	final static String tmf620ProductCatalogPath = "tmf-api/productCatalogManagement/v4";
-	final static String tmfEndpoint = "https://tmf.dome-marketplace-sbx.org";
+	final static String tmfEndpoint = "https://tmf.dome-marketplace-dev2.org";
 	
 
 	public static void main(String[] args) {
