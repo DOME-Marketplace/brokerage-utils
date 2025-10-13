@@ -9,6 +9,8 @@ import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf620.v4.ApiClient;
 import it.eng.dome.tmforum.tmf620.v4.ApiException;
 import it.eng.dome.tmforum.tmf620.v4.Configuration;
+import it.eng.dome.tmforum.tmf620.v4.model.Catalog;
+import it.eng.dome.tmforum.tmf620.v4.model.Category;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingCreate;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingPrice;
@@ -19,7 +21,7 @@ import it.eng.dome.tmforum.tmf620.v4.model.TimePeriod;
 public class ProductCatalogManagementApisTest {
 
 	final static String tmf620ProductCatalogPath = "tmf-api/productCatalogManagement/v4";
-	final static String tmfEndpoint = "https://tmf.dome-marketplace-dev2.org";
+	final static String tmfEndpoint = "https://tmf.dome-marketplace-sbx.org";
 	
 
 	public static void main(String[] args) {
@@ -29,7 +31,7 @@ public class ProductCatalogManagementApisTest {
 		 * ProductOffering
 		 */
 //		TestCreateProductOffering();
-		TestGetAllProductOffering();
+//		TestGetAllProductOffering();
 //		TestGetFilteredProductOffering();		
 //		String id = "urn:ngsi-ld:product-offering:d2d6e74e-1d18-478f-a435-6b56e6f44dd3";
 //		TestGetProductOffering(id);		
@@ -50,6 +52,21 @@ public class ProductCatalogManagementApisTest {
 //		String id = "urn:ngsi-ld:product-specification:538b1e8f-12bd-4c7c-a18e-62792bf3e0bc";
 //		TestGetProductSpecification(id);
 
+		
+		/**
+		 * Category
+		 */
+		TestGetAllCategories();
+//		String id = "urn:ngsi-ld:category:ace3054c-a354-44e8-b8e3-b47966211cc7";
+//		TestGetCategory(id);
+		
+		
+		/**
+		 * Catalog
+		 */
+//		TestGetAllCatalogs();
+//		String id = "urn:ngsi-ld:catalog:1bc0f7e6-fc2f-4455-8868-d0c6e7f1a30e";
+//		TestGetCatalog(id);
 	}
 	
 	protected static String TestCreateProductOffering() {
@@ -240,6 +257,89 @@ public class ProductCatalogManagementApisTest {
 			ProductSpecification ps = apis.getProductSpecification(id, null);
 			if (ps != null) {
 				System.out.println(ps.getId() + " " + ps.getName() + " " + ps.getLifecycleStatus());
+			}
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
+	
+	
+	protected static void TestGetAllCategories() {
+
+		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
+		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductCatalogPath);
+
+		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);		
+		AtomicInteger count = new AtomicInteger(0);
+		
+		FetchUtils.streamAll(
+	        apis::listCategories,			// method reference
+	        null,                       	// fields
+	        null, 				    		// filter
+	        100                         	// pageSize
+		) 
+		.forEach(c -> { 
+			count.incrementAndGet();
+			System.out.println(count + " " + c.getId() + " → " + c.getName() + " / " + c.getLifecycleStatus());
+			}
+		);		
+		
+		System.out.println("Categories found: " + count);
+	}
+	
+	
+	protected static void TestGetCategory(String id) {
+
+		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
+		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductCatalogPath);
+
+		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);	
+				
+		try {
+			Category c = apis.getCategory(id, null);
+			if (c != null) {
+				System.out.println(c.getId() + " " + c.getName() + " " + c.getLifecycleStatus());
+			}
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
+	}
+	
+	
+	protected static void TestGetAllCatalogs() {
+
+		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
+		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductCatalogPath);
+
+		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);		
+		AtomicInteger count = new AtomicInteger(0);
+		
+		FetchUtils.streamAll(
+	        apis::listCatalogs,			// method reference
+	        null,                      	// fields
+	        null, 				   		// filter
+	        100                        	// pageSize
+		) 
+		.forEach(c -> { 
+			count.incrementAndGet();
+			System.out.println(count + " " + c.getId() + " → " + c.getName() + " / " + c.getLifecycleStatus());
+			}
+		);		
+		
+		System.out.println("Catlogs found: " + count);
+	}
+	
+	protected static void TestGetCatalog(String id) {
+
+		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
+		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductCatalogPath);
+
+		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);	
+				
+		try {
+			Catalog c = apis.getCatalog(id, null);
+			if (c != null) {
+				System.out.println(c.getId() + " " + c.getName() + " " + c.getLifecycleStatus());
 			}
 		} catch (ApiException e) {
 			System.err.println("Error: " + e.getMessage());

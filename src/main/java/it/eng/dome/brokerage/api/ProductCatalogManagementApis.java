@@ -8,9 +8,13 @@ import org.slf4j.LoggerFactory;
 
 import it.eng.dome.tmforum.tmf620.v4.ApiClient;
 import it.eng.dome.tmforum.tmf620.v4.ApiException;
+import it.eng.dome.tmforum.tmf620.v4.api.CatalogApi;
+import it.eng.dome.tmforum.tmf620.v4.api.CategoryApi;
 import it.eng.dome.tmforum.tmf620.v4.api.ProductOfferingApi;
 import it.eng.dome.tmforum.tmf620.v4.api.ProductOfferingPriceApi;
 import it.eng.dome.tmforum.tmf620.v4.api.ProductSpecificationApi;
+import it.eng.dome.tmforum.tmf620.v4.model.Catalog;
+import it.eng.dome.tmforum.tmf620.v4.model.Category;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingCreate;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingPrice;
@@ -23,16 +27,20 @@ public class ProductCatalogManagementApis {
 	private ProductOfferingApi productOfferingApi;
 	private ProductOfferingPriceApi productOfferingPriceApi;
 	private ProductSpecificationApi productSpecificationApi;
+	private CategoryApi categoryApi;
+	private CatalogApi catalogApi;
 		
 	/**
 	 * Constructor
 	 * @param apiClientTMF620
 	 */
 	public ProductCatalogManagementApis(ApiClient apiClientTMF620){
-		logger.info("Init ProductOfferingApis - apiClientTMF620 basePath: {}", apiClientTMF620.getBasePath());
+		logger.info("Init ProductCatalogManagementApis - apiClientTMF620 basePath: {}", apiClientTMF620.getBasePath());
 		productOfferingApi = new ProductOfferingApi(apiClientTMF620);
 		productOfferingPriceApi = new ProductOfferingPriceApi(apiClientTMF620);
 		productSpecificationApi = new ProductSpecificationApi(apiClientTMF620);
+		categoryApi = new CategoryApi(apiClientTMF620);
+		catalogApi = new CatalogApi(apiClientTMF620);
 	}
 	
 	
@@ -235,4 +243,105 @@ public class ProductCatalogManagementApis {
 		return productSpecificationApi.listProductSpecification(fields, offset, limit, filter);
 	}
 	
+	
+	/**
+	 * Retrieves a specific {@link Category} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code Category} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "name,lifecycleStatus"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link Category} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 */
+	public Category getCategory(String id, String fields) throws ApiException {
+		logger.info("Request: getCategory by id {}", id);
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+
+		return categoryApi.retrieveCategory(id, fields);
+	}
+
+		
+	/**
+	 * Retrieves a list of {@link Category} resources.
+	 * <p>
+	 * This method queries the Product Catalog Management API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,lifecycleStatus"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link Category} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
+	 */
+	public List<Category> listCategories(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listCategories");
+				
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return categoryApi.listCategory(fields, offset, limit, filter);
+	}
+	
+	
+	/**
+	 * Retrieves a specific {@link Catalog} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code Catalog} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "name,lifecycleStatus"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link Catalog} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 */
+	public Catalog getCatalog(String id, String fields) throws ApiException {
+		logger.info("Request: getCatalog by id {}", id);
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+
+		return catalogApi.retrieveCatalog(id, fields);
+	}
+
+		
+	/**
+	 * Retrieves a list of {@link Catalog} resources.
+	 * <p>
+	 * This method queries the Product Catalog Management API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,lifecycleStatus"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link Catalog} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
+	 */
+	public List<Catalog> listCatalogs(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listCatalogs");
+				
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return catalogApi.listCatalog(fields, offset, limit, filter);
+	}
 }
