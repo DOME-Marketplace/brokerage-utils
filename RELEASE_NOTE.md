@@ -2,6 +2,12 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+
+### <code>2.1.9</code> :calendar: 13/10/2025
+**Feature**
+* Add `CategoryApis` class to get **all categories** and get **by id**.
+
+
 ### <code>2.1.8</code> :calendar: 06/10/2025
 **Feature**
 * Add `AbstractHealthService` class for all **Billing Services** to retrieve `Info` and `Health` objects.
