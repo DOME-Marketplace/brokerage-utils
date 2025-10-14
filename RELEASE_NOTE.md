@@ -4,7 +4,7 @@
 
 ### <code>2.1.10</code> :calendar: 14/10/2025
 **Feature**
-* Add *enumeration mapping* for **serialize** and **deserialize** in all *TMForum module*.
+* Add *TMF Enumeration Mapping* for **serialize** and **deserialize** in all * TMForum enum types*.
 
 
 ### <code>2.1.9</code> :calendar: 13/10/2025
