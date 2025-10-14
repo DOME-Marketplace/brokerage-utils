@@ -1,6 +1,5 @@
 package it.eng.dome.brokerage.api;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +21,6 @@ import it.eng.dome.tmforum.tmf666.v4.model.PartyAccount;
 public class AccountManagementApis {
 	
 	private final Logger logger = LoggerFactory.getLogger(AccountManagementApis.class);
-	private final int LIMIT = 100;
-	
 	private PartyAccountApi partyAccountApi;
 	private BillingAccountApi billingAccountApi;
 	private BillFormatApi billFormatApi;
@@ -42,216 +39,202 @@ public class AccountManagementApis {
 	
 	
 	/**
-	 * This method retrieves a specific PartyAccount by ID
-	 * 
-	 * @param partyAccountId - Identifier of the PartyAccount (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @return BillFormat
+	 * Retrieves a specific {@link PartyAccount} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code PartyAccount} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "status,name"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link PartyAccount} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public PartyAccount getPartyAccount(String partyAccountId, String fields) {
-		try {
-			return partyAccountApi.retrievePartyAccount(partyAccountId, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
+	public PartyAccount getPartyAccount(String id, String fields) throws ApiException  {
+		logger.info("Request: getPartyAccount by id {}", id);
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
 		}
+		
+		return partyAccountApi.retrievePartyAccount(id, fields);
+	}
+	
+		
+	/**
+	 * Retrieves a list of {@link PartyAccount} resources.
+	 * <p>
+	 * This method queries the Account Management API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,description"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return
+	 * @param limit  the maximum number of items to return
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link PartyAccount} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
+	 */
+	public List<PartyAccount> listPartyAccounts(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listPartyAccounts");
+				
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return partyAccountApi.listPartyAccount(fields, offset, limit, filter);   
+	}
+	
+		
+	/**
+	 * Retrieves a specific {@link BillingAccount} by its unique identifier.
+	 * 
+	 * @param id     the unique identifier of the {@link BillingAccount} (required)
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "status,name"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @return the {@link BillingAccount} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
+	 */
+	public BillingAccount getBillingAccount(String id, String fields) throws ApiException {
+		logger.info("Request: getBillingAccount by id {}", id);
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return billingAccountApi.retrieveBillingAccount(id, fields);
 	}
 	
 	
 	/**
-	 * This method retrieves the list of PartyAccount
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'href,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br> 
-	 * @return List&lt;PartyAccount&gt;
+	 * Retrieves a list of {@link BillingAccount} resources.
+	 * <p>
+	 * This method queries the Account Management API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,description"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return
+	 * @param limit  the maximum number of items to return
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link BillingAccount} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
-	public List<PartyAccount> getAllPartyAccounts(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllPartyAccounts");
-		List<PartyAccount> all = new ArrayList<PartyAccount>();
+	public List<BillingAccount> listBillingAccounts(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listBillingAccounts");
+			
+		if (filter != null && !filter.isEmpty()) {
+			logger.debug("Params used in the query-string filter: {}", filter);
+		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return billingAccountApi.listBillingAccount(fields, offset, limit, filter);
+	}
+	
+		
+	/**
+	 * Creates a new {@link BillFormat} resource.
+	 * <p>
+	 * This method sends a creation request to the Account Management API using
+	 * the provided {@link BillFormatCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
+	 * 
+	 * @param billFormatCreate the {@link BillFormatCreate} object used to create the new BillFormat (required)
+	 * @return the unique identifier ({@code id}) of the created {@link BillFormat}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
+	 */
+	public String createBillFormat(BillFormatCreate billFormatCreate) throws ApiException {	
+		logger.info("Create: BillFormat");
+
+		BillFormat billFormat = billFormatApi.createBillFormat(billFormatCreate);
+		logger.info("BillFormat saved successfully with id: {}", billFormat.getId());
+		
+		return billFormat.getId();
+	}
+	
+	
+	/**
+	 * Updates an existing {@link BillFormat} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Account Management API to update
+	 * the specified {@link BillFormat} with the provided {@link BillFormatUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link BillFormat} to update (required)
+	 * @param billFormatUpdate the {@link BillFormatUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
+	 */
+	public void updateBillFormat(String id, BillFormatUpdate billFormatUpdate) throws ApiException {
+		logger.info("Request: updateBillFormat by id {}", id);
+
+		BillFormat billFormat = billFormatApi.patchBillFormat(id, billFormatUpdate);
+		
+		boolean success = (billFormat != null && billFormat.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated BillFormat with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for BillFormat id: {}", id);
+		}
+	}
+	
+		
+	/**
+	 * Retrieves a specific {@link BillFormat} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code BillFormat} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "status,name"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link BillFormat} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 */
+	public BillFormat getBillFormat(String id, String fields) throws ApiException {
+		logger.info("Request: getBillFormat by id {}", id);
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
+		
+		return billFormatApi.retrieveBillFormat(id, fields);
+	}
+	
+	
+	/**
+	 * Retrieves a list of {@link BillFormat} resources.
+	 * <p>
+	 * This method queries the BillFormat API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,description"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return
+	 * @param limit  the maximum number of items to return
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link BillFormat} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
+	 */
+	public List<BillFormat> listBillFormats(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listBillFormats");
 		
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
 		}
-		
-		getAllPartyAccounts(all, fields, 0, filter);
-		logger.info("Number of PartyAccounts: {}", all.size());
-		return all;
-	}
-		
-	private void getAllPartyAccounts(List<PartyAccount> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
-
-		try {
-			List<PartyAccount> partyAccountList =  partyAccountApi.listPartyAccount(fields, offset, LIMIT, filter);
-
-			if (!partyAccountList.isEmpty()) {
-				list.addAll(partyAccountList);
-				getAllPartyAccounts(list, fields, start + 1, filter);				
-			}else {
-				return;
-			}
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
-	}
-	
-	
-	/**
-	 * This method retrieves a specific BillingAccount by ID
-	 * 
-	 * @param billingAccountId - Identifier of the BillingAccount (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @return BillingAccount
-	 */
-	public BillingAccount getBillingAccount(String billingAccountId, String fields) {
-		try {
-			return billingAccountApi.retrieveBillingAccount(billingAccountId, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
-	
-	/**
-	 * This method retrieves the list of BillingAccount
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'state,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br> 
-	 * @return List&lt;BillingAccount&gt;
-	 */
-	public List<BillingAccount> getAllBillingAccounts(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllBillingAccounts");
-		List<BillingAccount> all = new ArrayList<BillingAccount>();
-		
-		if (filter != null && !filter.isEmpty()) {
-			logger.debug("Params used in the query-string filter: {}", filter);
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
 		}
 		
-		getAllBillingAccounts(all, fields, 0, filter);
-		logger.info("Number of BillingAccounts: {}", all.size());
-		return all;
-	}
-		
-	private void getAllBillingAccounts(List<BillingAccount> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
-
-		try {
-			List<BillingAccount> agreementList =  billingAccountApi.listBillingAccount(fields, offset, LIMIT, filter);
-
-			if (!agreementList.isEmpty()) {
-				list.addAll(agreementList);
-				getAllBillingAccounts(list, fields, start + 1, filter);				
-			}else {
-				return;
-			}
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
-	}
-	
-	
-	/**
-	 * This method creates a BillFormat
-	 * 
-	 * @param BillFormatCreate - BillFormatCreate object used in the creation request of the BillFormat (required) 
-	 * @return BillFormat
-	 */
-	public BillFormat createBillFormat(BillFormatCreate billFormatCreate) {		
-		try {
-			return billFormatApi.createBillFormat(billFormatCreate);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
-	
-	
-	/**
-	 * This method updates the BillFormat by Id
-	 * 
-	 * @param billFormatId - Identifier of the BillFormat (required) 
-	 * @param billFormatUpdate - BillFormatUpdate object used to update the BillFormat (required) 
-	 * @return boolean
-	 */
-	public boolean updateBillFormat(String billFormatId, BillFormatUpdate billFormatUpdate) {
-		logger.info("Request: updateBillFormat");
-		try {
-			BillFormat billFormat = billFormatApi.patchBillFormat(billFormatId, billFormatUpdate);
-			logger.info("Update BillFormat with id: {}", billFormat.getId());
-			return true;
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return false;
-		}
-	}
-
-	/**
-	 * This method retrieves a specific BillFormat by ID
-	 * 
-	 * @param billFormatId - Identifier of the BillFormat (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @return BillFormat
-	 */
-	public BillFormat getBillFormat(String billFormatId, String fields) {
-		try {
-			return billFormatApi.retrieveBillFormat(billFormatId, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
-	
-	
-	/**
-	 * This method retrieves the list of BillFormat
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'href,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br> 
-	 * @return List&lt;BillFormat&gt;
-	 */
-	public List<BillFormat> getAllBillFormats(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllAgreements");
-		List<BillFormat> all = new ArrayList<BillFormat>();
-		
-		if (filter != null && !filter.isEmpty()) {
-			logger.debug("Params used in the query-string filter: {}", filter);
-		}
-		
-		getAllBillFormats(all, fields, 0, filter);
-		logger.info("Number of BillFormats: {}", all.size());
-		return all;
-	}
-		
-	private void getAllBillFormats(List<BillFormat> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
-
-		try {
-			List<BillFormat> billFormatList =  billFormatApi.listBillFormat(fields, offset, LIMIT, filter);
-
-			if (!billFormatList.isEmpty()) {
-				list.addAll(billFormatList);
-				getAllBillFormats(list, fields, start + 1, filter);				
-			}else {
-				return;
-			}
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
+		return billFormatApi.listBillFormat(fields, offset, limit, filter);
 	}
 
 }

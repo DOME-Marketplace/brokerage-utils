@@ -1,6 +1,5 @@
 package it.eng.dome.brokerage.api;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -10,22 +9,14 @@ import org.slf4j.LoggerFactory;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
 import it.eng.dome.tmforum.tmf678.v4.ApiException;
 import it.eng.dome.tmforum.tmf678.v4.api.AppliedCustomerBillingRateApi;
-import it.eng.dome.tmforum.tmf678.v4.api.CustomerBillApi;
-import it.eng.dome.tmforum.tmf678.v4.api.CustomerBillExtensionApi;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRateCreate;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRateUpdate;
-import it.eng.dome.tmforum.tmf678.v4.model.CustomerBill;
-import it.eng.dome.tmforum.tmf678.v4.model.CustomerBillCreate;
 
 public class AppliedCustomerBillRateApis {
-	
-	private final Logger logger = LoggerFactory.getLogger(AppliedCustomerBillRateApis.class);
-	private final int LIMIT = 100;
-	
-	private AppliedCustomerBillingRateApi appliedCustomerBillingRate;
-	private CustomerBillExtensionApi customerBillExtension;
-	private CustomerBillApi customerBill;
+
+	private final Logger logger = LoggerFactory.getLogger(AppliedCustomerBillRateApis.class);	
+	private AppliedCustomerBillingRateApi appliedCustomerBillingRateApi;
 
 	/**
 	 * Constructor
@@ -33,188 +24,114 @@ public class AppliedCustomerBillRateApis {
 	 */
 	public AppliedCustomerBillRateApis(ApiClient apiClientTMF678){
 		logger.info("Init AppliedCustomerBillRateApis - apiClientTMF678 basePath: {}", apiClientTMF678.getBasePath());
-		appliedCustomerBillingRate = new AppliedCustomerBillingRateApi(apiClientTMF678);	
-		customerBillExtension = new CustomerBillExtensionApi(apiClientTMF678);
-		customerBill = new CustomerBillApi(apiClientTMF678);
+		appliedCustomerBillingRateApi = new AppliedCustomerBillingRateApi(apiClientTMF678);	
 	}
-	
 
+	
 	/**
-	 * This method retrieves a specific AppliedCustomerBillingRate by ID
+	 * This method retrieves a specific AppliedCustomerBillingRate by id
 	 *  
-	 * @param applyId - Identifier of the AppliedCustomerBillingRate (required)
+	 * @param id - Identifier of the AppliedCustomerBillingRate (required)
 	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
 	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
 	 * - use fields == null to get all attributes
-	 * @return AppliedCustomerBillingRate
+	 * @return the {@link AppliedCustomerBillingRate} with the given id, or {@code null} if no AppliedCustomerBillingRate is found
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public AppliedCustomerBillingRate getAppliedCustomerBillingRate(String applyId, String fields) {
-		try {
-			
-			return appliedCustomerBillingRate.retrieveAppliedCustomerBillingRate(applyId, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
 	
 	/**
-	 * This method retrieves the list of AppliedCustomerBillingRate
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'product,periodCoverage')<br> 
-	 * - use fields == null to get all attributes	
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return List&lt;AppliedCustomerBillingRate&gt;
+	 * Retrieves a specific {@link AppliedCustomerBillingRate} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code AppliedCustomerBillingRate} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "product,periodCoverage"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link AppliedCustomerBillingRate} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	
-	public List<AppliedCustomerBillingRate> getAllAppliedCustomerBillingRates(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllAppliedCustomerBillingRates");
-		List<AppliedCustomerBillingRate> all = new ArrayList<AppliedCustomerBillingRate>();
+	public AppliedCustomerBillingRate getAppliedCustomerBillingRate(String id, String fields) throws ApiException {
+		logger.info("Request: getAppliedCustomerBillingRate by id {}", id);
+				
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
 		
+		return appliedCustomerBillingRateApi.retrieveAppliedCustomerBillingRate(id, fields);		
+	}
+	
+		
+	/**
+	 * Retrieves a list of {@link AppliedCustomerBillingRate} resources.
+	 * <p>
+	 * This method queries the AppliedCustomerBillingRate Management API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "product,periodCoverage"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link AppliedCustomerBillingRate} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
+	 */
+	public List<AppliedCustomerBillingRate> listAppliedCustomerBillingRates(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listAppliedCustomerBillingRates");
+			
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
 		}
-		
-		getAllApplied(all, fields, 0, filter);
-		logger.info("Number of AppliedCustomerBillingRates: {}", all.size());
-		return all;
-	}
-	
-	/**
-	 * This method updates the AppliedCustomerBillingRate by Id
-	 * 
-	 * @param appliedId - Identifier of the AppliedCustomerBillingRate (required) 
-	 * @param appliedCustomerBillingRateUpdate - AppliedCustomerBillingRateUpdate object used to update the AppliedCustomerBillingRate (required) 
-	 * @return boolean
-	 */
-	public boolean updateAppliedCustomerBillingRate(String appliedId, AppliedCustomerBillingRateUpdate appliedCustomerBillingRateUpdate) {
-		logger.info("Request: updateAppliedCustomerBillingRate");
-		try {
-			AppliedCustomerBillingRate billUpdate = appliedCustomerBillingRate.updateAppliedCustomerBillingRate(appliedId, appliedCustomerBillingRateUpdate);
-			logger.info("Update AppliedCustomerBillingRate with id: {}", billUpdate.getId());
-			return true;
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return false;
-		}
-	}
-	
-	/**
-	 * This method creates an AppliedCustomerBillingRate
-	 * 
-	 * @param appliedCustomerBillingRateCreate - AppliedCustomerBillingRateCreate object used in the creation request of the AppliedCustomerBillingRate (required) 
-	 * @return AppliedCustomerBillingRate
-	 */
-	public AppliedCustomerBillingRate createAppliedCustomerBillingRate(AppliedCustomerBillingRateCreate appliedCustomerBillingRateCreate) {
-		try {
-			AppliedCustomerBillingRate applied = appliedCustomerBillingRate.createAppliedCustomerBillingRate(appliedCustomerBillingRateCreate);
-			return applied;
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
-	
-	/**
-	 * This method retrieves the list of CustomerBill
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'state,paymentDueDate')<br> 
-	 * - use fields == null to get all attributes	
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br>  
-	 * @return List&lt;CustomerBill&gt;
-	 */
-	
-	public List<CustomerBill> getAllCustomerBills(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllCustomerBills");
-		List<CustomerBill> all = new ArrayList<CustomerBill>();
-		
-		if (filter != null && !filter.isEmpty()) {
-			logger.debug("Params used in the query-string filter: {}", filter);
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
 		}
 		
-		getAllCustomer(all, fields, 0, filter);
-		logger.info("Number of CustomerBills: {}", all.size());
-		return all;
+		return appliedCustomerBillingRateApi.listAppliedCustomerBillingRate(fields, offset, limit, filter);
+	}
+
+	
+	/**
+	 * Updates an existing {@link AppliedCustomerBillingRate} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the AppliedCustomerBillingRate Management API to update
+	 * the specified {@link AppliedCustomerBillingRate} with the provided {@link AppliedCustomerBillingRateUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link AppliedCustomerBillingRate} to update (required)
+	 * @param AppliedCustomerBillingRateUpdate the {@link AppliedCustomerBillingRateUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
+	 */
+	public void updateAppliedCustomerBillingRate(String id, AppliedCustomerBillingRateUpdate appliedCustomerBillingRateUpdate) throws ApiException {
+		logger.info("Request: updateAppliedCustomerBillingRate by id {}", id);
+
+		AppliedCustomerBillingRate billUpdate = appliedCustomerBillingRateApi.updateAppliedCustomerBillingRate(id, appliedCustomerBillingRateUpdate);
+		
+		boolean success = (billUpdate != null && billUpdate.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated AppliedCustomerBillingRate with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for AppliedCustomerBillingRate id: {}", id);
+		}
 	}
 	
 
 	/**
-	 * This method retrieves a specific CustomerBill by ID
-	 *  
-	 * @param customerBillId - Identifier of the CustomerBill (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'state,paymentDueDate')<br> 
-	 * - use fields == null to get all attributes
-	 * @return CustomerBill
-	 */
-	public CustomerBill getCustomerBill(String customerBillId, String fields) {
-		try {
-			
-			return customerBill.retrieveCustomerBill(customerBillId, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
-	
-	
-	/**
-	 * This method creates a CustomerBill
+	 * Creates a new {@link AppliedCustomerBillingRate} resource.
+	 * <p>
+	 * This method sends a creation request to the AppliedCustomerBillingRate Management API using
+	 * the provided {@link AppliedCustomerBillingRateCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
 	 * 
-	 * @param customerBillCreate - CustomerBillCreate object used in the creation request of the CustomerBill (required) 
-	 * @return customerBillId
+	 * @param appliedCustomerBillingRateCreate the {@link AppliedCustomerBillingRateCreate} object used to create the new AppliedCustomerBillingRate (required)
+	 * @return the unique identifier ({@code id}) of the created {@link AppliedCustomerBillingRate}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
 	 */
-	public String createCustomerBill(CustomerBillCreate customerBillCreate) {
-		logger.info("Request: createCustomerBill");
-		try {
-			CustomerBill customerBill = customerBillExtension.createCustomerBill(customerBillCreate);
-			logger.info("CustomerBill saved with id: {}", customerBill.getId());
-			return customerBill.getId();
-		} catch (ApiException e) {
-			logger.info("CustomerBill not saved: {}", customerBillCreate.toString());
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
-	
-	/*
-	 * Internal method to get all AppliedCustomerBillingRate in recursive way
-	 */
-	private void getAllApplied(List<AppliedCustomerBillingRate> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
+	public String createAppliedCustomerBillingRate(AppliedCustomerBillingRateCreate appliedCustomerBillingRateCreate) throws ApiException {
+		logger.info("Create: AppliedCustomerBillingRate");
 
-		try {
-			List<AppliedCustomerBillingRate> appliedList = appliedCustomerBillingRate.listAppliedCustomerBillingRate(fields, offset, LIMIT, filter);
-
-			if (!appliedList.isEmpty()) {
-				list.addAll(appliedList);
-				getAllApplied(list, fields, start + 1, filter);
-			}else {
-				return;
-			}
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
-	}
-	
-	private void getAllCustomer(List<CustomerBill> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
-
-		try {
-			List<CustomerBill> appliedList = customerBill.listCustomerBill(fields, offset, LIMIT, filter);
-
-			if (!appliedList.isEmpty()) {
-				list.addAll(appliedList);
-				getAllCustomer(list, fields, start + 1, filter);
-			}else {
-				return;
-			}
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
+		AppliedCustomerBillingRate applied = appliedCustomerBillingRateApi.createAppliedCustomerBillingRate(appliedCustomerBillingRateCreate);
+		logger.info("AppliedCustomerBillingRate saved successfully with id: {}", applied.getId());
+		return applied.getId();		
 	}
 }

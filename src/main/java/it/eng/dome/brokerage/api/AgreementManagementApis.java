@@ -1,6 +1,5 @@
 package it.eng.dome.brokerage.api;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,8 +16,6 @@ import it.eng.dome.tmforum.tmf651.v4.model.AgreementUpdate;
 
 public class AgreementManagementApis {
 	private final Logger logger = LoggerFactory.getLogger(AgreementManagementApis.class);
-	private final int LIMIT = 100;
-
 	private AgreementApi agreementApi;
 
 	/**
@@ -33,95 +30,100 @@ public class AgreementManagementApis {
 
 	
 	/**
-	 * This method creates a Agreement
-	 * 
-	 * @param AgreementCreate - AgreementCreate object used in the creation request of the Agreement (required) 
-	 * @return Agreement
+	 * Retrieves a specific {@link Agreement} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code Agreement} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "status,name"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link Agreement} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
-	public Agreement createAgreement(AgreementCreate agreementCreate) {		
-		try {
-			return agreementApi.createAgreement(agreementCreate);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
-	
-	
-	/**
-	 * This method updates the Agreement by Id
-	 * 
-	 * @param agreementId - Identifier of the Agreement (required) 
-	 * @param agreementUpdate - AgreementUpdate object used to update the Agreement (required) 
-	 * @return boolean
-	 */
-	public boolean updateAgreement(String agreementId, AgreementUpdate agreementUpdate) {
-		logger.info("Request: updateAgreement");
-		try {
-			Agreement agreement = agreementApi.patchAgreement(agreementId, agreementUpdate);
-			logger.info("Update Agreement with id: {}", agreement.getId());
-			return true;
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return false;
-		}
-	}
+	public Agreement getAgreement(String id, String fields) throws ApiException {
+		logger.info("Request: getAgreement by id {}", id);
 
-	/**
-	 * This method retrieves a specific Agreement by ID
-	 * 
-	 * @param agreementId - Identifier of the Agreement (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @return Agreement
-	 */
-	public Agreement getAgreement(String agreementId, String fields) {
-		try {
-			return agreementApi.retrieveAgreement(agreementId, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
+		if (fields != null) {
+				logger.debug("Selected attributes: [{}]", fields);
+			}
+			
+		return agreementApi.retrieveAgreement(id, fields);
 	}
 	
+	
 	/**
-	 * This method retrieves the list of Agreement
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'status,name')<br> 
-	 * - use fields == null to get all attributes
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br> 
-	 * @return List&lt;Agreement&gt;
+	 * Retrieves a list of {@link Agreement} resources.
+	 * <p>
+	 * This method queries the Agreement Management API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,description"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return
+	 * @param limit  the maximum number of items to return
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link Agreement} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
-	public List<Agreement> getAllAgreements(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllAgreements");
-		List<Agreement> all = new ArrayList<Agreement>();
-		
+	public List<Agreement> listAgreements(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listAgreements");
+
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
 		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
 		
-		getAllAgreements(all, fields, 0, filter);
-		logger.info("Number of Agreements: {}", all.size());
-		return all;
+		return agreementApi.listAgreement(fields, offset, limit, filter);   
 	}
+	
+
+	/**
+	 * Creates a new {@link Agreement} resource.
+	 * <p>
+	 * This method sends a creation request to the Agreement Management API using
+	 * the provided {@link AgreementCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
+	 * 
+	 * @param agreementCreate the {@link AgreementCreate} object used to create the new Agreement (required)
+	 * @return the unique identifier ({@code id}) of the created {@link Agreement}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
+	 */
+	public String createAgreement(AgreementCreate agreementCreate) throws ApiException {		
+		logger.info("Create: Agreement");
 		
-	private void getAllAgreements(List<Agreement> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
-
-		try {
-			List<Agreement> agreementList =  agreementApi.listAgreement(fields, offset, LIMIT, filter);
-
-			if (!agreementList.isEmpty()) {
-				list.addAll(agreementList);
-				getAllAgreements(list, fields, start + 1, filter);				
-			}else {
-				return;
-			}
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
+		Agreement agreement = agreementApi.createAgreement(agreementCreate);
+		logger.info("Agreement saved successfully with id: {}", agreement.getId());
+		
+		return agreement.getId();
 	}
+	
+	
+	/**
+	 * Updates an existing {@link Agreement} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Agreement Management API to update
+	 * the specified {@link Agreement} with the provided {@link AgreementUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link Agreement} to update (required)
+	 * @param AgreementUpdate the {@link AgreementUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
+	 */
+	public void updateAgreement(String id, AgreementUpdate agreementUpdate) throws ApiException {
+		logger.info("Request: updateAgreement by id {}", id);
+		
+		Agreement agreement = agreementApi.patchAgreement(id, agreementUpdate);
+
+		boolean success = (agreement != null && agreement.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated Agreement with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for Agreement id: {}", id);
+		}
+	}
+	
 }

@@ -1,6 +1,5 @@
 package it.eng.dome.brokerage.api;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,8 +21,6 @@ import it.eng.dome.tmforum.tmf635.v4.model.UsageUpdate;
 public class UsageManagementApis {
 	
 	private final Logger logger = LoggerFactory.getLogger(UsageManagementApis.class);
-	private final int LIMIT = 100;
-	
 	private UsageApi usageApi;
 	private UsageSpecificationApi usageSpecificationApi;
 	
@@ -38,191 +35,200 @@ public class UsageManagementApis {
 
 	}
 	
+	
+	/**
+	 * Retrieves a specific {@link Usage} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code Usage} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "status,usageType"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link Usage} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 */
+	public Usage getUsage(String id, String fields) throws ApiException {
+		logger.info("Request: getUsage by id {}", id);
+
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
 		
-	/**
-	 * This method creates an Usage
-	 * 
-	 * @param UsageCreate - UsageCreate object used in the creation request of the Usage (required) 
-	 * @return Usage
-	 */
-	public Usage createUsage(UsageCreate usageCreate) {		
-		try {
-			return usageApi.createUsage(usageCreate);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
+		return usageApi.retrieveUsage(id, fields);
 	}
-	
-	
-	/**
-	 * This method updates the Usage by Id
-	 * 
-	 * @param usageId - Identifier of the Usage (required) 
-	 * @param usageUpdate - UsageUpdate object used to update the Usage (required) 
-	 * @return boolean
-	 */
-	public boolean updateUsage(String usageId, UsageUpdate usageUpdate) {
-		logger.info("Request: updateUsage");
-		try {
-			Usage usage = usageApi.patchUsage(usageId, usageUpdate);
-			logger.info("Update Usage with id: {}", usage.getId());
-			return true;
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return false;
-		}
-	}
+		
 
 	/**
-	 * This method retrieves a specific Usage by ID
-	 * 
-	 * @param usageId - Identifier of the Usage (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'status,usageType')<br> 
-	 * - use fields == null to get all attributes
-	 * @return Usage
+	 * Retrieves a list of {@link Usage} resources.
+	 * <p>
+	 * This method queries the Usage API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "status,usageType"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link Usage} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
-	public Usage getUsage(String usageId, String fields) {
-		try {
-			return usageApi.retrieveUsage(usageId, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
-	
-	/**
-	 * This method retrieves the list of Usage
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'status,usageType')<br> 
-	 * - use fields == null to get all attributes
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br> 
-	 * @return List&lt;Usage&gt;
-	 */
-	public List<Usage> getAllUsages(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllUsages");
-		List<Usage> all = new ArrayList<Usage>();
-		
+	public List<Usage> listUsages(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listUsages");
+			
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
 		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
 		
-		getAllUsages(all, fields, 0, filter);
-		logger.info("Number of Usages: {}", all.size());
-		return all;
+		return usageApi.listUsage(fields, offset, limit, filter);
 	}
-		
-	private void getAllUsages(List<Usage> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
+	
+	
+	/**
+	 * Creates a new {@link Usage} resource.
+	 * <p>
+	 * This method sends a creation request to the Usage Management API using
+	 * the provided {@link UsageCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
+	 * 
+	 * @param usageCreate the {@link UsageCreate} object used to create the new Usage (required)
+	 * @return the unique identifier ({@code id}) of the created {@link Usage}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
+	 */
+	public String createUsage(UsageCreate usageCreate) throws ApiException {	
+		logger.info("Create: Usage");
 
-		try {
-			List<Usage> usageList =  usageApi.listUsage(fields, offset, LIMIT, filter);
+		Usage usage = usageApi.createUsage(usageCreate);
+		logger.info("Usage saved successfully with id: {}", usage.getId());
+		
+		return usage.getId();
+	}
+	
+	
+	/**
+	 * Updates an existing {@link Usage} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Usage Management API to update
+	 * the specified {@link Usage} with the provided {@link UsageUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link Usage} to update (required)
+	 * @param UsageUpdate the {@link UsageUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
+	 */
+	public void updateUsage(String id, UsageUpdate usageUpdate) throws ApiException {
+		logger.info("Request: updateUsage by id {}", id);
+		
+		Usage usage = usageApi.patchUsage(id, usageUpdate);
+		
+		boolean success = (usage != null && usage.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated Usage with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for Usage id: {}", id);
+		}
+	}
+	
+	
+	/**
+	 * Retrieves a specific {@link UsageSpecification} by its unique identifier.
+	 *
+	 * @param id      the identifier of the {@code UsageSpecification} to retrieve (required)
+	 * @param fields  a comma-separated list of properties to include in the response (optional) <br>
+	 *                - use this parameter to request specific attributes (e.g., {@code "name,version"}) <br>
+	 *                - use {@code null} or an empty string to retrieve all available attributes
+	 * @return the {@link UsageSpecification} matching the given {@code id}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved
+	 */
+	public UsageSpecification getUsageSpecification(String id, String fields) throws ApiException {
+		logger.info("Request: getUsageSpecification by id {}", id);
 
-			if (!usageList.isEmpty()) {
-				list.addAll(usageList);
-				getAllUsages(list, fields, start + 1, filter);				
-			}else {
-				return;
-			}
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
-	}
-	
-	
-	/**
-	 * This method creates an UsageSpecification
-	 * 
-	 * @param UsageCreate - UsageSpecificationCreate object used in the creation request of the UsageSpecification (required) 
-	 * @return UsageSpecification
-	 */
-	public UsageSpecification createUsageSpecification(UsageSpecificationCreate usageSpecificationCreate) {		
-		try {
-			return usageSpecificationApi.createUsageSpecification(usageSpecificationCreate);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
 		}
-	}
-	
-	/**
-	 * This method updates the UsageSpecification by Id
-	 * 
-	 * @param specificationId - Identifier of the UsageSpecification (required) 
-	 * @param usageSpecificationUpdate - UsageSpecificationUpdate object used to update the UsageSpecification (required) 
-	 * @return boolean
-	 */
-	public boolean updateUsageSpecification(String specificationId, UsageSpecificationUpdate usageSpecificationUpdate) {
-		logger.info("Request: updateUsageSpecification");
-		try {
-			UsageSpecification usageSpecification = usageSpecificationApi.patchUsageSpecification(specificationId, usageSpecificationUpdate);
-			logger.info("Update UsageSpecification with id: {}", usageSpecification.getId());
-			return true;
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return false;
-		}
-	}
-	
-	/**
-	 * This method retrieves a specific UsageSpecification by ID
-	 * 
-	 * @param specificationId - Identifier of the UsageSpecification (required)
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,version')<br> 
-	 * - use fields == null to get all attributes
-	 * @return UsageSpecification
-	 */
-	public UsageSpecification getUsageSpecification(String specificationId, String fields) {
-		try {
-			return usageSpecificationApi.retrieveUsageSpecification(specificationId, fields);
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return null;
-		}
-	}
-	
-	/**
-	 * This method retrieves the list of UsageSpecification
-	 * 
-	 * @param fields - Comma-separated properties to be provided in response (optional)<br> 
-	 * - use this string to get specific fields (separated by comma: i.e. 'name,version')<br> 
-	 * - use fields == null to get all attributes
-	 * @param filter - HashMap<K,V> to set query string params (optional)<br> 
-	 * @return List&lt;UsageSpecification&gt;
-	 */
-	public List<UsageSpecification> getAllUsageSpecifications(String fields, Map<String, String> filter) {
-		logger.info("Request: getAllUsageSpecifications");
 		
-		List<UsageSpecification> all = new ArrayList<UsageSpecification>();
-		
+		return usageSpecificationApi.retrieveUsageSpecification(id, fields);
+	}
+	
+	
+	/**
+	 * Retrieves a list of {@link UsageSpecification} resources.
+	 * <p>
+	 * This method queries the UsageSpecification API and returns a paginated subset of results 
+	 * based on the provided {@code offset}, {@code limit}, and optional filter criteria.
+	 * </p>
+	 *
+	 * @param fields a comma-separated list of properties to include in the response (optional)<br>
+	 *               - use this string to select specific fields (e.g. {@code "name,version"})<br>
+	 *               - use {@code null} to retrieve all attributes
+	 * @param offset the index of the first item to return 
+	 * @param limit  the maximum number of items to return 
+	 * @param filter a {@link Map} of query parameters used for filtering results (optional)
+	 * @return a {@link List} containing the retrieved {@link UsageSpecification} resources
+	 * @throws ApiException if the API call fails or the resources cannot be retrieved
+	 */
+	public List<UsageSpecification> listUsageSpecifications(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
+		logger.info("Request: listUsageSpecifications");
+				
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
 		}
+		if (fields != null) {
+			logger.debug("Selected attributes: [{}]", fields);
+		}
 		
-		getAllUsageSpecifications(all, fields, 0, filter);
-		logger.info("Number of UsageSpecifications: {}", all.size());
-		return all;
+		return usageSpecificationApi.listUsageSpecification(fields, offset, limit, filter);   
 	}
 	
-	private void getAllUsageSpecifications(List<UsageSpecification> list, String fields, int start, Map<String, String> filter) {
-		int offset = start * LIMIT;
 
-		try {
-			List<UsageSpecification> specificationList =  usageSpecificationApi.listUsageSpecification(fields, offset, LIMIT, filter);
-
-			if (!specificationList.isEmpty()) {
-				list.addAll(specificationList);
-				getAllUsageSpecifications(list, fields, start + 1, filter);				
-			}else {
-				return;
-			}
-		} catch (ApiException e) {
-			logger.error("Error: {}", e.getResponseBody());
-			return;
-		}		
+	/**
+	 * Creates a new {@link UsageSpecification} resource.
+	 * <p>
+	 * This method sends a creation request to the Usage Management API using
+	 * the provided {@link UsageSpecificationCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
+	 * 
+	 * @param usageSpecificationCreate the {@link UsageSpecificationCreate} object used to create the new UsageSpecification (required)
+	 * @return the unique identifier ({@code id}) of the created {@link UsageSpecification}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
+	 */
+	public String createUsageSpecification(UsageSpecificationCreate usageSpecificationCreate) throws ApiException {		
+		logger.info("Create: UsageSpecification");
+		
+		UsageSpecification usage = usageSpecificationApi.createUsageSpecification(usageSpecificationCreate);
+		logger.info("UsageSpecification saved successfully with id: {}", usage.getId());
+		
+		return usage.getId();
 	}
+
+
+	/**
+	 * Updates an existing {@link UsageSpecification} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Usage Management API to update
+	 * the specified {@link UsageSpecification} with the provided {@link UsageSpecificationUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link UsageSpecification} to update (required)
+	 * @param UsageSpecificationUpdate the {@link UsageSpecificationUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
+	 */
+	public void updateUsageSpecification(String id, UsageSpecificationUpdate usageSpecificationUpdate) throws ApiException {
+		logger.info("Request: updateUsageSpecification by id {}", id);
+
+		UsageSpecification usageSpecification = usageSpecificationApi.patchUsageSpecification(id, usageSpecificationUpdate);
+		
+		boolean success = (usageSpecification != null && usageSpecification.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated UsageSpecification with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for UsageSpecification id: {}", id);
+		}
+	}
+	
 }
