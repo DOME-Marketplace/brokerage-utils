@@ -4,7 +4,7 @@
 
 ### <code>2.1.10</code> :calendar: 14/10/2025
 **Feature**
-* Add *TMF Enumeration Mapping* for **serialize** and **deserialize** in all * TMForum enum types*.
+* Add *TMF Enumeration Mapping* for **serialize** and **deserialize** in all *TMForum enum types*, and usage via **Spring Boot annotation @Bean**.
 
 
 ### <code>2.1.9</code> :calendar: 13/10/2025
