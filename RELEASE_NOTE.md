@@ -3,13 +3,14 @@
 **Release Notes** of the *Brokerage Utils* software:
 
 
-### <code>2.2.0</code> :calendar: 14/10/2025
+### <code>2.2.0</code> :calendar: 15/10/2025
 **Improvements**
 * Remove the *recursive* functionality when retrieving the list of **TMForum objects**, and implement new features:
   - `streamAll`: **lazy stream processing**, suitable for using the Java Stream API (`map`, `filter`, `collect`).
   - `fetchByBatch`: **batch-by-batch processing**, applying a consumer (`BatchProcessor`) to each retrieved block of data.
   - `fetchAll`: **eager full loading**, aggregating all elements in memory and returning a complete list.
 * Add a **throw Exception** in all `Brokerage APIs`.
+* Manage **different types* in the `GenericEnumSerializer`.
 
 
 ### <code>2.1.10</code> :calendar: 14/10/2025
