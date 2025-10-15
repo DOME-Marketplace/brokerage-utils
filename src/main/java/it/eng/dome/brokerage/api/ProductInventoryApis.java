@@ -24,7 +24,7 @@ public class ProductInventoryApis {
 	 * @param apiClientTMF637
 	 */
 	public ProductInventoryApis(ApiClient apiClientTMF637){
-		logger.info("Init ProductApis -  apiClientTMF637 basePath: {}", apiClientTMF637.getBasePath());
+		logger.info("Init ProductInventoryApis -  apiClientTMF637 basePath: {}", apiClientTMF637.getBasePath());
 		productApi = new ProductApi(apiClientTMF637);
 	}
 	

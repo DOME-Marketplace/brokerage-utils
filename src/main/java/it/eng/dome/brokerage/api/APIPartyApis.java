@@ -25,7 +25,7 @@ public class APIPartyApis {
 	 * @param apiClientTMF632
 	 */
 	public APIPartyApis(ApiClient apiClientTMF632){
-		logger.info("Init OrganizationApis -  apiClientTMF632 basePath: {}", apiClientTMF632.getBasePath());
+		logger.info("Init APIPartyApis -  apiClientTMF632 basePath: {}", apiClientTMF632.getBasePath());
 		organizationApi = new OrganizationApi(apiClientTMF632);
 		individualApi = new IndividualApi(apiClientTMF632);
 	}

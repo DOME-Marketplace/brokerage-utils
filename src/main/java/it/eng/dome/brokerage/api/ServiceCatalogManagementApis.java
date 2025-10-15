@@ -22,7 +22,7 @@ public class ServiceCatalogManagementApis {
      * @param apiClientTMF633
      */
     public ServiceCatalogManagementApis(ApiClient apiClientTMF633){
-        logger.info("Init ServiceSpecificationApis - apiClientTMF633 basePath: {}", apiClientTMF633.getBasePath());
+        logger.info("Init ServiceCatalogManagementApis - apiClientTMF633 basePath: {}", apiClientTMF633.getBasePath());
         serviceSpecificationApi = new ServiceSpecificationApi(apiClientTMF633);
     }
 

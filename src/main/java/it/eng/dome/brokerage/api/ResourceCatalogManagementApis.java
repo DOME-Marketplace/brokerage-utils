@@ -22,7 +22,7 @@ public class ResourceCatalogManagementApis {
 	 * @param apiClientTMF634
 	 */
 	public ResourceCatalogManagementApis(ApiClient apiClientTMF634){
-		logger.info("Init ResourceSpecificationApis - apiClientTMF634 basePath: {}", apiClientTMF634.getBasePath());
+		logger.info("Init ResourceCatalogManagementApis - apiClientTMF634 basePath: {}", apiClientTMF634.getBasePath());
 		resourceSpecificationApi = new ResourceSpecificationApi(apiClientTMF634);
 	}
 	
