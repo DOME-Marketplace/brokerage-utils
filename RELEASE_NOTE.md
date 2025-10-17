@@ -2,6 +2,10 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.2.1</code> :calendar: 17/10/2025
+**Improvements**
+* Add `BillingPreviewRequestDTO`
+* Improved javadoc
 
 ### <code>2.2.0</code> :calendar: 15/10/2025
 **Improvements**

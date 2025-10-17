@@ -4,15 +4,13 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import it.eng.dome.tmforum.tmf637.v4.model.Product;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
 
 /**
- * This class represents the DTO used by the "invoicing/applyTaxes" API  to calculate a the taxes of the bill \n.
- * This class contains information about the Product (TMF637-v4) and the list of the AppliedCustomerBillingRate to which the taxes must be applied
+ * This class represents the DTO used by the "invoicing/applyTaxes" API  to calculate the taxes of the bill \n.
+ * This class contains information about the {@link Product} and the list of the {@link AppliedCustomerBillingRate} to which the taxes must be applied
  */
 public class ApplyTaxesRequestDTO {
 	
@@ -27,7 +25,7 @@ public class ApplyTaxesRequestDTO {
 	}
 	
 	/**
-	 * Class constructor specifying the Product, the TimePeriod and the list of ProductPrice for which the bill will be calculated
+	 * Class constructor specifying the {@link Product} and the list of the {@link AppliedCustomerBillingRate} to which the taxes must be applied
 	 */
 	@JsonCreator
 	public ApplyTaxesRequestDTO(@JsonProperty("product") Product pr, @JsonProperty("appliedCustomerBillingRate") List<AppliedCustomerBillingRate> acbrl) {
@@ -36,25 +34,25 @@ public class ApplyTaxesRequestDTO {
 	}
 	
 	/**
-	 * The Product of the AppliedCustomerBillingRate list
+	 * The {@link Product} of the {@link AppliedCustomerBillingRate}(s)
 	 * 
-	 * @return the Product  of the AppliedCustomerBillingRate list 
+	 * @return the Product of the AppliedCustomerBillingRate(s)
 	 */
 	public Product getProduct() {
 		return product;
 	}
 	
 	/**
-	 * Sets the Product of the AppliedCustomerBillingRate list
+	 * Sets the {@link Product} of the the {@link AppliedCustomerBillingRate}(s)
 	 * 
-	 * @param product the Product of the AppliedCustomerBillingRate list 
+	 * @param product the Product of the AppliedCustomerBillingRate(s) to set
 	 */
 	public void setProduct(Product product) {
 		this.product = product;
 	}
 	
 	/**
-	 * Returns the list of the AppliedCustomerBillingRate to which the taxes must be applied
+	 * Returns the list of the {@link AppliedCustomerBillingRate} to which the taxes must be applied
 	 * 
 	 * @return the list of the AppliedCustomerBillingRate to which the taxes must be applied
 	 */
@@ -63,7 +61,7 @@ public class ApplyTaxesRequestDTO {
 	}
 	
 	/**
-	 * Sets the list of the AppliedCustomerBillingRate to which the taxes must be applied
+	 * Sets the list of the {@link AppliedCustomerBillingRate} to which the taxes must be applied
 	 * 
 	 * @param appliedCustomerBillingRate the list of the AppliedCustomerBillingRate to set
 	 */
@@ -71,43 +69,4 @@ public class ApplyTaxesRequestDTO {
 		this.appliedCustomerBillingRate = appliedCustomerBillingRate;
 	}
 
-	
-	/**
-	 * Returns the ApplyTaxesRequestDTO to which the bill refers to
-	 * 
-	 * @return The Json (in string format) of the bill
-	 */
-	public String toJson() {
-		
-		// product
-		String productJson = this.getProduct().toJson();
-
-		// appliedCustomerBillingRateList
-		StringBuilder appliedCustomerBillingRateList = new StringBuilder("[");
-		for (int i = 0; i < this.getAppliedCustomerBillingRate().size(); i++) {
-			if (i > 0) {
-				appliedCustomerBillingRateList.append(", ");
-			}
-			appliedCustomerBillingRateList.append(this.getAppliedCustomerBillingRate().get(i).toJson());
-		}
-		appliedCustomerBillingRateList.append("]");
-
-		return "{ \"product\": " + capitalizeStatus(productJson) + ", \"appliedCustomerBillingRate\": " + appliedCustomerBillingRateList.toString() + "}";
-
-	}
-	
-	// Bugfix: ProductStatusType must be uppercase
-	private String capitalizeStatus(String json) {
-		ObjectMapper objectMapper = new ObjectMapper();
-		String capitalize = json;
-		 try {
-			ObjectNode jsonNode = (ObjectNode) objectMapper.readTree(json);
-			 String status = jsonNode.get("status").asText();
-			 jsonNode.put("status", status.toUpperCase());
-			 return objectMapper.writeValueAsString(jsonNode);
-
-		} catch (Exception e) {			
-			return capitalize;
-		}
-	}
 }
