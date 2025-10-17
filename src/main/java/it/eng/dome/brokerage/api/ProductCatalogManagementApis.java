@@ -21,6 +21,7 @@ import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingPrice;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingUpdate;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecification;
 
+
 public class ProductCatalogManagementApis {
 	
 	private final Logger logger = LoggerFactory.getLogger(ProductCatalogManagementApis.class);
