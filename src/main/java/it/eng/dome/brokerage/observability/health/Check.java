@@ -5,6 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -25,6 +26,7 @@ public class Check {
 
     private List<String> affectedEndpoints;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     private OffsetDateTime time;
 
     private String output;
