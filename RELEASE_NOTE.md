@@ -13,6 +13,7 @@
 **BugFix**
 * Set `offset={}, limit={}` params in the logger description for all **list** methods.
 
+
 ### <code>2.2.0</code> :calendar: 17/10/2025
 **Feature**
 * Remove the *recursive* functionality when retrieving the list of **TMForum objects**, and implement new features:
