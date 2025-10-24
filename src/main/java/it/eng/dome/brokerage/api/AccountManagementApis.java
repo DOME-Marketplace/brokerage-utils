@@ -76,7 +76,7 @@ public class AccountManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<PartyAccount> listPartyAccounts(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listPartyAccounts");
+		logger.info("Request: listPartyAccounts: offset={}, limit={}", offset, limit);
 				
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -127,7 +127,7 @@ public class AccountManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<BillingAccount> listBillingAccounts(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listBillingAccounts");
+		logger.info("Request: listBillingAccounts: offset={}, limit={}", offset, limit);
 			
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -225,7 +225,7 @@ public class AccountManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<BillFormat> listBillFormats(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listBillFormats");
+		logger.info("Request: listBillFormats: offset={}, limit={}", offset, limit);
 		
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);

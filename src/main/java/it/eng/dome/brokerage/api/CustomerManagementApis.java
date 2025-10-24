@@ -68,7 +68,7 @@ public class CustomerManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Customer> listCustomers(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listCustomers");
+		logger.info("Request: listCustomers: offset={}, limit={}", offset, limit);
 		
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);

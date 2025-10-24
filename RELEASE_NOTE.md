@@ -2,6 +2,16 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.2.1</code> :calendar: 24/10/2025
+**Improvements**
+* Add `BillingResponseDTO` class to manage billing response
+* Add `ProductOfferingPriceUtils` class to manage ProductOfferingPrice
+* Add `it.eng.dome.brokerage.model` package
+* Add `ApplyTaxesRequestDTO` class to manage invoicing service request
+* Add `ApplyTaxesResponseDTO` class to manage invoicing service response
+
+**BugFix**
+* Set `offset={}, limit={}` params in the logger description for all **list** methods.
 
 ### <code>2.2.0</code> :calendar: 17/10/2025
 **Feature**

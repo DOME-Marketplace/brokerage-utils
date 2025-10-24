@@ -74,7 +74,7 @@ public class UsageManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Usage> listUsages(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listUsages");
+		logger.info("Request: listUsages: offset={}, limit={}", offset, limit);
 			
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -172,7 +172,7 @@ public class UsageManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<UsageSpecification> listUsageSpecifications(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listUsageSpecifications");
+		logger.info("Request: listUsageSpecifications: offset={}, limit={}", offset, limit);
 				
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);

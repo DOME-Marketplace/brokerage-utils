@@ -65,7 +65,7 @@ public class ServiceCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<ServiceSpecification> listServiceSpecifications(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listServiceSpecifications");
+		logger.info("Request: listServiceSpecifications: offset={}, limit={}", offset, limit);
 					
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);

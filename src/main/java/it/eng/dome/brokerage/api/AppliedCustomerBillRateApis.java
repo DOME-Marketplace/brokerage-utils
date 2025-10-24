@@ -77,7 +77,7 @@ public class AppliedCustomerBillRateApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<AppliedCustomerBillingRate> listAppliedCustomerBillingRates(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listAppliedCustomerBillingRates");
+		logger.info("Request: listAppliedCustomerBillingRates: offset={}, limit={}", offset, limit);
 			
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);

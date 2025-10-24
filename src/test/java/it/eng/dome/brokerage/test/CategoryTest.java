@@ -1,8 +1,10 @@
 package it.eng.dome.brokerage.test;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
-import it.eng.dome.brokerage.api.CategoryApis;
+import it.eng.dome.brokerage.api.ProductCatalogManagementApis;
+import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf620.v4.ApiClient;
 import it.eng.dome.tmforum.tmf620.v4.Configuration;
 import it.eng.dome.tmforum.tmf620.v4.model.Category;
@@ -18,12 +20,8 @@ public class CategoryTest {
 		 * Get All Categories
 		 */
 		TestGetAllCategories();
+//		TestGetAllCategoriesToList();
 
-		/**
-		 * Get Category by ID
-		 */
-		String id = "urn:ngsi-ld:category:c3289c15-635b-44a6-90e7-93a6d2591b4f";
-		TestGetCategory(id);
 	}
 
 	protected static void TestGetAllCategories() {
@@ -31,9 +29,36 @@ public class CategoryTest {
 		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
 		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductOfferingPath);
 
-		CategoryApis apis = new CategoryApis(apiClientTmf620);
+		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);
+		AtomicInteger count = new AtomicInteger(0);
+		
+		FetchUtils.streamAll(
+	        apis::listCategories, 	// method reference
+	        null,                       // fields
+	        null, 				    // filter
+	        10                         // pageSize
+		).forEach(c -> { 
+			count.incrementAndGet();
+			System.out.println(count + " " + c.getId() + " → " + c.getName() + " / " + c.getDescription());
+			}
+		);
 
-		List<Category> categories = apis.getAllCategory(null, null);
+		System.out.println("Categories found: " + count);
+	}
+	
+	protected static void TestGetAllCategoriesToList() {
+
+		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
+		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductOfferingPath);
+
+		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);
+		
+		List<Category> categories = FetchUtils.streamAll(
+	        apis::listCategories, 	// method reference
+	        null,                       // fields
+	        null, 				    // filter
+	        100                         // pageSize
+		).toList(); 
 
 		int count = 0;
 		for (Category category : categories) {
@@ -43,17 +68,4 @@ public class CategoryTest {
 		System.out.println("Categories found: " + count);
 	}
 
-	protected static void TestGetCategory(String id) {
-
-		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
-		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductOfferingPath);
-
-		CategoryApis apis = new CategoryApis(apiClientTmf620);
-
-		Category category = apis.getCategory(id, null);
-
-		if (category != null) {
-			System.out.println(category.getId() + " " + category.getName() + " " + category.getLifecycleStatus());
-		}
-	}
 }

@@ -14,7 +14,7 @@ public class CustomerBillApisTest {
 	
 
 	final static String tmf678CustomerBillPath = "tmf-api/customerBillManagement/v4";
-	final static String tmfEndpoint = "https://dome-dev.eng.it";
+	final static String tmfEndpoint = "https://tmf.dome-marketplace-sbx.org";
 
 	public static void main(String[] args) {
 		

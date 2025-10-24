@@ -67,7 +67,7 @@ public class ProductInventoryApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Product> listProducts(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listAgreements");
+		logger.info("Request: listAgreements: offset={}, limit={}", offset, limit);
 		
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);

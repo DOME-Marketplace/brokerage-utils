@@ -83,7 +83,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<ProductOffering> listProductOfferings(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listProductOfferings");
+		logger.info("Request: listProductOfferings: offset={}, limit={}", offset, limit);
 				
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -181,7 +181,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<ProductOfferingPrice> listProductOfferingPrices(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listProductOfferingPrices");
+		logger.info("Request: listProductOfferingPrices: offset={}, limit={}", offset, limit);
 		
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -232,7 +232,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<ProductSpecification> listProductSpecifications(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listProductSpecifications");
+		logger.info("Request: listProductSpecifications: offset={}, limit={}", offset, limit);
 		
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -283,7 +283,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Category> listCategories(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listCategories");
+		logger.info("Request: listCategories: offset={}, limit={}", offset, limit);
 				
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -334,7 +334,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Catalog> listCatalogs(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listCatalogs");
+		logger.info("Request: listCatalogs: offset={}, limit={}", offset, limit);
 				
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);

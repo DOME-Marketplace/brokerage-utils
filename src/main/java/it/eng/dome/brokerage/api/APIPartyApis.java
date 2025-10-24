@@ -69,7 +69,7 @@ public class APIPartyApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Organization> listOrganizations(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listOrganizations");
+		logger.info("Request: listOrganizations: offset={}, limit={}", offset, limit);
 					
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -120,7 +120,7 @@ public class APIPartyApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Individual> listIndividuals(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listIndividuals");
+		logger.info("Request: listIndividuals: offset={}, limit={}", offset, limit);
 			
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);

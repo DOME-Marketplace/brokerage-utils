@@ -11,14 +11,14 @@ import it.eng.dome.tmforum.tmf633.v4.model.ServiceSpecification;
 
 public class ServiceCatalogManagementApisTest {
     final static String tmf633serviceCatalogManagementPath = "tmf-api/serviceCatalogManagement/v4";
-    final static String tmfEndpoint = "https://dome-dev.eng.it";
+    final static String tmfEndpoint = "https://tmf.dome-marketplace-sbx.org";
 
     public static void main(String[] args) {
 
         /**
          * Get All ServiceSpecification
          */
-//        TestGetAllServiceSpecification();        
+        TestGetAllServiceSpecification();        
 //        TestGetListServiceSpecification();
 //        TestExitListServiceSpecification();
 
@@ -26,8 +26,8 @@ public class ServiceCatalogManagementApisTest {
         /**
          * Get ServiceSpecification by ID
          */
-        String id = "urn:ngsi-ld:service-specification:44e32a74-94ee-4625-a6e3-ca69a66b3881";
-        TestGetServiceSpecification(id);
+//        String id = "urn:ngsi-ld:service-specification:44e32a74-94ee-4625-a6e3-ca69a66b3881";
+//        TestGetServiceSpecification(id);
 
     }
 
@@ -63,7 +63,7 @@ public class ServiceCatalogManagementApisTest {
 	        apis::listServiceSpecifications,		// method reference
 	        null,                       			// fields
 	        null, 									// filter
-	        100                         			// pageSize
+	        10                         			// pageSize
 		).toList();		
 		
 		System.out.println("ServiceSpecification found: " + serviceSpecifications.size());
@@ -93,7 +93,7 @@ public class ServiceCatalogManagementApisTest {
 	        apis::listServiceSpecifications,		// method reference
 	        null,                       			// fields
 	        null, 									// filter
-	        100                         			// pageSize
+	        10                         			// pageSize
 		) 
 		.forEach(rs -> { 
 			count.incrementAndGet();
