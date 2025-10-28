@@ -8,7 +8,6 @@
 * Add `ProductOfferingPriceUtils` class to manage ProductOfferingPrice
 * Add `it.eng.dome.brokerage.model` package
 * Add `ApplyTaxesRequestDTO` class to manage invoicing service request
-* Add `ApplyTaxesResponseDTO` class to manage invoicing service response
 
 **BugFix**
 * Set `offset={}, limit={}` params in the logger description for all **list** methods.

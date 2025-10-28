@@ -6,8 +6,9 @@ import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
 import it.eng.dome.tmforum.tmf678.v4.model.CustomerBill;
 
 /**
- * This class represents the response returned  by the "billing/bill" API after the bill calculation process.
- * This class contains information about the generated {@link CustomerBill} and the associated {@link AppliedCustomerBillingRate}(s) without taxes
+ * This class represents the response returned by the "billing/bill" API of the BillingEngine after the bill (without taxes) calculation process 
+ * and returned by by the "invoicing/applyTaxes" API of the InvoicingService after the application of taxes to the bills 
+ * This class contains information about the generated {@link CustomerBill} and the associated {@link AppliedCustomerBillingRate}(s)
  */
 public class BillingResponseDTO {
 	
