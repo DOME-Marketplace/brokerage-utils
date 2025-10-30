@@ -35,8 +35,7 @@ public class ProductOfferingPriceUtils {
 		if(popRef==null) 
 			throw new IllegalArgumentException("The ProductOfferingPriceRef is null in the ProductPrice");
 		
-		String fields="bundledPopRelationship,isBundle,lifecycleStatus,priceType,recurringChargePeriodLength,recurringChargePeriodType";
-		ProductOfferingPrice pop=popApis.getProductOfferingPrice(popRef.getId(), fields);
+		ProductOfferingPrice pop=popApis.getProductOfferingPrice(popRef.getId(), null);
 		
 		if(pop==null)			
 			throw new IllegalArgumentException(String.format("The ProductOfferingPrice '%s' is null", popRef.getId()));
@@ -59,8 +58,7 @@ public class ProductOfferingPriceUtils {
 		
 		for(BundledProductOfferingPriceRelationship popRel: popRelationships) {
 			
-			String fields="bundledPopRelationship,isBundle,lifecycleStatus,priceType,recurringChargePeriodLength,recurringChargePeriodType";
-			ProductOfferingPrice pop = popApis.getProductOfferingPrice(popRel.getId(),fields);
+			ProductOfferingPrice pop = popApis.getProductOfferingPrice(popRel.getId(),null);
 			
 			if(pop==null) {
 				throw new IllegalArgumentException(String.format("The ProductOfferingPrice '%s' is null", popRel.getId()));
