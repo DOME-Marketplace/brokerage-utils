@@ -24,7 +24,7 @@
   - `fetchByBatch`: **batch-by-batch processing**, applying a consumer (`BatchProcessor`) to each retrieved block of data.
   - `fetchAll`: **eager full loading**, aggregating all elements in memory and returning a complete list.
 * Add a **throw Exception** in all `Brokerage APIs`.
-* Manage **different types* in the `GenericEnumSerializer` and `GenericEnumDeserializer` classes.
+* Manage *different types* in the `GenericEnumSerializer` and `GenericEnumDeserializer` classes.
 
 **Improvements**
 * Update Javadoc.
