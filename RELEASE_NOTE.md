@@ -2,9 +2,14 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.2.3</code> :calendar: 14/11/2025
+**BugFix**
+* Fixed handling of **non-compliant** objects in `FetchUtils` by applying a **divide-and-conquer** fallback in `safeFetchRange` method, ensuring valid items are retained.
+
+
 ### <code>2.2.2</code> :calendar: 30/10/2025
 **BugFix**
-* Update `ProductOfferingPriceUtils` to retrieve all fields of `ProductOfferingPrice`
+* Update `ProductOfferingPriceUtils` to retrieve all fields of `ProductOfferingPrice`.
 
 ### <code>2.2.1</code> :calendar: 24/10/2025
 **Improvements**
