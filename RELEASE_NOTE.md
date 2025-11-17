@@ -10,6 +10,7 @@
 
 **Improvements**
 * Move `getChecksOnSelf` in the `AbstractHealthService` class to share for all `HealthService`. 
+* Add shared exception for billing services: `BadRelatedPartyException` and `IllegalEnumException`.
 
 
 ### <code>2.2.1</code> :calendar: 24/10/2025
