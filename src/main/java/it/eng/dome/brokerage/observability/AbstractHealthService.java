@@ -29,9 +29,17 @@ public abstract class AbstractHealthService {
         .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
     /**
-     * Returns basic service information based on BuildProperties.
+     * Returns basic service information based on BuildProperties and returns it as an {@link Info} object.
      *
-     * @return Info object containing name, version, and release time.
+     * <p>
+	 * The returned object contains:
+	 * <ul>
+	 *     <li>The application name, taken from {@code buildProperties.getName()}</li>
+	 *     <li>The application version, taken from {@code buildProperties.getVersion()}</li>
+	 *     <li>The build timestamp, formatted via {@code DateUtils.getFormatterTimestamp(buildProperties.getTime())}</li>
+	 * </ul>
+	 * 
+     * @return an {@link Info} object containing name, version, and release time.
      */
     public Info getInfo() {
         Info info = new Info();
@@ -41,6 +49,30 @@ public abstract class AbstractHealthService {
 
         return info;
     }
+    
+    /**
+     * Retrieves a health check related to the service itself by invoking the {@code getInfo()} API.
+     * 
+     * <p>
+	 * This method calls {@link #getInfo()} to obtain basic information about the service.
+	 * If the response is not {@code null}, the health check is marked as {@link HealthStatus#PASS};
+	 * otherwise, it is marked as {@link HealthStatus#FAIL}.
+	 * <p>
+	 * 
+	 * @param service_name the name of the service used in the check output message
+	 * @return a {@link Check} representing the health status of the {@code getInfo()} API
+     */
+	public Check getChecksOnSelf(String service_name) {
+
+	    // Check getInfo API
+	    Info info = getInfo();
+	    HealthStatus infoStatus = (info != null) ? HealthStatus.PASS : HealthStatus.FAIL;
+	    String infoOutput = (info != null)
+	            ? service_name + " version: " + info.getVersion()
+	            : service_name + " getInfo returned unexpected response";
+	    
+	    return createCheck("self", "get-info", "api", infoStatus, infoOutput);
+	}
 
     /**
      * Fully implement this method by adding Checks on internal status and dependencies, as well as notes and output.

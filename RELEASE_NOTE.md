@@ -6,6 +6,9 @@
 **BugFix**
 * Fixed handling of **non-compliant** objects in `FetchUtils` by applying a **divide-and-conquer** fallback in `safeFetchRange` method, ensuring valid items are retained.
 
+**Improvements**
+* Move `getChecksOnSelf` in the `AbstractHealthService` class to share for `all HealthService`. 
+
 
 ### <code>2.2.2</code> :calendar: 30/10/2025
 **BugFix**
