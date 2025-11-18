@@ -10,9 +10,10 @@
 
 **Improvements**
 * Move `getChecksOnSelf` in the `AbstractHealthService` class to share for all `HealthService`. 
-* Add shared exception for billing services: `BadRelatedPartyException` and `IllegalEnumException`.
+* Add *shared exception* for billing services: `BadRelatedPartyException` and `IllegalEnumException`.
 * Add `DefaultErrorResponse` compliant with RFC 7807.
-* Add `BillCycle` and `Invoice`. 
+* Add `BillCycle` and `Invoice` models. 
+
 
 ### <code>2.2.1</code> :calendar: 24/10/2025
 **Improvements**
