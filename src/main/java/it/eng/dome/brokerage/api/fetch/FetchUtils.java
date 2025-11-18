@@ -1,5 +1,6 @@
 package it.eng.dome.brokerage.api.fetch;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -105,10 +106,21 @@ public class FetchUtils {
 				try {
 					currentBatch = fetcher.fetch(fields, offset, pageSize, filter);
 				} catch (Exception e) {
-					logger.error("Error: {}", e.getMessage());
+					
+					Throwable cause = e;
+		            while (cause != null) { // management of SocketTimeoutException (nested exception)
+		                if (cause instanceof SocketTimeoutException) {
+		                	logger.error("Error processing batch - {}", cause.getMessage());
+		                	//exit from loop if Connect timed out
+		                	throw new RuntimeException(cause.getMessage());
+		                }
+		                cause = cause.getCause(); 
+		            }
+					
+		            logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
 					
 					// fallback: divide & conquer
-					logger.debug("Batch fetch failed at offset {} – applying divide-and-conquer fallback to recover valid items.", offset);
+					logger.debug("Batch fetch failed at offset {} - applying divide-and-conquer fallback to recover valid items.", offset);
 	                currentBatch = safeFetchRange(fetcher, fields, filter, offset, pageSize);
 				}
 
@@ -170,9 +182,21 @@ public class FetchUtils {
 	        try {
 	            batch = fetcher.fetch(fields, offset, batchSize, filter);
 	        } catch (Exception e) {
+	        	
+	        	Throwable cause = e;
+	            while (cause != null) { // management of SocketTimeoutException (nested exception)
+	                if (cause instanceof SocketTimeoutException) {
+	                	logger.error("Error processing batch - {}", cause.getMessage());
+	                	//exit from loop if Connect timed out
+	                	throw new RuntimeException(cause.getMessage());
+	                }
+	                cause = cause.getCause(); 
+	            }
+	        	
 	        	logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
 
-	            logger.debug("Batch fetch failed at offset {} – applying divide-and-conquer fallback to recover valid items.", offset);
+	        	// fallback: divide & conquer
+	            logger.debug("Batch fetch failed at offset {} - applying divide-and-conquer fallback to recover valid items.", offset);
 	            batch = safeFetchRange(fetcher, fields, filter, offset, batchSize);
 	        }
 

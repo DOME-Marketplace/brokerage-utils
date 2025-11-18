@@ -111,7 +111,7 @@ public class ErrorResponse {
 	 * 
 	 * @return The time the response was generated
 	 */
-	public OffsetDateTime getTimstamp() {
+	public OffsetDateTime getTimestamp() {
 		return timestamp;
 	}
 
