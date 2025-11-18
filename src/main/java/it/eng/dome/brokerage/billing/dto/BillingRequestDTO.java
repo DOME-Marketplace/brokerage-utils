@@ -12,12 +12,12 @@ import it.eng.dome.tmforum.tmf678.v4.model.TimePeriod;
 
 /**
  * This class represents the DTO used by the "billing/bill" API  to calculate a bill \n.
- * This class contains information about the {@link Product} the billingPeriod (i.e., {@link TimePeriod}) and the list of {@link ProductPrice} for which the bill must be calculated.
+ * This class contains information about the identifier of the {@link Product}, the billingPeriod (i.e., {@link TimePeriod}) and the list of {@link ProductPrice} for which the bill must be calculated.
  */
 public class BillingRequestDTO {
 	
-	private Product product;
-	private TimePeriod timePeriod;
+	private String productId;
+	private TimePeriod billingPeriod;
 	//FIXME - TO REMOVE
 	private List<ProductPrice> productPrice;
 	
@@ -30,33 +30,33 @@ public class BillingRequestDTO {
 	/**
 	 * Class constructor specifying the {@link Product} the billingPeriod (i.e., {@link TimePeriod}) and the list of {@link ProductPrice} for which the bill must be calculated
 	 * 
-	 * @param pr A {@link Product} instance for which the bill must be calculate
-	 * @param tp A {@link TimePeriod} representing the billingPeriod of the bill 
+	 * @param productId An identifier of the {@link Product} for which the bill must be calculate
+	 * @param billingPeriod A {@link TimePeriod} representing the billingPeriod of the bill 
 	 * @param ppl A list of {@link ProductPrice} of the Product that must be included in the bill
 	 */
 	@JsonCreator
-	public BillingRequestDTO(@JsonProperty("product") Product pr, @JsonProperty("timePeriod") TimePeriod tp, @JsonProperty("productPrice") List<ProductPrice> ppl) {
-		this.setProduct(pr);
-		this.setTimePeriod(tp);
+	public BillingRequestDTO(@JsonProperty("productId") String productId, @JsonProperty("billingPeriod") TimePeriod billingPeriod, @JsonProperty("productPrice") List<ProductPrice> ppl) {
+		this.setProductId(productId);
+		this.setBillingPeriod(billingPeriod);
 		this.setProductPrice(ppl);
 	}
 
 	/**
-	 * Returns the {@link Product} to which the bill refers to
+	 * Returns the identifier of the {@link Product} to which the bill refers to
 	 * 
-	 * @return The Product of the bill 
+	 * @return The identifier of the Product for which the bill must be calculated 
 	 */
-	public Product getProduct() {
-		return product;
+	public String getProductId() {
+		return productId;
 	}
 
 	/**
-	 * Sets the {@link Product} of the bill
+	 * Sets the identifier of the {@link Product} for which the bill must be calculated 
 	 * 
-	 * @param product The Product of the bill
+	 * @param productId The identifier of the Product to which the bill refers to
 	 */
-	public void setProduct(Product product) {
-		this.product = product;
+	public void setProductId(String productId) {
+		this.productId = productId;
 	}
 
 	/**
@@ -64,17 +64,17 @@ public class BillingRequestDTO {
 	 * 
 	 * @return The billingPeriod of the bill
 	 */ 
-	public TimePeriod getTimePeriod() {
-		return timePeriod;
+	public TimePeriod getBillingPeriod() {
+		return billingPeriod;
 	}
 
 	/**
 	 * Sets the {@link TimePeriod} of the bill
 	 * 
-	 * @param timePeriod The billingPeriod of the bill
+	 * @param billingPeriod The billingPeriod of the bill
 	 */
-	public void setTimePeriod(TimePeriod timePeriod) {
-		this.timePeriod = timePeriod;
+	public void setBillingPeriod(TimePeriod billingPeriod) {
+		this.billingPeriod = billingPeriod;
 	}
 
 	/**

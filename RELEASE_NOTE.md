@@ -2,7 +2,10 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
-### <code>2.2.2</code> :calendar: 30/10/2025
+### <code>2.2.2</code> :calendar: 12/11/2025
+**Improvements**
+* Add `Invoice` class to manage billing response
+
 **BugFix**
 * Update `ProductOfferingPriceUtils` to retrieve all fields of `ProductOfferingPrice`
 
