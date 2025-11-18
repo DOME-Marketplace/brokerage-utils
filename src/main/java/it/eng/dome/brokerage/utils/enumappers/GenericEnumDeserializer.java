@@ -11,6 +11,8 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
+import it.eng.dome.brokerage.exception.IllegalEnumException;
+
 public class GenericEnumDeserializer<T> extends StdDeserializer<T> {
 
 	private static final long serialVersionUID = 2027123572912834740L;
@@ -40,8 +42,8 @@ public class GenericEnumDeserializer<T> extends StdDeserializer<T> {
             return value;
         } catch (Exception e) {
         	logger.warn("Valid {} enum: {}", enumClass.getSimpleName(), getEnumValues());
-        	logger.error("Error deserializing enum {} from '{}'", enumClass.getSimpleName(), text, e);
-        	throw new IOException("Error deserializing enum " + enumClass.getSimpleName() + " from " + text, e);
+        	logger.error("Error deserializing enum {} from '{}'", enumClass.getSimpleName(), text);
+        	throw new IllegalEnumException("Unexpected value '" + text + "' for enum " + enumClass.getSimpleName(), e);
         }
     }
     

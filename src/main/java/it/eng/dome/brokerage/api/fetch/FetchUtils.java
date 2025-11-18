@@ -1,5 +1,6 @@
 package it.eng.dome.brokerage.api.fetch;
 
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -10,7 +11,12 @@ import java.util.Spliterators;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class FetchUtils {
+	
+	private static final Logger logger = LoggerFactory.getLogger(FetchUtils.class);
 
 	/**
 	 * Functional interface representing a fetcher that retrieves a list of objects
@@ -62,11 +68,15 @@ public class FetchUtils {
 
 	/**
 	 * Streams all elements fetched in batches from a {@link ListedFetcher}.
-	 * <p>
-	 * This method retrieves items in pages of size {@code pageSize} using the
-	 * provided fetcher, and returns a {@link Stream} that lazily iterates over all
-	 * items, fetching new batches only when needed.
-	 * </p>
+	 * <p>This method lazily retrieves items in pages of size {@code pageSize} using the
+	 * provided fetcher, producing a {@link Stream} that loads data on demand as the
+	 * stream is consumed. Each batch is fetched only when the iterator requires it.</p>
+	 *
+	 * <p>If a batch fetch fails due to malformed or non-compliant data within the range,
+	 * the method automatically applies a divide-and-conquer fallback strategy to
+	 * recover all valid items: the batch is recursively split into smaller ranges
+	 * until valid subsets are successfully fetched. Only the corrupted elements are
+	 * discarded, ensuring that no valid items are lost.</p>
 	 *
 	 * @param <T>      the type of elements to fetch and stream
 	 * @param fetcher  the {@link ListedFetcher} used to fetch items in batches
@@ -96,7 +106,22 @@ public class FetchUtils {
 				try {
 					currentBatch = fetcher.fetch(fields, offset, pageSize, filter);
 				} catch (Exception e) {
-					throw new RuntimeException("Error fetching data from API at offset " + offset + " when getting " + pageSize + " items", e);
+					
+					Throwable cause = e;
+		            while (cause != null) { // management of SocketTimeoutException (nested exception)
+		                if (cause instanceof SocketTimeoutException) {
+		                	logger.error("Error processing batch - {}", cause.getMessage());
+		                	//exit from loop if Connect timed out
+		                	throw new RuntimeException(cause.getMessage());
+		                }
+		                cause = cause.getCause(); 
+		            }
+					
+		            logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
+					
+					// fallback: divide & conquer
+					logger.debug("Batch fetch failed at offset {} - applying divide-and-conquer fallback to recover valid items.", offset);
+	                currentBatch = safeFetchRange(fetcher, fields, filter, offset, pageSize);
 				}
 
 				if (currentBatch == null || currentBatch.isEmpty()) {
@@ -104,7 +129,7 @@ public class FetchUtils {
 					return false;
 				}
 
-				offset += currentBatch.size();
+				offset += pageSize;
 				index = 0;
 				return true;
 			}
@@ -114,24 +139,29 @@ public class FetchUtils {
 				if (!hasNext()) {
 					throw new NoSuchElementException();
 				}
-				try {
-	                return currentBatch.get(index++);
-	            } catch (Exception e) {
-	            	throw new RuntimeException("Error processing batch at offset " + offset + " when getting " + pageSize + " items", e);
-	            }
+                return currentBatch.get(index++);
 			}
 		};
 
 		return StreamSupport.stream(Spliterators.spliteratorUnknownSize(iterator, 0), false);
 	}
+		
 
 	/**
 	 * Fetches elements in batches from a {@link ListedFetcher} and processes each
 	 * batch using a {@link BatchProcessor}.
 	 * <p>
-	 * This method repeatedly fetches items in pages of size {@code batchSize} and
-	 * passes each non-empty batch to the provided {@code consumer} for processing.
-	 * Fetching continues until no more items are returned.
+	 * This method retrieves items in pages of size {@code batchSize} using the
+	 * given fetcher. Each successfully fetched, non-empty batch is then passed to
+	 * the supplied {@code consumer} for processing. Fetching continues until the
+	 * fetcher returns an empty or {@code null} result, indicating that no more
+	 * items are available.
+	 * </p>
+	 *
+	 * <p>
+	 * If an exception occurs during fetching or processing, the method fails fast
+	 * by throwing a {@link RuntimeException}, including the original cause. No
+	 * additional recovery or fallback logic is applied.
 	 * </p>
 	 *
 	 * @param <T>       the type of elements to fetch and process
@@ -145,13 +175,29 @@ public class FetchUtils {
 	public static <T> void fetchByBatch(ListedFetcher<T> fetcher, String fields, Map<String, String> filter, int batchSize, BatchProcessor<T> consumer) {
 
 		int offset = 0;
-		List<T> batch;
-
+		
 		while (true) {
+			List<T> batch;
+			
 	        try {
 	            batch = fetcher.fetch(fields, offset, batchSize, filter);
 	        } catch (Exception e) {
-	            throw new RuntimeException("Error fetching batch at offset " + offset + " when getting " + batchSize + " items", e);
+	        	
+	        	Throwable cause = e;
+	            while (cause != null) { // management of SocketTimeoutException (nested exception)
+	                if (cause instanceof SocketTimeoutException) {
+	                	logger.error("Error processing batch - {}", cause.getMessage());
+	                	//exit from loop if Connect timed out
+	                	throw new RuntimeException(cause.getMessage());
+	                }
+	                cause = cause.getCause(); 
+	            }
+	        	
+	        	logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
+
+	        	// fallback: divide & conquer
+	            logger.debug("Batch fetch failed at offset {} - applying divide-and-conquer fallback to recover valid items.", offset);
+	            batch = safeFetchRange(fetcher, fields, filter, offset, batchSize);
 	        }
 
 	        if (batch == null || batch.isEmpty()) {
@@ -164,7 +210,7 @@ public class FetchUtils {
 	            throw new RuntimeException("Error processing batch starting at offset " + offset, e);
 	        }
 
-	        offset += batch.size();
+	        offset += batchSize;
 	    }
 	}
 
@@ -191,5 +237,54 @@ public class FetchUtils {
 		fetchByBatch(fetcher, fields, filter, pageSize, batch -> allItems.addAll(batch));
 
 		return allItems;
+	}
+	
+	
+	/**
+	 * Safely fetches a range of items from a paginated API using a divide-and-conquer
+	 * fallback strategy when a batch fetch fails.
+	 * 
+	 * @param <T>     the type of items returned by the fetcher
+	 * @param fetcher the API abstraction used to retrieve paginated items
+	 * @param fields  the field selector passed to the API
+	 * @param filter  optional filter parameters passed to the API
+	 * @param start   the starting offset (inclusive) of the requested range
+	 * @param size    the number of items to retrieve
+	 * @return a list containing all valid items within the requested range,
+	 *         possibly empty if the entire range is invalid or corrupted
+	 */
+	private static <T> List<T> safeFetchRange(
+	        ListedFetcher<T> fetcher,
+	        String fields,
+	        Map<String, String> filter,
+	        int start,
+	        int size) {
+
+	    // base case - single element
+	    if (size == 1) {
+	        try {
+	            List<T> res = fetcher.fetch(fields, start, 1, filter);
+	            return res != null ? res : Collections.emptyList();
+	        } catch (Exception e) {
+	            return Collections.emptyList();
+	        }
+	    }
+
+	    // batch
+	    try {
+	        List<T> res = fetcher.fetch(fields, start, size, filter);
+	        return res != null ? res : Collections.emptyList();
+	    } catch (Exception e) {
+
+	        int half = size / 2;
+
+	        List<T> left  = safeFetchRange(fetcher, fields, filter, start, half);
+	        List<T> right = safeFetchRange(fetcher, fields, filter, start + half, size - half);
+
+	        List<T> result = new ArrayList<>(left.size() + right.size());
+	        result.addAll(left);
+	        result.addAll(right);
+	        return result;
+	    }
 	}
 }
