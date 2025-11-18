@@ -3,7 +3,7 @@
 **Release Notes** of the *Brokerage Utils* software:
 
 
-### <code>2.2.2</code> :calendar: 17/11/2025 (Work In Progress)
+### <code>2.2.2</code> :calendar: 18/11/2025 (Work In Progress)
 **BugFix**
 * Update `ProductOfferingPriceUtils` to retrieve all fields of `ProductOfferingPrice`.
 * Fixed handling of **non-compliant** objects in `FetchUtils` by applying a **divide-and-conquer** fallback in `safeFetchRange` method, ensuring valid items are retained.
@@ -11,6 +11,7 @@
 **Improvements**
 * Move `getChecksOnSelf` in the `AbstractHealthService` class to share for all `HealthService`. 
 * Add shared exception for billing services: `BadRelatedPartyException` and `IllegalEnumException`.
+* Add `DefaultErrorResponse` compliant with RFC 7807.
 
 
 ### <code>2.2.1</code> :calendar: 24/10/2025
