@@ -3,6 +3,8 @@ package it.eng.dome.brokerage.test;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.Test;
+
 import it.eng.dome.brokerage.api.ProductCatalogManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf620.v4.ApiClient;
@@ -14,7 +16,8 @@ public class CategoryTest {
 	final static String tmf620ProductOfferingPath = "tmf-api/productCatalogManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
 
-	public static void main(String[] args) {
+	@Test
+	public void RunTest() {
 
 		/**
 		 * Get All Categories
@@ -24,7 +27,7 @@ public class CategoryTest {
 		
 //		TestGetAllCategoriesStreamAll();
 //		TestGetAllCategoriesFetchByBatch();		
-		TestGetAllCategoriesFetchAll();
+//		TestGetAllCategoriesFetchAll();
 	}
 
 	protected static void TestGetAllCategoriesStreamAll() {

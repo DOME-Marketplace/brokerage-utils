@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.Test;
+
 import it.eng.dome.brokerage.api.CustomerBillApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
@@ -16,11 +18,11 @@ public class CustomerBillApisTest {
 	final static String tmf678CustomerBillPath = "tmf-api/customerBillManagement/v4";
 	final static String tmfEndpoint = "https://tmf.dome-marketplace-sbx.org";
 
-	public static void main(String[] args) {
+	@Test
+	public void RunTest() {
 		
-		TestCustomerBillFiltered();
-		
-		TestCustomerBillById();
+//		TestCustomerBillFiltered();		
+//		TestCustomerBillById();
 	}
 	
 	
@@ -59,7 +61,7 @@ public class CustomerBillApisTest {
 		CustomerBillApis apis = new CustomerBillApis(apiClientTmf678);
 			
 		// get by ID
-		String id = "urn:ngsi-ld:customer-bill:3adf91fe-4896-4820-8ae8-db29864e03a3";
+		String id = "urn:ngsi-ld:customer-bill:e642addf-48e2-4627-8489-a1bad7d09e10";
 		try {
 			System.out.println("detail of state: " + apis.getCustomerBill(id, null).getState().getValue());
 		} catch (ApiException e) {

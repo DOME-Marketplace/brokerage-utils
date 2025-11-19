@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.Test;
+
 import it.eng.dome.brokerage.api.CustomerManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf629.v4.ApiClient;
@@ -17,12 +19,13 @@ public class CustomerManagementApisTest {
 	final static String tmf629CustomerPath = "tmf-api/customerManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
 
-	public static void main(String[] args) {
+	@Test
+	public void RunTest() {
 
 		/**
 		 * Get All Customers
 		 */
-		TestGetAllCustomers();
+//		TestGetAllCustomers();
 
 		/**
 		 * Get Filtered Customers

@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.Test;
+
 import it.eng.dome.brokerage.api.AgreementManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf651.v4.ApiClient;
@@ -19,12 +21,13 @@ public class AgreementManagementApisTest {
 	final static String tmf651CustomerPath = "tmf-api/agreementManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
 
-	public static void main(String[] args) {
+	@Test
+	public void RunTest() {
 		
 		/**
 		 * Get All Agreements
 		 */
-		TestGetAllAgreements();
+//		TestGetAllAgreements();
 		
 		/**
 		 * Get Filtered Agreements

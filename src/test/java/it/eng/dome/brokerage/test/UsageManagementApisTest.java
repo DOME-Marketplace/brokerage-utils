@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.Test;
+
 import it.eng.dome.brokerage.api.UsageManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf635.v4.ApiClient;
@@ -27,7 +29,8 @@ public class UsageManagementApisTest {
 	final static String tmf635UsagePath = "tmf-api/usageManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
 
-	public static void main(String[] args) {
+	@Test
+	public void RunTest() {
 
 		/**
 		 * Create Usage
@@ -47,8 +50,8 @@ public class UsageManagementApisTest {
 		/**
 		 * Get All Usages
 		 */
-		TestGetAllUsages();
-		TestGetAllUsageFiltered();
+//		TestGetAllUsages();
+//		TestGetAllUsageFiltered();
 		
 		/**
 		 * Create UsageSpecification

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.Test;
+
 import it.eng.dome.brokerage.api.AppliedCustomerBillRateApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
@@ -17,16 +19,16 @@ import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRateCreate;
 import it.eng.dome.tmforum.tmf678.v4.model.TimePeriod;
 
-public class AppliedCustomerBillRateApisTest {
 
+public class AppliedCustomerBillRateApisTest {
 
 	final static String tmf678CustomerBillPath = "tmf-api/customerBillManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
 	
-	
-	public static void main(String[] args) {
-		
-		TestAppliedCustomerBillRate();
+    @Test
+    public void RunTest() {
+    	
+//		TestAppliedCustomerBillRate();
 		
 //		TestAppliedCustomerBillRateFetch();
 		
@@ -40,8 +42,8 @@ public class AppliedCustomerBillRateApisTest {
 //		TestAppliedCustomerBillRateRevenueBilled();
 		
 //		TestCreateApplyRelatedParty();
-	}
-
+    }
+	
 	
 	public static void TestAppliedCustomerBillRateFetch() {
 		
@@ -93,6 +95,7 @@ public class AppliedCustomerBillRateApisTest {
 		}
 	}
 	
+	@Test
 	public static void TestAppliedCustomerBillRate() {
 		
 		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();

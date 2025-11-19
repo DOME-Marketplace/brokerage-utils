@@ -5,7 +5,8 @@
 
 ### <code>2.2.3</code> :calendar: 19/11/2025 (WIP)
 **Improvements**
-* Add `AbstractMarkdownGenerator` to share for all services to generate **REST_APIs.md** documentation,
+* Add `AbstractMarkdownGenerator` to share for all services to generate **REST_APIs.md** documentation.
+* Use of `JUnit Tests` for APIs.
 
 
 ### <code>2.2.2</code> :calendar: 18/11/2025

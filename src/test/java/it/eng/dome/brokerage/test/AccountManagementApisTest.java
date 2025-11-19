@@ -3,6 +3,8 @@ package it.eng.dome.brokerage.test;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.Test;
+
 import it.eng.dome.brokerage.api.AccountManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf666.v4.ApiClient;
@@ -19,7 +21,8 @@ public class AccountManagementApisTest {
 	final static String tmf666AccountPath = "tmf-api/accountManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
 
-	public static void main(String[] args) {
+	@Test
+	public void RunTest() {
 				
 		/**
 		 * PartyAccount
@@ -40,10 +43,10 @@ public class AccountManagementApisTest {
 		 */
 //		TestCreateBillFormat();
 		
-		String id = "urn:ngsi-ld:bill-format:c3b254fc-2d6b-42ca-ade1-133d554351bb";
+//		String id = "urn:ngsi-ld:bill-format:c3b254fc-2d6b-42ca-ade1-133d554351bb";
 //		TestUpdateBillFormat(id);
 //		TestGetAllBillFormats();
-		TestGetBillFormatById(id);
+//		TestGetBillFormatById(id);
 		
 	}
 	

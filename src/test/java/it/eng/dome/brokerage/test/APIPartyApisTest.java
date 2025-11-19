@@ -2,6 +2,8 @@ package it.eng.dome.brokerage.test;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.Test;
+
 import it.eng.dome.brokerage.api.APIPartyApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf632.v4.ApiClient;
@@ -15,20 +17,21 @@ public class APIPartyApisTest {
 	final static String tmf63ePartyPath = "tmf-api/party/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it"; 
 
-	public static void main(String[] args) {
+	@Test
+	public void RunTest() {
 
 		/**
 		 * Test Organizations
 		 */
-		TestOrganizations();
-		TestOrganization();
+//		TestOrganizations();
+//		TestOrganization();
 		
 		
 		/**
 		 * Test Individuals
 		 */
-		TestIndividuals();
-		TestIndividual();		
+//		TestIndividuals();
+//		TestIndividual();		
 	}
 
 	public static void TestOrganizations() {

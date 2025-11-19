@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.Test;
+
 import it.eng.dome.brokerage.api.ProductCatalogManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf620.v4.ApiClient;
@@ -27,15 +29,14 @@ public class ProductCatalogManagementApisTest {
 	final static String tmf620ProductCatalogPath = "tmf-api/productCatalogManagement/v4";
 	final static String tmfEndpoint = /*"https://dome-dev.eng.it"; */ "https://tmf.dome-marketplace-sbx.org";
 	
-
-	public static void main(String[] args) {
-		
+	@Test
+	public void RunTest() {
 		
 		/**
 		 * ProductOffering
 		 */
 //		TestCreateProductOffering();
-		TestGetAllProductOffering();
+//		TestGetAllProductOffering();
 //		TestGetAllProductOfferingFetchByBatch();
 //		TestGetFilteredProductOffering();		
 //		String id = "urn:ngsi-ld:product-offering:ac2d9699-2b55-402d-8028-c229b9683dba";

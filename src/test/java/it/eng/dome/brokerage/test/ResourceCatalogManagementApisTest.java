@@ -3,6 +3,8 @@ package it.eng.dome.brokerage.test;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.junit.jupiter.api.Test;
+
 import it.eng.dome.brokerage.api.ResourceCatalogManagementApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf634.v4.ApiClient;
@@ -15,7 +17,8 @@ public class ResourceCatalogManagementApisTest {
 	final static String tmf634ResourceCatalogPath = "tmf-api/resourceCatalog/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
 
-	public static void main(String[] args) {
+	@Test
+	public void RunTest() {
 		
 		/**
 		 * Get All ResourceSpecification
