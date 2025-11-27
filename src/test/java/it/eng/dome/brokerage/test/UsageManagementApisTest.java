@@ -1,5 +1,6 @@
 package it.eng.dome.brokerage.test;
 
+import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +29,8 @@ public class UsageManagementApisTest {
 	
 	final static String tmf635UsagePath = "tmf-api/usageManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
+	
+	final static String SCHEMA = "https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/TrackedEntity.json";
 
 	@Test
 	public void RunTest() {
@@ -38,7 +41,7 @@ public class UsageManagementApisTest {
 //		String id = TestCreateUsage();
 //		if (id != null) {
 //			Usage u = TestGetUsage(id);
-//			System.out.println(u.getId() + " " + u.getStatus() + " " + u.getUsageCharacteristic());
+//			System.out.println(u.getId() + " " + u.getStatus() + " " + u.getLastUpdate());
 //		}
 		
 		/**
@@ -59,7 +62,7 @@ public class UsageManagementApisTest {
 //		String id = TestCreateUsageSpecification();
 //		if (id != null) {
 //			UsageSpecification us = TestGetUsageSpecification(id);
-//			System.out.println(us.getId() + " " + us.getName() + " " + us.getVersion());
+//			System.out.println(us.getId() + " " + us.getName() + " " + us.getLastUpdate());
 //		}
 
 		/**
@@ -90,7 +93,8 @@ public class UsageManagementApisTest {
 		tp.setStartDateTime(OffsetDateTime.now());
 		tp.setEndDateTime(OffsetDateTime.now().plusDays(10));
 		usc.setValidFor(tp);
-		usc.setLastUpdate(OffsetDateTime.now());
+		
+		usc.setLastUpdate(OffsetDateTime.now().minusDays(5));
 		
 		String id = null;
 		try {
@@ -222,10 +226,13 @@ public class UsageManagementApisTest {
 		UsageManagementApis apis = new UsageManagementApis(apiClientTmf635);
 		
 		UsageCreate uc = new UsageCreate();
-		uc.setDescription("Test UsageCharacteristic");
+		uc.setDescription("Test LastUpdate");
 		uc.setStatus(UsageStatusType.GUIDED);
 		uc.setUsageDate(OffsetDateTime.now());
 		uc.setUsageType("VOICE");
+		OffsetDateTime myTime = OffsetDateTime.now().minusDays(3);
+		System.out.println("Setting lastUpdate to: " + myTime);
+		uc.setLastUpdate(myTime);
 		
 		UsageCharacteristic uch = new UsageCharacteristic();
 		uch.setId("a0ba-b214-234a-ba15");
@@ -236,6 +243,8 @@ public class UsageManagementApisTest {
 		listUch.add(uch);
 		uc.setUsageCharacteristic(listUch);
 
+		uc.setAtSchemaLocation(URI.create(SCHEMA));
+		
 		String id = null;
 		try {
 			id = apis.createUsage(uc);

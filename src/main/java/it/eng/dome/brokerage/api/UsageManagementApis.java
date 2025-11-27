@@ -1,11 +1,15 @@
 package it.eng.dome.brokerage.api;
 
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.dome.brokerage.api.config.DomeTmfSchemaConfig;
 import it.eng.dome.tmforum.tmf635.v4.ApiClient;
 import it.eng.dome.tmforum.tmf635.v4.ApiException;
 import it.eng.dome.tmforum.tmf635.v4.api.UsageApi;
@@ -23,6 +27,7 @@ public class UsageManagementApis {
 	private final Logger logger = LoggerFactory.getLogger(UsageManagementApis.class);
 	private UsageApi usageApi;
 	private UsageSpecificationApi usageSpecificationApi;
+	private final String usageSchemaLocation = DomeTmfSchemaConfig.get("usage");
 	
 	/**
 	 * Constructor
@@ -101,7 +106,14 @@ public class UsageManagementApis {
 	 */
 	public String createUsage(UsageCreate usageCreate) throws ApiException {	
 		logger.info("Create: Usage");
-
+		
+		usageCreate.setLastUpdate(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC));
+		
+		if (usageCreate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", usageSchemaLocation);
+			usageCreate.setAtSchemaLocation(URI.create(usageSchemaLocation));
+		}
+		
 		Usage usage = usageApi.createUsage(usageCreate);
 		logger.info("Usage saved successfully with id: {}", usage.getId());
 		
@@ -122,6 +134,8 @@ public class UsageManagementApis {
 	 */
 	public void updateUsage(String id, UsageUpdate usageUpdate) throws ApiException {
 		logger.info("Request: updateUsage by id {}", id);
+		
+		usageUpdate.setLastUpdate(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC));
 		
 		Usage usage = usageApi.patchUsage(id, usageUpdate);
 		
@@ -200,6 +214,8 @@ public class UsageManagementApis {
 	public String createUsageSpecification(UsageSpecificationCreate usageSpecificationCreate) throws ApiException {		
 		logger.info("Create: UsageSpecification");
 		
+		usageSpecificationCreate.setLastUpdate(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC));
+				
 		UsageSpecification usage = usageSpecificationApi.createUsageSpecification(usageSpecificationCreate);
 		logger.info("UsageSpecification saved successfully with id: {}", usage.getId());
 		
@@ -221,6 +237,8 @@ public class UsageManagementApis {
 	public void updateUsageSpecification(String id, UsageSpecificationUpdate usageSpecificationUpdate) throws ApiException {
 		logger.info("Request: updateUsageSpecification by id {}", id);
 
+		usageSpecificationUpdate.setLastUpdate(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC));
+		
 		UsageSpecification usageSpecification = usageSpecificationApi.patchUsageSpecification(id, usageSpecificationUpdate);
 		
 		boolean success = (usageSpecification != null && usageSpecification.getId() != null);
