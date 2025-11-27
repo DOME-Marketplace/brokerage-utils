@@ -183,15 +183,15 @@ public class FetchUtils {
 	            batch = fetcher.fetch(fields, offset, batchSize, filter);
 	        } catch (Exception e) {
 	        	
-	        	Throwable cause = e;
-	            while (cause != null) { // management of SocketTimeoutException (nested exception)
-	                if (cause instanceof SocketTimeoutException) {
-	                	logger.error("Error processing batch - {}", cause.getMessage());
-	                	//exit from loop if Connect timed out
-	                	throw new RuntimeException(cause.getMessage());
-	                }
-	                cause = cause.getCause(); 
-	            }
+//	        	Throwable cause = e;
+//	            while (cause != null) { // management of SocketTimeoutException (nested exception)
+//	                if (cause instanceof SocketTimeoutException) {
+//	                	logger.error("Error processing batch - {}", cause.getMessage());
+//	                	//exit from loop if Connect timed out
+//	                	throw new RuntimeException(cause.getMessage());
+//	                }
+//	                cause = cause.getCause(); 
+//	            }
 	        	
 	        	logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
 
