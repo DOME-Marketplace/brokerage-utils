@@ -23,7 +23,7 @@ public class ResourceCatalogManagementApisTest {
 		/**
 		 * Get All ResourceSpecification
 		 */
-//		TestGetAllResourceSpecification();
+		TestGetAllResourceSpecification();
 		
 		/**
 		 * Get ResourceSpecification Filtered
@@ -55,7 +55,7 @@ public class ResourceCatalogManagementApisTest {
 		) 
 		.forEach(rs -> { 
 			count.incrementAndGet();
-			System.out.println(count + " " + rs.getId() + " → " + rs.getName() + " / " + rs.getLifecycleStatus());
+			System.out.println(count + " " + rs.getId() + " → " + rs.getName() + " / " + rs.getLastUpdate());
 			}
 		);		
 		
