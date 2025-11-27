@@ -1,9 +1,11 @@
 package it.eng.dome.brokerage.test;
 
 import java.io.IOException;
+import java.net.URI;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.OffsetDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,9 +16,14 @@ import org.junit.jupiter.api.Test;
 import it.eng.dome.brokerage.api.AppliedCustomerBillRateApis;
 import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
+import it.eng.dome.tmforum.tmf678.v4.ApiException;
 import it.eng.dome.tmforum.tmf678.v4.Configuration;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRate;
 import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRateCreate;
+import it.eng.dome.tmforum.tmf678.v4.model.AppliedCustomerBillingRateUpdate;
+import it.eng.dome.tmforum.tmf678.v4.model.BillRef;
+import it.eng.dome.tmforum.tmf678.v4.model.BillingAccountRef;
+import it.eng.dome.tmforum.tmf678.v4.model.RelatedParty;
 import it.eng.dome.tmforum.tmf678.v4.model.TimePeriod;
 
 
@@ -24,6 +31,8 @@ public class AppliedCustomerBillRateApisTest {
 
 	final static String tmf678CustomerBillPath = "tmf-api/customerBillManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
+	
+	final static String SCHEMA = "https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/TrackedShareableEntity.schema.json";
 	
     @Test
     public void RunTest() {
@@ -42,8 +51,83 @@ public class AppliedCustomerBillRateApisTest {
 //		TestAppliedCustomerBillRateRevenueBilled();
 		
 //		TestCreateApplyRelatedParty();
+		TestCreateApplyCustomerBillingRate();
+		
+//    	TestUpdateApplyCustomerBillingRate();
     }
-	
+    
+	  public static void TestUpdateApplyCustomerBillingRate() {
+	    	
+	    	ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+			apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+			
+			AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+
+			String id = "urn:ngsi-ld:applied-customer-billing-rate:b51d9352-25e1-4fcf-9016-9bcc8af275f3";
+			try {
+				AppliedCustomerBillingRateUpdate acbru = new AppliedCustomerBillingRateUpdate();
+				acbru.setIsBilled(true);
+				BillRef br = new BillRef();
+				br.setId("urn:ngsi-ld:customer-bill:32646090-fb77-4559-b5fc-aaa57a6559e9");
+				acbru.setBill(br);
+				
+				acbru.setAtSchemaLocation(URI.create(SCHEMA));
+				
+				apis.updateAppliedCustomerBillingRate(id, acbru);
+			} catch (ApiException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+	  }
+    
+    public static void TestCreateApplyCustomerBillingRate() {
+    	
+    	ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+		
+		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+		AppliedCustomerBillingRateCreate acbrc = new AppliedCustomerBillingRateCreate();
+		
+		acbrc.setType("recurring");
+		acbrc.setName("Auto set lastUpdate field");
+//		Instant instant = Instant.now();
+//		acbrc.setLastUpdate(instant.atOffset(ZoneOffset.UTC));
+		
+		List<RelatedParty> relatedParty = new ArrayList<RelatedParty>();
+		
+		RelatedParty rp = new RelatedParty();
+		rp.setRole("Buyer");
+		rp.setId("urn:ngsi-ld:organization:caf3a7ce-00a0-4e3b-b2b4-bf1ad4a52eb7");
+		rp.setName("IN2 INGENIERIA DE LA INFORMACION SOCIEDAD LIMITADA");
+		rp.setAtReferredType("organization");
+		relatedParty.add(rp);
+		
+		rp = new RelatedParty();
+		rp.setRole("Seller");
+		rp.setId("urn:ngsi-ld:organization:a195013a-a0e4-493a-810a-b040e10da58f");
+		rp.setName("CloudFerro S.A.");
+		rp.setAtReferredType("organization");
+		relatedParty.add(rp);
+			
+		acbrc.setRelatedParty(relatedParty);
+		
+		acbrc.setIsBilled(false);
+		BillingAccountRef ba = new BillingAccountRef();
+		ba.setId("urn:ngsi-ld:billing-account:3bf025cb-1b58-48be-b0ae-bb0967d09d3b");
+		acbrc.setBillingAccount(ba);
+		acbrc.setAtSchemaLocation(URI.create(SCHEMA));
+		
+		try {
+			String id = apis.createAppliedCustomerBillingRate(acbrc);
+			
+			System.out.println("Applied id: " + id);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
+    	
+    }
+    
 	
 	public static void TestAppliedCustomerBillRateFetch() {
 		
@@ -129,9 +213,9 @@ public class AppliedCustomerBillRateApisTest {
 		
 		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
 		try {
-			AppliedCustomerBillingRate apply = apis.getAppliedCustomerBillingRate("urn:ngsi-ld:applied-customer-billing-rate:bc1c48ab-4cd1-4df0-a698-052c6c687129", null);
+			AppliedCustomerBillingRate apply = apis.getAppliedCustomerBillingRate("urn:ngsi-ld:applied-customer-billing-rate:c510a70c-67a3-435c-80e6-5e623766e01c", null);
 			if (apply != null) {
-				System.out.println(apply.getName());
+				System.out.println(apply.getName() + " " + apply.getLastUpdate());
 			}	
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());

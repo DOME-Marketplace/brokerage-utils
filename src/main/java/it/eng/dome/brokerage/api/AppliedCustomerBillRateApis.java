@@ -1,11 +1,15 @@
 package it.eng.dome.brokerage.api;
 
+import java.net.URI;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.dome.brokerage.api.config.DomeTmfSchemaConfig;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
 import it.eng.dome.tmforum.tmf678.v4.ApiException;
 import it.eng.dome.tmforum.tmf678.v4.api.AppliedCustomerBillingRateApi;
@@ -17,6 +21,7 @@ public class AppliedCustomerBillRateApis {
 
 	private final Logger logger = LoggerFactory.getLogger(AppliedCustomerBillRateApis.class);	
 	private AppliedCustomerBillingRateApi appliedCustomerBillingRateApi;
+	private final String appliedSchemaLocation = DomeTmfSchemaConfig.get("applied");
 
 	/**
 	 * Constructor
@@ -103,6 +108,10 @@ public class AppliedCustomerBillRateApis {
 	 */
 	public void updateAppliedCustomerBillingRate(String id, AppliedCustomerBillingRateUpdate appliedCustomerBillingRateUpdate) throws ApiException {
 		logger.info("Request: updateAppliedCustomerBillingRate by id {}", id);
+		
+		if (appliedCustomerBillingRateUpdate.getLastUpdate() == null) {
+			appliedCustomerBillingRateUpdate.setLastUpdate(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC));
+		}
 
 		AppliedCustomerBillingRate billUpdate = appliedCustomerBillingRateApi.updateAppliedCustomerBillingRate(id, appliedCustomerBillingRateUpdate);
 		
@@ -129,6 +138,15 @@ public class AppliedCustomerBillRateApis {
 	 */
 	public String createAppliedCustomerBillingRate(AppliedCustomerBillingRateCreate appliedCustomerBillingRateCreate) throws ApiException {
 		logger.info("Create: AppliedCustomerBillingRate");
+
+		if (appliedCustomerBillingRateCreate.getLastUpdate() == null) {			
+			appliedCustomerBillingRateCreate.setLastUpdate(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC));
+		}
+		
+		if (appliedCustomerBillingRateCreate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", appliedSchemaLocation);
+			appliedCustomerBillingRateCreate.setAtSchemaLocation(URI.create(appliedSchemaLocation));
+		}
 
 		AppliedCustomerBillingRate applied = appliedCustomerBillingRateApi.createAppliedCustomerBillingRate(appliedCustomerBillingRateCreate);
 		logger.info("AppliedCustomerBillingRate saved successfully with id: {}", applied.getId());

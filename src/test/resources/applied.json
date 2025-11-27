@@ -39,7 +39,8 @@
         "value": "test"
       }
    ],
-   "@schemaLocation": "https://raw.githubusercontent.com/DOME-Marketplace/dome-odrl-profile/refs/heads/main/schemas/simplified/RelatedPartyRef.schema.json",
+   "lastUpdate": "2025-03-24T17:21:22.963366137Z",
+   "@schemaLocation": "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/AppliedCustomerBillRate.schema.json",
    "relatedParty":[
 		{
 		    "@referredType": "organization",
