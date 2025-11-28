@@ -20,8 +20,6 @@ import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingPrice;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingPriceRelationship;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecificationCharacteristicValueUse;
 import it.eng.dome.tmforum.tmf620.v4.model.TimePeriod;
-import it.eng.dome.tmforum.tmf637.v4.model.ProductOfferingPriceRef;
-import it.eng.dome.tmforum.tmf637.v4.model.ProductPrice;
 import jakarta.validation.constraints.NotNull;
 
 public class ProductOfferingPriceUtils {
@@ -33,23 +31,23 @@ public class ProductOfferingPriceUtils {
 	
 	
 	/**
-	 * Retrieves the {@link ProductOfferingPrice} referenced in the {@link ProductPrice}
-	 * @param pp A ProductPrice  
+	 * Retrieves the {@link ProductOfferingPrice} with the specified {@link ProductOfferingPrice}'s identifier
+	 * @param popRef The identifier of the ProductOfferigPrice to retrieve
 	 * @param popApis A {@link ProductCatalogManagementApis} instance
-	 * @return The ProductOfferingPrice referenced by the ProductPrice
-	 * @throws IllegalArgumentException If the reference to the ProductOfferingPrice is missing in the ProductPrice or the referenced ProductOfferingPrice does not exist  
+	 * @return The ProductOfferingPrice referenced by the specified {@link ProductOfferingPrice}'s identifier 
+	 * @throws IllegalArgumentException If the referenced ProductOfferingPrice does not exist  
 	 * @throws ApiException If the API call to retrieve the ProductOfferingPrice fails or the resource cannot be retrieved
 	 */
-	public static ProductOfferingPrice getProductOfferingPrice(@NotNull ProductPrice pp, @NotNull ProductCatalogManagementApis popApis) throws IllegalArgumentException, ApiException {
+	public static ProductOfferingPrice getProductOfferingPrice(@NotNull String popRefId, @NotNull ProductCatalogManagementApis popApis) throws IllegalArgumentException, ApiException {
 		
-		ProductOfferingPriceRef popRef = pp.getProductOfferingPrice();
-		if(popRef==null) 
-			throw new IllegalArgumentException("The ProductOfferingPriceRef is null in the ProductPrice");
+		//ProductOfferingPriceRef popRef = pp.getProductOfferingPrice();
+		/*if(popRef==null) 
+			throw new IllegalArgumentException("The ProductOfferingPriceRef is null");*/
 		
-		ProductOfferingPrice pop=popApis.getProductOfferingPrice(popRef.getId(), null);
+		ProductOfferingPrice pop=popApis.getProductOfferingPrice(popRefId, null);
 		
 		if(pop==null)			
-			throw new IllegalArgumentException(String.format("The ProductOfferingPrice '%s' is null", popRef.getId()));
+			throw new IllegalArgumentException(String.format("The ProductOfferingPrice '%s' is null", popRefId));
 		
 		return pop;
 	}
@@ -116,17 +114,18 @@ public class ProductOfferingPriceUtils {
 	 * @throws IllegalArgumentException If the ProductOfferingPrice contains unexpected values
 	 */
 	public static RecurringChargePeriod getRecurringChargePeriod(@NotNull ProductOfferingPrice pop) throws IllegalArgumentException{
-		RecurringChargePeriod rcp=new RecurringChargePeriod();
 		
 		Integer periodLenght=pop.getRecurringChargePeriodLength();
 		RecurringPeriod periodType=getRecurringPeriodType(pop);
+		
+		RecurringChargePeriod rcp=new RecurringChargePeriod(periodType,periodLenght);
 		
 		if(periodLenght!=null && periodType!=null) { 
 			if(periodLenght<=0)
 				throw new IllegalArgumentException(String.format("The 'recurringChargePeriodLenght' must be greater than zero in the ProductOfferingPrice '%s'", pop.getId()));
 			
-			rcp.setRecurringChargePeriodLenght(periodLenght);
-			rcp.setRecurringChargePeriodType(periodType);
+			//rcp.setRecurringChargePeriodLenght(periodLenght);
+			//rcp.setRecurringChargePeriodType(periodType);
 			
 			return rcp;
 		}
@@ -139,7 +138,7 @@ public class ProductOfferingPriceUtils {
 	 * @return The RecurringPeriod of the specified ProductOfferingPrice
 	 * @throws IllegalArgumentException If the ProductOfferingPrice contains unexpected values
 	 */
-	public static RecurringPeriod getRecurringPeriodType(@NotNull ProductOfferingPrice pop) throws IllegalArgumentException{
+	/*public static RecurringPeriod getRecurringPeriodType(@NotNull ProductOfferingPrice pop) throws IllegalArgumentException{
 		 
 		String popRecChargePeriodType=pop.getRecurringChargePeriodType();
 		
@@ -161,11 +160,22 @@ public class ProductOfferingPriceUtils {
 	             return RecurringPeriod.MONTH;
 	         case "year":
 	         case "years":
-	         case "yearly.":
+	         case "yearly":
 	             return RecurringPeriod.YEAR;
 	         default:
 	             throw new IllegalArgumentException(String.format("Invalid '%s' recurringChargePeriod in the ProductOfferingPrice '%s'", normalized,pop.getId()));
 			 }
+		}else {
+			throw new IllegalArgumentException(String.format("Error in ProductOfferingPrice '%s': the RecurringChargePeriodType is null", pop.getId()));
+		}
+	}*/
+	
+	public static RecurringPeriod getRecurringPeriodType(@NotNull ProductOfferingPrice pop) throws IllegalArgumentException{
+		 
+		String popRecChargePeriodType=pop.getRecurringChargePeriodType();
+		
+		if(popRecChargePeriodType!=null) {
+			return RecurringPeriod.fromString(popRecChargePeriodType); 
 		}else {
 			throw new IllegalArgumentException(String.format("Error in ProductOfferingPrice '%s': the RecurringChargePeriodType is null", pop.getId()));
 		}
@@ -177,7 +187,7 @@ public class ProductOfferingPriceUtils {
 	 * @return The PriceType of the specified ProductOfferingPrice
 	 * @throws IllegalArgumentException If the ProductOfferingPrice contains unexpected values
 	 */
-	public static PriceType getPriceType(@NotNull ProductOfferingPrice pop) throws IllegalArgumentException{
+	/*public static PriceType getPriceType(@NotNull ProductOfferingPrice pop) throws IllegalArgumentException{
 		 
 		String popPriceType=pop.getPriceType();
 
@@ -192,18 +202,33 @@ public class ProductOfferingPriceUtils {
 	         case "recurringprepaid":
 	             return PriceType.RECURRING_PREPAID;
 	         case "recurring":
+	        	 return PriceType.RECURRING;
 	         case "recurring_postpaid": 
 	         case "recurringpostpaid":
+	        	 return PriceType.RECURRING_POSTPAID;
 	         case "usage":
 	         case "pay_per_use":
 	         case "payperuse":
-	             return PriceType.RECURRING_POSTPAID;
+	             return PriceType.USAGE;
+	         case "discount":
+	        	 return PriceType.DISCOUNT;
 	         case "custom":
 	             return PriceType.CUSTOM;
 	         default:
 	             throw new IllegalArgumentException(String.format("Invalid '%s' priceType in the ProductOfferingPrice '%s'", normalized, pop.getId()));
 			 } 
 		}else {
+			throw new IllegalArgumentException(String.format("Error in ProductOfferingPrice '%s': the priceType is null", pop.getId()));
+		}
+	}*/
+	
+	public static PriceType getPriceType(@NotNull ProductOfferingPrice pop) throws IllegalArgumentException{
+		
+		String popPriceType=pop.getPriceType();
+		
+		if(popPriceType!=null && !popPriceType.isEmpty())
+			return PriceType.fromString(popPriceType);
+		else {
 			throw new IllegalArgumentException(String.format("Error in ProductOfferingPrice '%s': the priceType is null", pop.getId()));
 		}
 	}
@@ -233,13 +258,18 @@ public class ProductOfferingPriceUtils {
 	}
 	
 	/**
-	 * Checks if the specified {@link ProductOfferingPrice} is a RECURRING_POSTPAID or RECURRING_PREPAID {@link PriceType}
+	 * Checks if the specified {@link ProductOfferingPrice} is RECURRING {@link PriceType}
 	 * @param pop A ProductOfferingPrice instance
-	 * @return True if the specified ProductOfferingPrice is a RECURRING_POSTPAID or RECURRING_PREPAID PriceType, false otherwise
+	 * @return True if the specified ProductOfferingPrice is a RECURRING PriceType, false otherwise
 	 */
 	public static boolean isPriceTypeRecurring(@NotNull ProductOfferingPrice pop) throws IllegalArgumentException{
-		if(getPriceType(pop)!=null)
+		/*if(getPriceType(pop)!=null)
 			return getPriceType(pop).equals(PriceType.RECURRING_POSTPAID) || getPriceType(pop).equals(PriceType.RECURRING_PREPAID);
+		else
+			return false;
+			*/
+		if(getPriceType(pop)!=null)
+			return getPriceType(pop).equals(PriceType.RECURRING);
 		else
 			return false;
 	}
@@ -275,7 +305,7 @@ public class ProductOfferingPriceUtils {
 	 * @return True if the specified ProductOfferingPrice is a Usage priceType, false otherwise
 	 */
 	public static boolean isPriceTypeUsage(@NotNull ProductOfferingPrice pop) {
-		String popPriceType=pop.getPriceType();
+		/*String popPriceType=pop.getPriceType();
 
 		if(popPriceType!=null) {
 			String normalized = popPriceType.toLowerCase().replaceAll("[\\s-]+", "_");
@@ -289,7 +319,47 @@ public class ProductOfferingPriceUtils {
 			}
 		}
 		
-		return false;
+		return false;*/
+		if(getPriceType(pop)!=null)
+			return getPriceType(pop).equals(PriceType.USAGE);
+		else
+			return false;
+	}
+	
+	/**
+	 * Checks if the specified {@link ProductOfferingPrice} is a DISCOUNT {@link PriceType}
+	 * @param pop A ProductOfferingPrice instance
+	 * @return True if the specified ProductOfferingPrice is a DISCOUNT PriceType, false otherwise
+	 */
+	public static boolean isPriceTypeDiscount(@NotNull ProductOfferingPrice pop) throws IllegalArgumentException{
+		if(getPriceType(pop)!=null)
+			return getPriceType(pop).equals(PriceType.DISCOUNT);
+		else
+			return false;
+	}
+	
+	/**
+	 * Checks if the specified {@link ProductOfferingPrice} belongs to the RECURRING category, i.e., the {@link PriceType} is RECURRING, RECURRING_POSTPAID, RECURRING_PREPAID or USAGE.
+	 * @param pop A ProductOfferingPrice instance
+	 * @return True if the specified ProductOfferingPrice is a RECURRING, RECURRING_POSTPAID, RECURRING_PREPAID or USAGE {@link PriceType}, false otherwise
+	 */
+	public static boolean isPriceTypeInRecurringCategory(@NotNull ProductOfferingPrice pop) throws IllegalArgumentException{
+		if(getPriceType(pop)!=null)
+			return getPriceType(pop).equals(PriceType.RECURRING) || getPriceType(pop).equals(PriceType.RECURRING_POSTPAID) || getPriceType(pop).equals(PriceType.RECURRING_PREPAID) || getPriceType(pop).equals(PriceType.USAGE);
+		else
+			return false;
+	}
+	
+	/**
+	 * Checks if the specified {@link ProductOfferingPrice} belongs to the RECURRING_POSTPAID category, i.e., the {@link PriceType} is RECURRING, RECURRING_POSTPAID or USAGE.
+	 * @param pop A ProductOfferingPrice instance
+	 * @return True if the specified ProductOfferingPrice is a RECURRING, RECURRING_POSTPAID or USAGE {@link PriceType}, false otherwise
+	 */
+	public static boolean isPriceTypeInRecurringPostpaidCategory(@NotNull ProductOfferingPrice pop) throws IllegalArgumentException{
+		if(getPriceType(pop)!=null)
+			return getPriceType(pop).equals(PriceType.RECURRING) || getPriceType(pop).equals(PriceType.RECURRING_POSTPAID) || getPriceType(pop).equals(PriceType.USAGE);
+		else
+			return false;
 	}
 	
 	/**
