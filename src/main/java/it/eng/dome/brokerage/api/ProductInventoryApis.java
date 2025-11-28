@@ -1,11 +1,14 @@
 package it.eng.dome.brokerage.api;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.dome.brokerage.api.config.DomeTmfSchemaConfig;
+import it.eng.dome.brokerage.billing.utils.DateTimeUtils;
 import it.eng.dome.tmforum.tmf637.v4.ApiClient;
 import it.eng.dome.tmforum.tmf637.v4.ApiException;
 import it.eng.dome.tmforum.tmf637.v4.api.ProductApi;
@@ -18,6 +21,8 @@ public class ProductInventoryApis {
 	
 	private final Logger logger = LoggerFactory.getLogger(ProductInventoryApis.class);
 	private ProductApi productApi;
+	
+	private final String productSchemaLocation = DomeTmfSchemaConfig.get("product");
 	
 	/**
 	 * Constructor
@@ -94,6 +99,13 @@ public class ProductInventoryApis {
 	 */
 	public String createProduct(ProductCreate productCreate) throws ApiException {
 		logger.info("Create: Product");
+		
+		productCreate.setLastUpdate(DateTimeUtils.getCurrentUtcTime());
+		
+		if (productCreate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", productSchemaLocation);
+			productCreate.setAtSchemaLocation(URI.create(productSchemaLocation));
+		}
 			
 		Product product = productApi.createProduct(productCreate);
 		logger.info("Product saved successfully with id: {}", product.getId());
@@ -116,6 +128,13 @@ public class ProductInventoryApis {
 	public void updateProduct(String id, ProductUpdate productUpdate) throws ApiException {
 		logger.info("Request: updateProduct by id {}", id);
 
+		productUpdate.setLastUpdate(DateTimeUtils.getCurrentUtcTime());
+		
+		if (productUpdate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", productSchemaLocation);
+			productUpdate.setAtSchemaLocation(URI.create(productSchemaLocation));
+		}
+		
 		Product product = productApi.patchProduct(id, productUpdate);
 
 		boolean success = (product != null && product.getId() != null);

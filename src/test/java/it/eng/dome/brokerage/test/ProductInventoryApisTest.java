@@ -1,5 +1,6 @@
 package it.eng.dome.brokerage.test;
 
+import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -20,6 +21,8 @@ public class ProductInventoryApisTest {
 	final static String tmf637ProductInventoryPath = "tmf-api/productInventory/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
 
+	final static String SCHEMA = "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/AppliedCustomerBillRate.schema.json";
+	
 	@Test
 	public void RunTest() {
 
@@ -44,7 +47,7 @@ public class ProductInventoryApisTest {
 		/**
 		 * Update Product
 		 */
-//		String id = "urn:ngsi-ld:product:a9450703-9a4e-4aac-8b47-257e5423b236";
+//		String id = "urn:ngsi-ld:product:b6fcb927-b2fe-428d-b7b9-fa165fcb2dbb";
 //		TestUpdateProduct(id);
 	}
 	
@@ -91,7 +94,7 @@ public class ProductInventoryApisTest {
 		) 
 		.forEach(product -> { 
 			count.incrementAndGet();
-			System.out.println(count + " " + product.getId() + " → " + product.getName() + " / " + product.getStatus());
+			System.out.println(count + " " + product.getId() + " → " + product.getName() + " / " + product.getLastUpdate());
 			}
 		);		
 		
@@ -107,7 +110,9 @@ public class ProductInventoryApisTest {
 		ProductInventoryApis apis = new ProductInventoryApis(apiClientTmf637);
 		
 		ProductCreate pc = new ProductCreate();
-		pc.setDescription("Simple product for testing via Java");
+		pc.setDescription("Simple product for testing lastUpdate with schema");
+		
+		pc.setAtSchemaLocation(URI.create(SCHEMA));
 		
 		String id = null;
 		try {
@@ -129,8 +134,8 @@ public class ProductInventoryApisTest {
 
 		
 		ProductUpdate pu = new ProductUpdate();
-		pu.setName("Product for test");
-		pu.setStatus(ProductStatusType.CREATED);
+		pu.setName("Update product to test LastUpdate");
+		pu.setStatus(ProductStatusType.ABORTED_);
 		
 		try {
 			apis.updateProduct(id, pu);

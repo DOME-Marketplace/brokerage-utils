@@ -22,9 +22,19 @@ public class DateTimeUtils {
 	 *
 	 * @return an {@link OffsetDateTime} representing the current local time but using UTC as the offset, without altering the local clock time.
 	 */
-	public static OffsetDateTime getLocalTimeWithUtcOffset() {
+	public static OffsetDateTime getLocalTimeWithUtcOffset1() {
 		OffsetDateTime localTime = OffsetDateTime.now(Clock.systemDefaultZone());
     	return localTime.withOffsetSameLocal(ZoneOffset.UTC);        
     }
+	
+	
+	/**
+	 * Returns the current date and time in UTC.
+	 *
+	 * @return the current {@link OffsetDateTime} using {@link ZoneOffset#UTC}
+	 */
+	public static OffsetDateTime getCurrentUtcTime() {
+	    return OffsetDateTime.now(ZoneOffset.UTC);
+	}
 
 }

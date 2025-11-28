@@ -3,8 +3,11 @@
 **Release Notes** of the *Brokerage Utils* software:
 
 
-### <code>2.2.3</code> :calendar: 19/11/2025 (WIP)
+### <code>2.2.3</code> :calendar: 28/11/2025
 **Improvements**
+* Include `lastUpdate` attribute in **Usage**, **Product**, **Individual**, **Organization**, and **AppliedCustomerBillingRate** classes. 
+* Include `pricingLogicAlgorithm` attribute in **ProductOffering**.
+* Add `dome-tmf-schema.properties` to set default schema location for custom attributes.
 * Add `AbstractMarkdownGenerator` to share for all services to generate **REST_APIs.md** documentation.
 * Use of `JUnit Tests` for APIs.
 

@@ -107,7 +107,7 @@ public class APIPartyApis {
 	public String createOrganization(OrganizationCreate organizationCreate) throws ApiException {	
 		logger.info("Create: Organization");
 
-		organizationCreate.setLastUpdate(DateTimeUtils.getLocalTimeWithUtcOffset());
+		organizationCreate.setLastUpdate(DateTimeUtils.getCurrentUtcTime());
 		
 		if (organizationCreate.getAtSchemaLocation() == null) {
 			logger.debug("Setting default schemaLocation to {}", organizationSchemaLocation);
@@ -134,7 +134,7 @@ public class APIPartyApis {
 	public void updateOrganization(String id, OrganizationUpdate organizationUpdate) throws ApiException {
 		logger.info("Request: updateOrganization by id {}", id);
 
-		organizationUpdate.setLastUpdate(DateTimeUtils.getLocalTimeWithUtcOffset());
+		organizationUpdate.setLastUpdate(DateTimeUtils.getCurrentUtcTime());
 		
 		if (organizationUpdate.getAtSchemaLocation() == null) {
 			logger.debug("Setting default schemaLocation to {}", organizationSchemaLocation);
@@ -218,7 +218,7 @@ public class APIPartyApis {
 	public String createIndividual(IndividualCreate individualCreate) throws ApiException {	
 		logger.info("Create: Individual");
 
-		individualCreate.setLastUpdate(DateTimeUtils.getLocalTimeWithUtcOffset());
+		individualCreate.setLastUpdate(DateTimeUtils.getCurrentUtcTime());
 		
 		if (individualCreate.getAtSchemaLocation() == null) {
 			logger.debug("Setting default schemaLocation to {}", individualSchemaLocation);
@@ -245,7 +245,7 @@ public class APIPartyApis {
 	public void updateIndividual(String id, IndividualUpdate individualUpdate) throws ApiException {
 		logger.info("Request: updateIndividual by id {}", id);
 
-		individualUpdate.setLastUpdate(DateTimeUtils.getLocalTimeWithUtcOffset());
+		individualUpdate.setLastUpdate(DateTimeUtils.getCurrentUtcTime());
 		
 		if (individualUpdate.getAtSchemaLocation() == null) {
 			logger.debug("Setting default schemaLocation to {}", individualSchemaLocation);

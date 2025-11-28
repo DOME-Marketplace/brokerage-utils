@@ -1,11 +1,14 @@
 package it.eng.dome.brokerage.api;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.dome.brokerage.api.config.DomeTmfSchemaConfig;
+import it.eng.dome.brokerage.billing.utils.DateTimeUtils;
 import it.eng.dome.tmforum.tmf620.v4.ApiClient;
 import it.eng.dome.tmforum.tmf620.v4.ApiException;
 import it.eng.dome.tmforum.tmf620.v4.api.CatalogApi;
@@ -14,10 +17,16 @@ import it.eng.dome.tmforum.tmf620.v4.api.ProductOfferingApi;
 import it.eng.dome.tmforum.tmf620.v4.api.ProductOfferingPriceApi;
 import it.eng.dome.tmforum.tmf620.v4.api.ProductSpecificationApi;
 import it.eng.dome.tmforum.tmf620.v4.model.Catalog;
+import it.eng.dome.tmforum.tmf620.v4.model.CatalogCreate;
+import it.eng.dome.tmforum.tmf620.v4.model.CatalogUpdate;
 import it.eng.dome.tmforum.tmf620.v4.model.Category;
+import it.eng.dome.tmforum.tmf620.v4.model.CategoryCreate;
+import it.eng.dome.tmforum.tmf620.v4.model.CategoryUpdate;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOffering;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingCreate;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingPrice;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingPriceCreate;
+import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingPriceUpdate;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductOfferingUpdate;
 import it.eng.dome.tmforum.tmf620.v4.model.ProductSpecification;
 
@@ -30,6 +39,10 @@ public class ProductCatalogManagementApis {
 	private ProductSpecificationApi productSpecificationApi;
 	private CategoryApi categoryApi;
 	private CatalogApi catalogApi;
+	
+	private final String categorySchemaLocation = DomeTmfSchemaConfig.get("category");
+	private final String productofferingSchemaLocation = DomeTmfSchemaConfig.get("productoffering");
+	private final String productofferingpriceSchemaLocation = DomeTmfSchemaConfig.get("productofferingprice");
 		
 	/**
 	 * Constructor
@@ -110,6 +123,11 @@ public class ProductCatalogManagementApis {
 	 */
 	public String createProductOffering(ProductOfferingCreate productOfferingCreate) throws ApiException {		
 		logger.info("Create: ProductOffering");
+		
+		if (productOfferingCreate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", productofferingSchemaLocation);
+			productOfferingCreate.setAtSchemaLocation(URI.create(productofferingSchemaLocation));
+		}
 
 		ProductOffering offering = productOfferingApi.createProductOffering(productOfferingCreate);
 		logger.info("ProductOffering saved successfully with id: {}", offering.getId());
@@ -131,6 +149,11 @@ public class ProductCatalogManagementApis {
 	 */
 	public void updateProductOffering(String id, ProductOfferingUpdate productOfferingUpdate) throws ApiException {
 		logger.info("Request: updateProductOffering by id {}", id);
+		
+		if (productOfferingUpdate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", productofferingSchemaLocation);
+			productOfferingUpdate.setAtSchemaLocation(URI.create(productofferingSchemaLocation));
+		}
 		
 		ProductOffering productOffering = productOfferingApi.patchProductOffering(id, productOfferingUpdate);
 
@@ -191,6 +214,63 @@ public class ProductCatalogManagementApis {
 		}
 		
 		return productOfferingPriceApi.listProductOfferingPrice(fields, offset, limit, filter);  
+	}
+	
+	
+	/**
+	 * Creates a new {@link ProductOfferingPrice} resource.
+	 * <p>
+	 * This method sends a creation request to the Product Catalog Management API using
+	 * the provided {@link ProductOfferingPriceCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
+	 * 
+	 * @param productOfferingPriceCreate the {@link ProductOfferingPriceCreate} object used to create the new ProductOfferingPrice (required)
+	 * @return the unique identifier ({@code id}) of the created {@link ProductOfferingPrice}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
+	 */
+	public String createProductOfferingPrice(ProductOfferingPriceCreate productOfferingPriceCreate) throws ApiException {		
+		logger.info("Create: ProductOfferingPrice");
+		
+		if (productOfferingPriceCreate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", productofferingpriceSchemaLocation);
+			productOfferingPriceCreate.setAtSchemaLocation(URI.create(productofferingpriceSchemaLocation));
+		}
+
+		ProductOfferingPrice offering = productOfferingPriceApi.createProductOfferingPrice(productOfferingPriceCreate);
+		logger.info("ProductOfferingPrice saved successfully with id: {}", offering.getId());
+		
+		return offering.getId();
+	}
+	
+	
+	/**
+	 * Updates an existing {@link ProductOfferingPrice} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Product ProductOfferingPrice Management API to update
+	 * the specified {@link ProductOfferingPrice} with the provided {@link ProductOfferingPriceUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link ProductOfferingPrice} to update (required)
+	 * @param productOfferingPriceUpdate the {@link ProductOfferingPriceUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
+	 */
+	public void updateProductOfferingPrice(String id, ProductOfferingPriceUpdate productOfferingPriceUpdate) throws ApiException {
+		logger.info("Request: updateProductOfferingPrice by id {}", id);
+
+		if (productOfferingPriceUpdate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", productofferingpriceSchemaLocation);
+			productOfferingPriceUpdate.setAtSchemaLocation(URI.create(productofferingpriceSchemaLocation));
+		}
+		
+		ProductOfferingPrice ProductOfferingPrice = productOfferingPriceApi.patchProductOfferingPrice(id, productOfferingPriceUpdate);
+
+		boolean success = (ProductOfferingPrice != null && ProductOfferingPrice.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated ProductOfferingPrice with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for ProductOfferingPrice id: {}", id);
+		}
 	}
 	
 	
@@ -297,6 +377,67 @@ public class ProductCatalogManagementApis {
 	
 	
 	/**
+	 * Creates a new {@link Category} resource.
+	 * <p>
+	 * This method sends a creation request to the Product Catalog Management API using
+	 * the provided {@link CategoryCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
+	 * 
+	 * @param categoryCreate the {@link CategoryCreate} object used to create the new Category (required)
+	 * @return the unique identifier ({@code id}) of the created {@link Category}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
+	 */
+	public String createCategory(CategoryCreate categoryCreate) throws ApiException {		
+		logger.info("Create: Category");
+
+		categoryCreate.setLastUpdate(DateTimeUtils.getCurrentUtcTime());
+		
+		if (categoryCreate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", categorySchemaLocation);
+			categoryCreate.setAtSchemaLocation(URI.create(categorySchemaLocation));
+		}
+		
+		Category offering = categoryApi.createCategory(categoryCreate);
+		logger.info("Category saved successfully with id: {}", offering.getId());
+		
+		return offering.getId();
+	}
+	
+	
+	/**
+	 * Updates an existing {@link Category} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Product Category Management API to update
+	 * the specified {@link Category} with the provided {@link CategoryUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link Category} to update (required)
+	 * @param categoryUpdate the {@link CategoryUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
+	 */
+	public void updateCategory(String id, CategoryUpdate categoryUpdate) throws ApiException {
+		logger.info("Request: updateCategory by id {}", id);
+		
+		categoryUpdate.setLastUpdate(DateTimeUtils.getCurrentUtcTime());
+		
+		if (categoryUpdate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", categorySchemaLocation);
+			categoryUpdate.setAtSchemaLocation(URI.create(categorySchemaLocation));
+		}
+
+		Category Category = categoryApi.patchCategory(id, categoryUpdate);
+
+		boolean success = (Category != null && Category.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated Category with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for Category id: {}", id);
+		}
+	}
+	
+	
+	/**
 	 * Retrieves a specific {@link Catalog} by its unique identifier.
 	 *
 	 * @param id      the identifier of the {@code Catalog} to retrieve (required)
@@ -344,5 +485,52 @@ public class ProductCatalogManagementApis {
 		}
 		
 		return catalogApi.listCatalog(fields, offset, limit, filter);
+	}
+	
+	
+	/**
+	 * Creates a new {@link Catalog} resource.
+	 * <p>
+	 * This method sends a creation request to the Product Catalog Management API using
+	 * the provided {@link CatalogCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
+	 * 
+	 * @param catalogCreate the {@link CatalogCreate} object used to create the new Catalog (required)
+	 * @return the unique identifier ({@code id}) of the created {@link Catalog}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
+	 */
+	public String createCatalog(CatalogCreate catalogCreate) throws ApiException {		
+		logger.info("Create: Catalog");
+		
+		Catalog offering = catalogApi.createCatalog(catalogCreate);
+		logger.info("Catalog saved successfully with id: {}", offering.getId());
+		
+		return offering.getId();
+	}
+	
+	
+	/**
+	 * Updates an existing {@link Catalog} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the Product Catalog Management API to update
+	 * the specified {@link Catalog} with the provided {@link CatalogUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link Catalog} to update (required)
+	 * @param catalogUpdate the {@link CatalogUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
+	 */
+	public void updateCatalog(String id, CatalogUpdate catalogUpdate) throws ApiException {
+		logger.info("Request: updateCatalog by id {}", id);
+
+		Catalog Catalog = catalogApi.patchCatalog(id, catalogUpdate);
+
+		boolean success = (Catalog != null && Catalog.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated Catalog with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for Catalog id: {}", id);
+		}
 	}
 }

@@ -11,20 +11,48 @@ import it.eng.dome.brokerage.api.fetch.FetchUtils;
 import it.eng.dome.tmforum.tmf678.v4.ApiClient;
 import it.eng.dome.tmforum.tmf678.v4.ApiException;
 import it.eng.dome.tmforum.tmf678.v4.Configuration;
+import it.eng.dome.tmforum.tmf678.v4.model.CustomerBillCreate;
+import it.eng.dome.tmforum.tmf678.v4.model.Money;
+import it.eng.dome.tmforum.tmf678.v4.model.StateValue;
 
 public class CustomerBillApisTest {
 	
 
 	final static String tmf678CustomerBillPath = "tmf-api/customerBillManagement/v4";
-	final static String tmfEndpoint = "https://tmf.dome-marketplace-sbx.org";
+	final static String tmfEndpoint = "https://dome-dev.eng.it"; //"https://tmf.dome-marketplace-sbx.org";
 
 	@Test
 	public void RunTest() {
 		
 //		TestCustomerBillFiltered();		
 //		TestCustomerBillById();
+		
+//		TestCreateBillCustomer();
 	}
 	
+	public static void TestCreateBillCustomer() {
+		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+		
+		CustomerBillApis apis = new CustomerBillApis(apiClientTmf678);
+		
+		CustomerBillCreate cbc = new CustomerBillCreate();
+		cbc.setCategory("category");
+		Money amountDue = new Money();
+		amountDue.setUnit("EUR");
+		amountDue.setValue(Float.valueOf("12.05"));
+		cbc.setAmountDue(amountDue);
+		cbc.setState(StateValue.ON_HOLD);
+		
+		String id = null;
+		try {
+			id = apis.createCustomerBill(cbc);
+		} catch (ApiException e) {
+			System.err.println("Error: " + e.getMessage());
+		}
+		
+		System.out.println("CustomerBill id: " + id);
+	}
 	
 	public static void TestCustomerBillFiltered() {
 		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
@@ -61,9 +89,9 @@ public class CustomerBillApisTest {
 		CustomerBillApis apis = new CustomerBillApis(apiClientTmf678);
 			
 		// get by ID
-		String id = "urn:ngsi-ld:customer-bill:e642addf-48e2-4627-8489-a1bad7d09e10";
+		String id = "urn:ngsi-ld:customer-bill:3bff8fc2-7587-4c4e-baec-8b4a3e7ee335";
 		try {
-			System.out.println("detail of state: " + apis.getCustomerBill(id, null).getState().getValue());
+			System.out.println("detail of state: " + apis.getCustomerBill(id, null).getLastUpdate());
 		} catch (ApiException e) {
 			System.err.println("Error: " + e.getMessage());
 		}

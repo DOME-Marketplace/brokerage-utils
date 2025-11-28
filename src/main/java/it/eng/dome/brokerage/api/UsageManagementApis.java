@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import it.eng.dome.brokerage.api.config.DomeTmfSchemaConfig;
+import it.eng.dome.brokerage.billing.utils.DateTimeUtils;
 import it.eng.dome.tmforum.tmf635.v4.ApiClient;
 import it.eng.dome.tmforum.tmf635.v4.ApiException;
 import it.eng.dome.tmforum.tmf635.v4.api.UsageApi;
@@ -107,7 +108,7 @@ public class UsageManagementApis {
 	public String createUsage(UsageCreate usageCreate) throws ApiException {	
 		logger.info("Create: Usage");
 		
-		usageCreate.setLastUpdate(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC));
+		usageCreate.setLastUpdate(DateTimeUtils.getCurrentUtcTime());
 		
 		if (usageCreate.getAtSchemaLocation() == null) {
 			logger.debug("Setting default schemaLocation to {}", usageSchemaLocation);
@@ -135,7 +136,7 @@ public class UsageManagementApis {
 	public void updateUsage(String id, UsageUpdate usageUpdate) throws ApiException {
 		logger.info("Request: updateUsage by id {}", id);
 		
-		usageUpdate.setLastUpdate(OffsetDateTime.now().withOffsetSameInstant(ZoneOffset.UTC));
+		usageUpdate.setLastUpdate(DateTimeUtils.getCurrentUtcTime());
 		
 		Usage usage = usageApi.patchUsage(id, usageUpdate);
 		
