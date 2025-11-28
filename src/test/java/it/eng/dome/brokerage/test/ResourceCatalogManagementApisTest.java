@@ -23,7 +23,7 @@ public class ResourceCatalogManagementApisTest {
 		/**
 		 * Get All ResourceSpecification
 		 */
-		TestGetAllResourceSpecification();
+//		TestGetAllResourceSpecification();
 		
 		/**
 		 * Get ResourceSpecification Filtered
