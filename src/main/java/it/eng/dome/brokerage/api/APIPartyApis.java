@@ -1,17 +1,24 @@
 package it.eng.dome.brokerage.api;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import it.eng.dome.brokerage.api.config.DomeTmfSchemaConfig;
+import it.eng.dome.brokerage.billing.utils.DateTimeUtils;
 import it.eng.dome.tmforum.tmf632.v4.ApiClient;
 import it.eng.dome.tmforum.tmf632.v4.ApiException;
 import it.eng.dome.tmforum.tmf632.v4.api.IndividualApi;
 import it.eng.dome.tmforum.tmf632.v4.api.OrganizationApi;
 import it.eng.dome.tmforum.tmf632.v4.model.Individual;
+import it.eng.dome.tmforum.tmf632.v4.model.IndividualCreate;
+import it.eng.dome.tmforum.tmf632.v4.model.IndividualUpdate;
 import it.eng.dome.tmforum.tmf632.v4.model.Organization;
+import it.eng.dome.tmforum.tmf632.v4.model.OrganizationCreate;
+import it.eng.dome.tmforum.tmf632.v4.model.OrganizationUpdate;
 
 
 public class APIPartyApis {
@@ -19,6 +26,9 @@ public class APIPartyApis {
 	private final Logger logger = LoggerFactory.getLogger(APIPartyApis.class);	
 	private OrganizationApi organizationApi;
 	private IndividualApi individualApi;
+	
+	private final String organizationSchemaLocation = DomeTmfSchemaConfig.get("organization");
+	private final String individualSchemaLocation = DomeTmfSchemaConfig.get("individual");
 	
 	/**
 	 * Constructor 
@@ -83,6 +93,66 @@ public class APIPartyApis {
 
 	
 	/**
+	 * Creates a new {@link Organization} resource.
+	 * <p>
+	 * This method sends a creation request to the API Party Management using
+	 * the provided {@link OrganizationCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
+	 * 
+	 * @param organizationCreate the {@link OrganizationCreate} object used to create the new Organization (required)
+	 * @return the unique identifier ({@code id}) of the created {@link Organization}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
+	 */
+	public String createOrganization(OrganizationCreate organizationCreate) throws ApiException {	
+		logger.info("Create: Organization");
+
+		organizationCreate.setLastUpdate(DateTimeUtils.getLocalTimeWithUtcOffset());
+		
+		if (organizationCreate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", organizationSchemaLocation);
+			organizationCreate.setAtSchemaLocation(URI.create(organizationSchemaLocation));
+		}
+		
+		Organization organization = organizationApi.createOrganization(organizationCreate);
+		logger.info("Organization saved successfully with id: {}", organization.getId());
+		return organization.getId();
+	}
+	
+	
+	/**
+	 * Updates an existing {@link Organization} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the API Party Management to update
+	 * the specified {@link Organization} with the provided {@link OrganizationUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link Organization} to update (required)
+	 * @param organizationUpdate the {@link OrganizationUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
+	 */
+	public void updateOrganization(String id, OrganizationUpdate organizationUpdate) throws ApiException {
+		logger.info("Request: updateOrganization by id {}", id);
+
+		organizationUpdate.setLastUpdate(DateTimeUtils.getLocalTimeWithUtcOffset());
+		
+		if (organizationUpdate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", organizationSchemaLocation);
+			organizationUpdate.setAtSchemaLocation(URI.create(organizationSchemaLocation));
+		}
+		
+		Organization Organization = organizationApi.patchOrganization(id, organizationUpdate);
+
+		boolean success = (Organization != null && Organization.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated Organization with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for Organization id: {}", id);
+		}
+	}
+	
+	
+	/**
 	 * Retrieves a specific {@link Individual} by its unique identifier.
 	 *
 	 * @param id      the identifier of the {@code Individual} to retrieve (required)
@@ -130,6 +200,66 @@ public class APIPartyApis {
 		}
 		
 		return individualApi.listIndividual(fields, offset, limit, filter);
+	}
+	
+	
+	/**
+	 * Creates a new {@link Individual} resource.
+	 * <p>
+	 * This method sends a creation request to the API Party Management using
+	 * the provided {@link IndividualCreate} payload.
+	 * If the creation is successful, it returns the identifier of the newly created resource.
+	 * </p>
+	 * 
+	 * @param individualCreate the {@link IndividualCreate} object used to create the new Individual (required)
+	 * @return the unique identifier ({@code id}) of the created {@link Individual}
+	 * @throws ApiException if the API call fails or the resource cannot be retrieved  
+	 */
+	public String createIndividual(IndividualCreate individualCreate) throws ApiException {	
+		logger.info("Create: Individual");
+
+		individualCreate.setLastUpdate(DateTimeUtils.getLocalTimeWithUtcOffset());
+		
+		if (individualCreate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", individualSchemaLocation);
+			individualCreate.setAtSchemaLocation(URI.create(individualSchemaLocation));
+		}
+		
+		Individual individual = individualApi.createIndividual(individualCreate);
+		logger.info("Individual saved successfully with id: {}", individual.getId());
+		return individual.getId();
+	}
+	
+	
+	/**
+	 * Updates an existing {@link Individual} resource by its unique identifier.
+	 * <p>
+	 * This method sends a PATCH request to the API Party Management to update
+	 * the specified {@link Individual} with the provided {@link IndividualUpdate} data.
+	 * </p>
+	 *
+	 * @param id the unique identifier of the {@link Individual} to update (required)
+	 * @param IndividualUpdate the {@link IndividualUpdate} object containing the updated fields (required)
+	 * @throws ApiException if the API call fails or the resource cannot be updated
+	 */
+	public void updateIndividual(String id, IndividualUpdate individualUpdate) throws ApiException {
+		logger.info("Request: updateIndividual by id {}", id);
+
+		individualUpdate.setLastUpdate(DateTimeUtils.getLocalTimeWithUtcOffset());
+		
+		if (individualUpdate.getAtSchemaLocation() == null) {
+			logger.debug("Setting default schemaLocation to {}", individualSchemaLocation);
+			individualUpdate.setAtSchemaLocation(URI.create(individualSchemaLocation));
+		}
+		
+		Individual Individual = individualApi.patchIndividual(id, individualUpdate);
+
+		boolean success = (Individual != null && Individual.getId() != null);
+		if (success) {
+			logger.debug("Successfully updated Individual with id: {}", id);
+		} else {
+			logger.warn("Update may have failed for Individual id: {}", id);
+		}
 	}
 	
 }
