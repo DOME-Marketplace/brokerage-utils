@@ -10,6 +10,8 @@
 * Add `dome-tmf-schema.properties` to set default schema location for custom attributes.
 * Add `AbstractMarkdownGenerator` to share for all services to generate **REST_APIs.md** documentation.
 * Use of `JUnit Tests` for APIs.
+* Added model classes and DTO
+* Update `ProductOfferingPriceUtils` 
 
 
 ### <code>2.2.2</code> :calendar: 18/11/2025
