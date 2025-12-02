@@ -1,5 +1,6 @@
 package it.eng.dome.brokerage.api.fetch;
 
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -66,23 +67,42 @@ public class FetchUtils {
 	}
 
 	/**
-	 * Streams all elements fetched in batches from a {@link ListedFetcher}.
-	 * <p>This method lazily retrieves items in pages of size {@code pageSize} using the
-	 * provided fetcher, producing a {@link Stream} that loads data on demand as the
-	 * stream is consumed. Each batch is fetched only when the iterator requires it.</p>
+	 * Streams all elements fetched in batches from a {@link ListedFetcher}, with robust
+	 * error-recovery logic and lazy on-demand loading.
+	 * 
+	 * <p>This method returns a {@link Stream} that incrementally retrieves data in pages
+	 * of size {@code pageSize}. Items are not fetched upfront: each batch is loaded only
+	 * when required by the stream consumer. This allows efficient processing of very large
+	 * datasets while keeping memory usage low.</p>
 	 *
-	 * <p>If a batch fetch fails due to malformed or non-compliant data within the range,
-	 * the method automatically applies a divide-and-conquer fallback strategy to
-	 * recover all valid items: the batch is recursively split into smaller ranges
-	 * until valid subsets are successfully fetched. Only the corrupted elements are
-	 * discarded, ensuring that no valid items are lost.</p>
+	 * <h3>Error Handling and Data Recovery</h3>
+	 * <p>If fetching a batch fails due to malformed, incomplete or non-compliant data,
+	 * the method automatically invokes a <em>divide-and-conquer fallback</em>:
+	 * the failing range is recursively split into smaller ranges to isolate and discard
+	 * only the corrupted elements, while successfully retrieving all valid ones.</p>
+	 *
+	 * <p>Certain exceptions (such as {@link java.net.UnknownHostException}) are treated as
+	 * non-recoverable and immediately rethrown, aborting the stream.</p>
+	 *
+	* <h3>Iterator Behavior</h3>
+	 * <ul>
+	 *   <li>The stream is backed by a custom iterator that maintains its own
+	 *       {@code offset}, {@code currentBatch}, and index within the batch.</li>
+	 *   <li>When the current batch is exhausted, the iterator automatically fetches
+	 *       the next batch.</li>
+	 *   <li>Fetching stops when an empty batch is returned.</li>
+	 *   <li>If the consumer calls {@code next()} after the stream is exhausted,
+	 *       a {@link java.util.NoSuchElementException} is thrown.</li>
+	 * </ul>
 	 *
 	 * @param <T>      the type of elements to fetch and stream
 	 * @param fetcher  the {@link ListedFetcher} used to fetch items in batches
 	 * @param fields   a comma-separated list of fields to include in each fetch; may be {@code null} or empty
 	 * @param filter   a map of filtering criteria; may be {@code null} or empty
 	 * @param pageSize the maximum number of items to fetch in each batch; must be greater than 0
-	 * @return a {@link Stream} of all items fetched from the {@code fetcher}; never {@code null}, may be empty
+	 * @return a lazily evaluated {@link Stream} that iterates through all available items;
+	 *         never {@code null}, but may be empty
+	 * @throws RuntimeException if an unrecoverable I/O error occurs (e.g., network unreachable)
 	 * @throws NoSuchElementException if the iterator is exhausted and {@code next()} is called
 	 */
 	public static <T> Stream<T> streamAll(ListedFetcher<T> fetcher, String fields, Map<String, String> filter, int pageSize) {
@@ -104,6 +124,11 @@ public class FetchUtils {
 				            return false;
 				        }
 					} catch (Exception e) {
+						
+						// Error Management with Exception
+						if (hasCause(e, UnknownHostException.class)) {							
+					        throw new RuntimeException(e.getMessage());
+					    }
 						
 			            logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
 						
@@ -136,18 +161,21 @@ public class FetchUtils {
 	/**
 	 * Fetches elements in batches from a {@link ListedFetcher} and processes each
 	 * batch using a {@link BatchProcessor}.
-	 * <p>
-	 * This method retrieves items in pages of size {@code batchSize} using the
-	 * given fetcher. Each successfully fetched, non-empty batch is then passed to
-	 * the supplied {@code consumer} for processing. Fetching continues until the
-	 * fetcher returns an empty or {@code null} result, indicating that no more
-	 * items are available.
-	 * </p>
+	 * 
+	 * <p>This method retrieves items page by page, using the given {@code fetcher}
+	 * with the specified {@code batchSize}. Each non-empty batch is passed to the
+	 * supplied {@code consumer} for processing. Fetching continues until an empty
+	 * batch is returned, indicating that no further items are available.</p>
 	 *
-	 * <p>
-	 * If an exception occurs during fetching or processing, the method fails fast
-	 * by throwing a {@link RuntimeException}, including the original cause. No
-	 * additional recovery or fallback logic is applied.
+	 * <p>If an exception occurs during fetching, the method inspects the exception
+	 * chain to detect unrecoverable errors such as {@link UnknownHostException}.
+	 * In such cases, a {@link RuntimeException} is thrown and execution stops
+	 * immediately. For other errors, the method applies a divide-and-conquer
+	 * fallback strategy through {@code safeFetchRange} to recover any valid items
+	 * within the failing batch.</p>
+	 * 
+	 * <p>If an exception occurs during batch processing, the method fails fast by
+	 * throwing a {@link RuntimeException} that wraps the original cause.</p>
 	 * </p>
 	 *
 	 * @param <T>       the type of elements to fetch and process
@@ -156,7 +184,9 @@ public class FetchUtils {
 	 * @param filter    a map of filtering criteria; may be {@code null} or empty
 	 * @param batchSize the maximum number of items to fetch in each batch; must be greater than 0
 	 * @param consumer  the {@link BatchProcessor} that processes each batch; must not be {@code null}
-	 * @throws RuntimeException if any error occurs while fetching or processing a batch (fail-fast)
+	 * @throws RuntimeException if fetching fails with an unrecoverable error, 
+	 *                  if fallback recovery fails, 
+	 *                  or if batch processing encounters an error
 	 */
 	public static <T> void fetchByBatch(ListedFetcher<T> fetcher, String fields, Map<String, String> filter, int batchSize, BatchProcessor<T> consumer) {
 
@@ -173,6 +203,19 @@ public class FetchUtils {
 	            }
 	            
 	        } catch (Exception e) {
+	        	
+	        	// Error Management with Exception
+	        	Throwable cause = e;
+	        	 while (cause != null) { 
+	        		 // 1. Management of UnknownHostException (nested exception)
+	                if (cause instanceof UnknownHostException) {
+	                	logger.error("Error processing batch - {}", cause.getMessage());
+	                	//exit from loop if UnknownHostException
+	                	throw new RuntimeException(cause.getMessage());
+	                }
+	                // next exception
+	                cause = cause.getCause(); 
+	            }
 	        	        	
 	        	logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
 
@@ -193,6 +236,7 @@ public class FetchUtils {
 	        offset += batchSize;
 	    }
 	}
+	
 
 	/**
 	 * Fetches all elements from a {@link ListedFetcher} and returns them in a
@@ -266,5 +310,36 @@ public class FetchUtils {
 	        result.addAll(right);
 	        return result;
 	    }
+	}
+	
+	
+	/**
+	 * Checks whether the given throwable or any of its nested causes is an instance
+	 * of the specified exception type.
+	 * <p>
+	 * This method walks the exception cause chain starting from the provided
+	 * {@code throwable} and returns {@code true} as soon as a cause matching the
+	 * given {@code type} is found. If no matching cause exists in the chain, the
+	 * method returns {@code false}.
+	 * </p>
+	 *
+	 * <p>This utility is useful for detecting specific exceptions that may be
+	 * wrapped inside higher-level exceptions, especially when using libraries or
+	 * frameworks that nest the underlying root cause.</p>
+	 *
+	 * @param throwable the exception to inspect; may be {@code null}
+	 * @param type the exception type to search for; must not be {@code null}
+	 * @return {@code true} if the throwable or any cause in its chain is an instance
+	 *         of the given type; {@code false} otherwise
+	 */
+	private static boolean hasCause(Throwable t, Class<? extends Throwable> type) {
+	    while (t != null) {	    	
+	        if (type.isInstance(t)) {
+	        	logger.error("Error processing batch - {}", t.getMessage());
+	            return true;
+	        }
+	        t = t.getCause();
+	    }
+	    return false;
 	}
 }
