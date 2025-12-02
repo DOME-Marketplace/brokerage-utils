@@ -3,8 +3,10 @@ package it.eng.dome.brokerage.test;
 import java.net.URI;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.jupiter.api.Test;
@@ -35,7 +37,7 @@ import it.eng.dome.tmforum.tmf620.v4.model.TimePeriod;
 public class ProductCatalogManagementApisTest {
 
 	final static String tmf620ProductCatalogPath = "tmf-api/productCatalogManagement/v4";
-	final static String tmfEndpoint = "https://dome-dev.eng.it";//"https://an-dhub-sbx.dome-project.eu"; /*"https://dome-dev.eng.it"; */ //"https://tmf.dome-marketplace-sbx.org";
+	final static String tmfEndpoint = /*"https://dome-dev.eng.it";*/ /*"https://an-dhub-sbx.dome-project.eu";  */ "https://tmf.dome-marketplace-sbx.org";
 	
 	final static String SCHEMA = "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/AppliedCustomerBillRate.schema.json";
 	
@@ -47,12 +49,16 @@ public class ProductCatalogManagementApisTest {
 		 */
 //		TestCreateProductOffering();
 //		TestGetAllProductOffering();
+//		TestGetAllProductOfferingWithFilter();
 //		TestGetAllProductOfferingFetchByBatch();
-//=>		TestGetAllProductOfferingStream();
+//		TestGetAllProductOfferingFetchByBatchWithFilter();
+//		TestGetAllProductOfferingCompare();
+//		TestGetAllProductOfferingStream();
 //		TestGetFilteredProductOffering();		
-//		String id = "urn:ngsi-ld:product-offering:769f160f-0185-4f6c-9065-0e34d71d9903";
+//		String id = "urn:ngsi-ld:product-offering:27e1e44f-da97-4657-aca6-317b1a97e9c2";
 //		TestGetProductOffering(id);		
 //		TestUpdateProductOffering(id);	
+		TestCustomFilterProductOffering();	
 		
 		/**
 		 * ProductOfferingPrice
@@ -161,7 +167,7 @@ public class ProductCatalogManagementApisTest {
 		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);
 		
 		ProductOfferingCreate poc = new ProductOfferingCreate();
-		poc.setName("Final Product Offering ");
+		poc.setName("Simple Product Offering");
 		poc.setDescription("Use Case: Product Offering for testing with ExternallyBilled.schema.json");
 		poc.isBundle(false);
 		poc.setLastUpdate(OffsetDateTime.now());
@@ -193,7 +199,7 @@ public class ProductCatalogManagementApisTest {
 		
 		//poc.setLastUpdate(OffsetDateTime.now());
 		poc.setRelatedParty(parties);
-		//String schemaLocation = "https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/ShareableEntity.schema.json"; //OK
+//		String schemaLocation = "https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/ShareableEntity.schema.json"; //OK
 		//String schemaLocation = "https://raw.githubusercontent.com/Sh3rd3n/SchemaValidationTest/refs/heads/main/ProductOfferingExtension.schema.json"; //OK creazione -> no array
 //		String schemaLocation = "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/ProductOfferingExtensionTest.schema.json"; //OK
 		String schemaLocation = "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/ProductOfferingTestAll.schema.json"; //OK
@@ -219,6 +225,30 @@ public class ProductCatalogManagementApisTest {
 		return id;
 	}
 	
+	protected static void TestGetAllProductOfferingWithFilter() {
+		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
+		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductCatalogPath);
+
+		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);		
+		AtomicInteger count = new AtomicInteger(0);
+		Set<String> ids = new HashSet<>();
+
+		FetchUtils.streamAll(
+	        apis::listProductOfferings,		// method reference
+	        null,                       	// fields
+	        null, 				    		// filter
+	        25                         	// pageSize
+		) 
+		.filter(po -> ids.add(po.getId()))
+		.forEach(po -> { 
+			count.incrementAndGet();
+			System.out.println(count + " " + po.getId() + " → " + po.getName() + " / " + po.getLastUpdate() + " / ");
+		}
+		);		
+		
+		System.out.println("ProductOffering found: " + count);
+	}
+	
 	protected static void TestGetAllProductOffering() {
 
 		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
@@ -226,6 +256,14 @@ public class ProductCatalogManagementApisTest {
 
 		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);		
 		AtomicInteger count = new AtomicInteger(0);
+		AtomicInteger duplicate = new AtomicInteger(0);
+//		Set<String> ids = new HashSet<>();
+		
+		Set<String> seenIds = new HashSet<>();
+		seenIds.clear();
+		
+		Set<String> duplicateIds = new HashSet<>();
+		duplicateIds.clear();
 		
 		FetchUtils.streamAll(
 	        apis::listProductOfferings,		// method reference
@@ -233,18 +271,45 @@ public class ProductCatalogManagementApisTest {
 	        null, 				    		// filter
 	        10                         	// pageSize
 		) 
+//		.filter(po -> ids.add(po.getId()))
 		.forEach(po -> { 
 			count.incrementAndGet();
-			System.out.print(count + " " + po.getId() + " → " + po.getName() + " / " + po.getLifecycleStatus() + " / ");
-
-			if (po.getRelatedParty() != null) {
-				System.out.println(po.getRelatedParty().get(0).getName());
-			}else {
-				System.out.println("no relatedParty");
-			}
-
+			String id = po.getId();
+		    if (!seenIds.add(id)) {	
+		    	duplicate.incrementAndGet();
+		        duplicateIds.add(id);
+		    }
+			System.out.println(count + " " + po.getId() + " → " + po.getName() + " / " + po.getLastUpdate() + " / ");
 		}
 		);		
+		
+		System.out.println("ProductOffering found: " + count);
+		System.out.println("ID duplicated: " + duplicateIds.size() + " - duplicate multiple: " + duplicate);
+		for (String is : duplicateIds) {
+			System.out.println(is);
+		}
+	}
+	
+	protected static void TestGetAllProductOfferingFetchByBatchWithFilter() {
+		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
+		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductCatalogPath);
+
+		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);		
+		AtomicInteger count = new AtomicInteger(0);
+		Set<String> ids = new HashSet<>();
+
+		FetchUtils.fetchByBatch(
+			apis::listProductOfferings, 
+			null, 
+			null, 
+			50,
+			batch -> batch.stream()
+            .filter(po -> ids.add(po.getId())) 
+            .forEach(po -> {
+            	count.incrementAndGet();
+            	System.out.println(count + " " + po.getId() + " → " + po.getName() + " / " + po.getLastUpdate() + " / ");
+            })
+		);	
 		
 		System.out.println("ProductOffering found: " + count);
 	}
@@ -256,30 +321,97 @@ public class ProductCatalogManagementApisTest {
 
 		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);		
 		AtomicInteger count = new AtomicInteger(0);
+		AtomicInteger duplicate = new AtomicInteger(0);
+		
+		Set<String> seenIds = new HashSet<>();
+		seenIds.clear();
+		
+		Set<String> duplicateIds = new HashSet<>();
+		duplicateIds.clear();
 		
 		FetchUtils.fetchByBatch(
 			apis::listProductOfferings, 
 			null, 
 			null, 
-			1,
+			10,
 			batch -> {
 			    batch.forEach(po -> {
 			    	count.incrementAndGet();
-			    	System.out.print(count + " " + po.getId() + " → " + po.getName() + " / " + po.getLifecycleStatus() + " / ");
-
-					if (po.getRelatedParty() != null) {
-						System.out.println(po.getRelatedParty().get(0).getName());
-					}else {
-						System.out.println("no relatedParty");
-					}
-
+			    	String id = po.getId();
+				    if (!seenIds.add(id)) {	
+				    	duplicate.incrementAndGet();
+				        duplicateIds.add(id);
+				    }
+			    	System.out.println(count + " " + po.getId() + " → " + po.getName() + " / " + po.getLifecycleStatus() + " / ");
 			    });
 			}
 		);
 				
 		System.out.println("ProductOffering found: " + count);
+		System.out.println("ID duplicated: " + duplicateIds.size() + " - duplicate multiple: " + duplicate);
+		for (String is : duplicateIds) {
+			System.out.println(is);
+		}
 	}
 	
+	
+	protected static void TestGetAllProductOfferingCompare() {
+		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
+		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductCatalogPath);
+
+		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);
+		
+		System.out.println("Use Case 1: streamAll");
+		AtomicInteger count1 = new AtomicInteger(0);
+		Set<String> id1s = new HashSet<>();
+		Set<String> streamIds = new HashSet<>();
+
+		FetchUtils.streamAll(
+	        apis::listProductOfferings,		// method reference
+		        null,                       	// fields
+		        null, 				    		// filter
+		        50                         	// pageSize
+			) 
+			.filter(po -> id1s.add(po.getId()))
+			.forEach(po -> { 
+				count1.incrementAndGet();
+				streamIds.add(po.getId());
+			}
+		);
+		System.out.println("ProductOffering StreamAll found: " + count1);
+		
+		System.out.println("Use Case 2: fetchByBatch");
+		AtomicInteger count2 = new AtomicInteger(0);
+		Set<String> batchIds = new HashSet<>();
+		Set<String> id2s = new HashSet<>();
+
+		FetchUtils.fetchByBatch(
+			apis::listProductOfferings, 
+			null, 
+			null, 
+			50,
+			batch -> batch.stream()
+            .filter(po -> id2s.add(po.getId())) 
+            .forEach(po -> {
+            	count2.incrementAndGet();
+            	batchIds.add(po.getId());
+            })
+		);	
+		System.out.println("ProductOffering FetchByBatch found: " + count2);
+		
+		System.out.println("Compare ");
+		Set<String> diff1 = new HashSet<>(batchIds);
+		Set<String> diff2 = new HashSet<>(streamIds);
+
+		diff1.removeAll(streamIds); 
+		diff2.removeAll(batchIds); 
+
+		Set<String> differentIds = new HashSet<>(diff1);
+		differentIds.addAll(diff2);
+
+		System.out.println("different ID between batchIds and streamIds (" + differentIds.size() + "):");
+		differentIds.forEach(System.out::println);
+	}
 	
 	protected static void TestGetAllProductOfferingStream() {
 
@@ -327,6 +459,30 @@ public class ProductCatalogManagementApisTest {
 		System.out.println("ProductOffering found: " + count);
 	}
 	
+	protected static void TestCustomFilterProductOffering() {
+
+		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
+		apiClientTmf620.setBasePath(tmfEndpoint + "/" + tmf620ProductCatalogPath);
+		AtomicInteger count = new AtomicInteger(0);
+		
+		ProductCatalogManagementApis apis = new ProductCatalogManagementApis(apiClientTmf620);		
+
+		FetchUtils.fetchByBatch(
+			apis::listProductOfferings, 
+			null, 
+			Map.of("category.name", "DOME OPERATOR Plan"), 
+			10,
+			batch -> {
+			    batch.forEach(po -> {
+			    	count.incrementAndGet();
+			    	System.out.println(count + " " + po.getId() + " → " + po.getName() + " / " + po.getLifecycleStatus() + " / ");
+			    });
+			}
+		);
+		
+		System.out.println("ProductOffering found: " + count);
+	}
+	
 	protected static void TestUpdateProductOffering(String id) {
 
 		ApiClient apiClientTmf620 = Configuration.getDefaultApiClient();
@@ -358,7 +514,7 @@ public class ProductCatalogManagementApisTest {
 			if (po != null) {
 				System.out.println(po.getId() + " " + po.getName() + " >> " + po.getLastUpdate());
 			}
-		} catch (ApiException e) {
+		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
 		}
 	}

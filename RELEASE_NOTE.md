@@ -2,6 +2,11 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.2.4</code> :calendar: 02/12/2025 (WIP)
+**BugFix**
+* Improve `streamAll` and `fetchByBatch` methods in **FetchUtils**.
+
+
 
 ### <code>2.2.3</code> :calendar: 28/11/2025
 **Improvements**

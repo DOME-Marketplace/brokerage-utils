@@ -1,6 +1,5 @@
 package it.eng.dome.brokerage.api.fetch;
 
-import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -92,46 +91,33 @@ public class FetchUtils {
 			private int offset = 0;
 			private List<T> currentBatch = Collections.emptyList();
 			private int index = 0;
-			private boolean finished = false;
 
 			@Override
 			public boolean hasNext() {
-				if (index < currentBatch.size()) {
-					return true;
-				}
-				if (finished) {
-					return false;
-				}
+				while (index >= currentBatch.size()) {
 
-				try {
-					currentBatch = fetcher.fetch(fields, offset, pageSize, filter);
-				} catch (Exception e) {
+					List<T> batch = null;
+					try {
+						batch = fetcher.fetch(fields, offset, pageSize, filter);
+						
+						if (batch.isEmpty()) {
+				            return false;
+				        }
+					} catch (Exception e) {
+						
+			            logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
+						
+						// fallback: divide & conquer
+						logger.debug("Batch fetch failed at offset {} - applying divide-and-conquer fallback to recover valid items.", offset);
+						batch = safeFetchRange(fetcher, fields, filter, offset, pageSize); 
+						logger.debug("Items retrieved in fallback {}", batch.size());
+					}
 					
-					Throwable cause = e;
-		            while (cause != null) { // management of SocketTimeoutException (nested exception)
-		                if (cause instanceof SocketTimeoutException) {
-		                	logger.error("Error processing batch - {}", cause.getMessage());
-		                	//exit from loop if Connect timed out
-		                	throw new RuntimeException(cause.getMessage());
-		                }
-		                cause = cause.getCause(); 
-		            }
-					
-		            logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
-					
-					// fallback: divide & conquer
-					logger.debug("Batch fetch failed at offset {} - applying divide-and-conquer fallback to recover valid items.", offset);
-	                currentBatch = safeFetchRange(fetcher, fields, filter, offset, pageSize);
+					currentBatch = batch;
+					offset += pageSize;
+					index = 0;
 				}
-
-				if (currentBatch == null || currentBatch.isEmpty()) {
-					finished = true;
-					return false;
-				}
-
-				offset += pageSize;
-				index = 0;
-				return true;
+				return index < currentBatch.size();
 			}
 
 			@Override
@@ -177,35 +163,29 @@ public class FetchUtils {
 		int offset = 0;
 		
 		while (true) {
-			List<T> batch;
+			List<T> batch = null;
 			
 	        try {
 	            batch = fetcher.fetch(fields, offset, batchSize, filter);
+	            
+	            if (batch.isEmpty()) {
+	            	break;
+	            }
+	            
 	        } catch (Exception e) {
-	        	
-//	        	Throwable cause = e;
-//	            while (cause != null) { // management of SocketTimeoutException (nested exception)
-//	                if (cause instanceof SocketTimeoutException) {
-//	                	logger.error("Error processing batch - {}", cause.getMessage());
-//	                	//exit from loop if Connect timed out
-//	                	throw new RuntimeException(cause.getMessage());
-//	                }
-//	                cause = cause.getCause(); 
-//	            }
-	        	
+	        	        	
 	        	logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
 
 	        	// fallback: divide & conquer
 	            logger.debug("Batch fetch failed at offset {} - applying divide-and-conquer fallback to recover valid items.", offset);
 	            batch = safeFetchRange(fetcher, fields, filter, offset, batchSize);
-	        }
-
-	        if (batch == null || batch.isEmpty()) {
-	            break;
+	            logger.debug("Items retrieved in fallback {}", batch.size());
 	        }
 
 	        try {
-	            consumer.process(batch);
+	        	if (!batch.isEmpty()) {
+	        		consumer.process(batch);
+	        	}
 	        } catch (Exception e) {
 	            throw new RuntimeException("Error processing batch starting at offset " + offset, e);
 	        }
