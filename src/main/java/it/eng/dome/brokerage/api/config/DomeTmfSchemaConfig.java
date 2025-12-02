@@ -25,13 +25,6 @@ public class DomeTmfSchemaConfig {
 				props.load(is);
 			}
 
-			// Override ENV + system properties
-			/*props.stringPropertyNames().forEach(key -> {
-				if (key.startsWith(PREFIX)) {
-					override(key);
-				}
-			});*/
-
 			// Build dynamic schema map
 			props.stringPropertyNames().forEach(key -> {
 				if (key.startsWith(PREFIX)) {
@@ -46,17 +39,6 @@ public class DomeTmfSchemaConfig {
 		}
 	}
 
-	/*private static void override(String key) {
-		String envKey = key.replace(".", "_").toUpperCase();
-		String envValue = System.getenv(envKey);
-		if (envValue != null)
-			props.setProperty(key, envValue);
-
-		String sysValue = System.getProperty(key);
-		if (sysValue != null)
-			props.setProperty(key, sysValue);
-	}*/
-
 	public static Map<String, String> getSchemas() {
 		return schemaMap;
 	}
@@ -66,8 +48,8 @@ public class DomeTmfSchemaConfig {
 	}
 
 	public static void printProperties() {
-		logger.info("=========== Dome TMF Schema Properties ===========");
-		schemaMap.forEach((k, v) -> logger.info(k + " = " + v));
-		logger.info("==================================================");
+		logger.debug("=========== Dome TMF Schema Properties ===========");
+		schemaMap.forEach((k, v) -> logger.debug(k + " = " + v));
+		logger.debug("==================================================");
 	}
 }
