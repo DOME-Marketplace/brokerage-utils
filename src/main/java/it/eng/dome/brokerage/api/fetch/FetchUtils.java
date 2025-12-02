@@ -126,7 +126,8 @@ public class FetchUtils {
 					} catch (Exception e) {
 						
 						// Error Management with Exception
-						if (hasCause(e, UnknownHostException.class)) {							
+						if (hasCause(e, UnknownHostException.class)) {	
+							//exit from loop if UnknownHostException
 					        throw new RuntimeException(e.getMessage());
 					    }
 						
@@ -205,17 +206,10 @@ public class FetchUtils {
 	        } catch (Exception e) {
 	        	
 	        	// Error Management with Exception
-	        	Throwable cause = e;
-	        	 while (cause != null) { 
-	        		 // 1. Management of UnknownHostException (nested exception)
-	                if (cause instanceof UnknownHostException) {
-	                	logger.error("Error processing batch - {}", cause.getMessage());
-	                	//exit from loop if UnknownHostException
-	                	throw new RuntimeException(cause.getMessage());
-	                }
-	                // next exception
-	                cause = cause.getCause(); 
-	            }
+				if (hasCause(e, UnknownHostException.class)) {	
+					//exit from loop if UnknownHostException
+					throw new RuntimeException(e.getMessage());
+			    }
 	        	        	
 	        	logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
 

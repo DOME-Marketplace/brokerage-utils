@@ -37,7 +37,7 @@ import it.eng.dome.tmforum.tmf620.v4.model.TimePeriod;
 public class ProductCatalogManagementApisTest {
 
 	final static String tmf620ProductCatalogPath = "tmf-api/productCatalogManagement/v4";
-	final static String tmfEndpoint = /*"https://dome-dev.eng.it";*/ /*"https://an-dhub-sbx.dome-project.eu";  */ "https://tmf.dome-marketplace-sbx.org";
+	final static String tmfEndpoint = "https://dome-dev.eng.it"; /*"https://an-dhub-sbx.dome-project.eu";*/  // "https://tmf.dome-marketplace-sbx.org";
 	
 	final static String SCHEMA = "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/AppliedCustomerBillRate.schema.json";
 	
@@ -58,7 +58,7 @@ public class ProductCatalogManagementApisTest {
 //		String id = "urn:ngsi-ld:product-offering:27e1e44f-da97-4657-aca6-317b1a97e9c2";
 //		TestGetProductOffering(id);		
 //		TestUpdateProductOffering(id);	
-		TestCustomFilterProductOffering();	
+//		TestCustomFilterProductOffering();	
 		
 		/**
 		 * ProductOfferingPrice
@@ -333,7 +333,7 @@ public class ProductCatalogManagementApisTest {
 			apis::listProductOfferings, 
 			null, 
 			null, 
-			10,
+			150,
 			batch -> {
 			    batch.forEach(po -> {
 			    	count.incrementAndGet();
