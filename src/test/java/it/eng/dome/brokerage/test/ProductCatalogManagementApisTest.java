@@ -37,7 +37,7 @@ import it.eng.dome.tmforum.tmf620.v4.model.TimePeriod;
 public class ProductCatalogManagementApisTest {
 
 	final static String tmf620ProductCatalogPath = "tmf-api/productCatalogManagement/v4";
-	final static String tmfEndpoint = "https://dome-dev.eng.it"; /*"https://an-dhub-sbx.dome-project.eu";*/  // "https://tmf.dome-marketplace-sbx.org";
+	final static String tmfEndpoint = "https://dome-dev.eng.it"; /* "https://an-dhub-sbx.dome-project.eu"; */ //"https://tmf.dome-marketplace-sbx.org";
 	
 	final static String SCHEMA = "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/AppliedCustomerBillRate.schema.json";
 	
@@ -269,7 +269,7 @@ public class ProductCatalogManagementApisTest {
 	        apis::listProductOfferings,		// method reference
 	        null,                       	// fields
 	        null, 				    		// filter
-	        10                         	// pageSize
+	        150                         	// pageSize
 		) 
 //		.filter(po -> ids.add(po.getId()))
 		.forEach(po -> { 
@@ -333,7 +333,7 @@ public class ProductCatalogManagementApisTest {
 			apis::listProductOfferings, 
 			null, 
 			null, 
-			150,
+			50,
 			batch -> {
 			    batch.forEach(po -> {
 			    	count.incrementAndGet();
@@ -342,7 +342,7 @@ public class ProductCatalogManagementApisTest {
 				    	duplicate.incrementAndGet();
 				        duplicateIds.add(id);
 				    }
-			    	System.out.println(count + " " + po.getId() + " → " + po.getName() + " / " + po.getLifecycleStatus() + " / ");
+			    	System.out.println(count + " " + po.getId() + " → " + po.getName() + " / " + po.getLastUpdate() + " / ");
 			    });
 			}
 		);
