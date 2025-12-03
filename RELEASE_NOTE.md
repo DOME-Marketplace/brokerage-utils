@@ -2,7 +2,7 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
-### <code>2.2.4</code> :calendar: 02/12/2025 (WIP)
+### <code>2.2.4</code> :calendar: 03/12/2025
 **Improvements**
 * Add `GenericApiException` to display error message of **TMForum ApiExceptions**.
 * Handle **exceptions** that occur during batch fetching and proceed to recover valid items.
@@ -10,7 +10,6 @@
 **BugFix**
 * Improve `streamAll` and `fetchByBatch` methods in **FetchUtils**.
 * Updated `InstantBillingRequestDTO`
-
 
 
 ### <code>2.2.3</code> :calendar: 28/11/2025
