@@ -38,7 +38,7 @@ public class ServiceCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
     public ServiceSpecification getServiceSpecification(String id, String fields) throws ApiException {
-		logger.info("Request: getServiceSpecification by id {}", id);
+		logger.debug("Request: getServiceSpecification by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -65,7 +65,7 @@ public class ServiceCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<ServiceSpecification> listServiceSpecifications(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listServiceSpecifications: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listServiceSpecifications: offset={}, limit={}", offset, limit);
 					
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);

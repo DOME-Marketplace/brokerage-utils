@@ -49,7 +49,7 @@ public class AccountManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public PartyAccount getPartyAccount(String id, String fields) throws ApiException  {
-		logger.info("Request: getPartyAccount by id {}", id);
+		logger.debug("Request: getPartyAccount by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -76,7 +76,7 @@ public class AccountManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<PartyAccount> listPartyAccounts(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listPartyAccounts: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listPartyAccounts: offset={}, limit={}", offset, limit);
 				
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -100,7 +100,7 @@ public class AccountManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved 
 	 */
 	public BillingAccount getBillingAccount(String id, String fields) throws ApiException {
-		logger.info("Request: getBillingAccount by id {}", id);
+		logger.debug("Request: getBillingAccount by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -127,7 +127,7 @@ public class AccountManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<BillingAccount> listBillingAccounts(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listBillingAccounts: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listBillingAccounts: offset={}, limit={}", offset, limit);
 			
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -180,7 +180,7 @@ public class AccountManagementApis {
 		
 		boolean success = (billFormat != null && billFormat.getId() != null);
 		if (success) {
-			logger.debug("Successfully updated BillFormat with id: {}", id);
+			logger.info("Successfully updated BillFormat with id: {}", id);
 		} else {
 			logger.warn("Update may have failed for BillFormat id: {}", id);
 		}
@@ -198,7 +198,7 @@ public class AccountManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public BillFormat getBillFormat(String id, String fields) throws ApiException {
-		logger.info("Request: getBillFormat by id {}", id);
+		logger.debug("Request: getBillFormat by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -225,7 +225,7 @@ public class AccountManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<BillFormat> listBillFormats(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listBillFormats: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listBillFormats: offset={}, limit={}", offset, limit);
 		
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);

@@ -41,7 +41,7 @@ public class CustomerBillApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public CustomerBill getCustomerBill(String id, String fields) throws ApiException {
-		logger.info("Request: getCustomerBill by id {}", id);
+		logger.debug("Request: getCustomerBill by id {}", id);
 		
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -68,7 +68,7 @@ public class CustomerBillApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<CustomerBill> listCustomerBills(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listCustomerBills: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listCustomerBills: offset={}, limit={}", offset, limit);
 		
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);

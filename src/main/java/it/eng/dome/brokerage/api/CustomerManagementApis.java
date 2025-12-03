@@ -41,7 +41,7 @@ public class CustomerManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public Customer getCustomer(String id, String fields) throws ApiException {
-		logger.info("Request: getCustomer by id {}", id);
+		logger.debug("Request: getCustomer by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -68,7 +68,7 @@ public class CustomerManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Customer> listCustomers(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listCustomers: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listCustomers: offset={}, limit={}", offset, limit);
 		
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -120,7 +120,7 @@ public class CustomerManagementApis {
 
 		boolean success = (customer != null && customer.getId() != null);
 		if (success) {
-			logger.debug("Successfully updated Customer with id: {}", id);
+			logger.info("Successfully updated Customer with id: {}", id);
 		} else {
 			logger.warn("Update may have failed for Customer id: {}", id);
 		}

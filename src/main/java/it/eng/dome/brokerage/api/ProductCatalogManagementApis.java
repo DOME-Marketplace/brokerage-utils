@@ -69,7 +69,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public ProductOffering getProductOffering(String id, String fields) throws ApiException {
-		logger.info("Request: getProductOffering by id {}", id);
+		logger.debug("Request: getProductOffering by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -96,7 +96,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<ProductOffering> listProductOfferings(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listProductOfferings: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listProductOfferings: offset={}, limit={}", offset, limit);
 				
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -159,7 +159,7 @@ public class ProductCatalogManagementApis {
 
 		boolean success = (productOffering != null && productOffering.getId() != null);
 		if (success) {
-			logger.debug("Successfully updated ProductOffering with id: {}", id);
+			logger.info("Successfully updated ProductOffering with id: {}", id);
 		} else {
 			logger.warn("Update may have failed for ProductOffering id: {}", id);
 		}
@@ -177,7 +177,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public ProductOfferingPrice getProductOfferingPrice(String id, String fields) throws ApiException {
-		logger.info("Request: getProductOfferingPrice by id {}", id);
+		logger.debug("Request: getProductOfferingPrice by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -204,7 +204,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<ProductOfferingPrice> listProductOfferingPrices(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listProductOfferingPrices: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listProductOfferingPrices: offset={}, limit={}", offset, limit);
 		
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -267,7 +267,7 @@ public class ProductCatalogManagementApis {
 
 		boolean success = (ProductOfferingPrice != null && ProductOfferingPrice.getId() != null);
 		if (success) {
-			logger.debug("Successfully updated ProductOfferingPrice with id: {}", id);
+			logger.info("Successfully updated ProductOfferingPrice with id: {}", id);
 		} else {
 			logger.warn("Update may have failed for ProductOfferingPrice id: {}", id);
 		}
@@ -285,7 +285,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public ProductSpecification getProductSpecification(String id, String fields) throws ApiException {
-		logger.info("Request: getProductSpecification by id {}", id);
+		logger.debug("Request: getProductSpecification by id {}", id);
 	
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -312,7 +312,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<ProductSpecification> listProductSpecifications(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listProductSpecifications: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listProductSpecifications: offset={}, limit={}", offset, limit);
 		
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -336,7 +336,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public Category getCategory(String id, String fields) throws ApiException {
-		logger.info("Request: getCategory by id {}", id);
+		logger.debug("Request: getCategory by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -363,7 +363,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Category> listCategories(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listCategories: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listCategories: offset={}, limit={}", offset, limit);
 				
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -430,7 +430,7 @@ public class ProductCatalogManagementApis {
 
 		boolean success = (Category != null && Category.getId() != null);
 		if (success) {
-			logger.debug("Successfully updated Category with id: {}", id);
+			logger.info("Successfully updated Category with id: {}", id);
 		} else {
 			logger.warn("Update may have failed for Category id: {}", id);
 		}
@@ -448,7 +448,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public Catalog getCatalog(String id, String fields) throws ApiException {
-		logger.info("Request: getCatalog by id {}", id);
+		logger.debug("Request: getCatalog by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -475,7 +475,7 @@ public class ProductCatalogManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Catalog> listCatalogs(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listCatalogs: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listCatalogs: offset={}, limit={}", offset, limit);
 				
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -528,7 +528,7 @@ public class ProductCatalogManagementApis {
 
 		boolean success = (Catalog != null && Catalog.getId() != null);
 		if (success) {
-			logger.debug("Successfully updated Catalog with id: {}", id);
+			logger.info("Successfully updated Catalog with id: {}", id);
 		} else {
 			logger.warn("Update may have failed for Catalog id: {}", id);
 		}

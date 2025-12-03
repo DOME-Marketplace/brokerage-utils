@@ -52,7 +52,7 @@ public class APIPartyApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public Organization getOrganization(String id, String fields) throws ApiException {	
-		logger.info("Request: getOrganization by id {}", id);
+		logger.debug("Request: getOrganization by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -79,7 +79,7 @@ public class APIPartyApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Organization> listOrganizations(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listOrganizations: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listOrganizations: offset={}, limit={}", offset, limit);
 					
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -145,7 +145,7 @@ public class APIPartyApis {
 
 		boolean success = (Organization != null && Organization.getId() != null);
 		if (success) {
-			logger.debug("Successfully updated Organization with id: {}", id);
+			logger.info("Successfully updated Organization with id: {}", id);
 		} else {
 			logger.warn("Update may have failed for Organization id: {}", id);
 		}
@@ -163,7 +163,7 @@ public class APIPartyApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public Individual getIndividual(String id, String fields) throws ApiException {	
-		logger.info("Request: getIndividual by id {}", id);
+		logger.debug("Request: getIndividual by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -190,7 +190,7 @@ public class APIPartyApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Individual> listIndividuals(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listIndividuals: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listIndividuals: offset={}, limit={}", offset, limit);
 			
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -256,7 +256,7 @@ public class APIPartyApis {
 
 		boolean success = (Individual != null && Individual.getId() != null);
 		if (success) {
-			logger.debug("Successfully updated Individual with id: {}", id);
+			logger.info("Successfully updated Individual with id: {}", id);
 		} else {
 			logger.warn("Update may have failed for Individual id: {}", id);
 		}

@@ -40,7 +40,7 @@ public class AgreementManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public Agreement getAgreement(String id, String fields) throws ApiException {
-		logger.info("Request: getAgreement by id {}", id);
+		logger.debug("Request: getAgreement by id {}", id);
 
 		if (fields != null) {
 				logger.debug("Selected attributes: [{}]", fields);
@@ -67,7 +67,7 @@ public class AgreementManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Agreement> listAgreements(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listAgreements: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listAgreements: offset={}, limit={}", offset, limit);
 
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -120,7 +120,7 @@ public class AgreementManagementApis {
 
 		boolean success = (agreement != null && agreement.getId() != null);
 		if (success) {
-			logger.debug("Successfully updated Agreement with id: {}", id);
+			logger.info("Successfully updated Agreement with id: {}", id);
 		} else {
 			logger.warn("Update may have failed for Agreement id: {}", id);
 		}

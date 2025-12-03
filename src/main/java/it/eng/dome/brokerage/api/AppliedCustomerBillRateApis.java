@@ -55,7 +55,7 @@ public class AppliedCustomerBillRateApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public AppliedCustomerBillingRate getAppliedCustomerBillingRate(String id, String fields) throws ApiException {
-		logger.info("Request: getAppliedCustomerBillingRate by id {}", id);
+		logger.debug("Request: getAppliedCustomerBillingRate by id {}", id);
 				
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -82,7 +82,7 @@ public class AppliedCustomerBillRateApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<AppliedCustomerBillingRate> listAppliedCustomerBillingRates(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listAppliedCustomerBillingRates: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listAppliedCustomerBillingRates: offset={}, limit={}", offset, limit);
 			
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -115,7 +115,7 @@ public class AppliedCustomerBillRateApis {
 		
 		boolean success = (billUpdate != null && billUpdate.getId() != null);
 		if (success) {
-			logger.debug("Successfully updated AppliedCustomerBillingRate with id: {}", id);
+			logger.info("Successfully updated AppliedCustomerBillingRate with id: {}", id);
 		} else {
 			logger.warn("Update may have failed for AppliedCustomerBillingRate id: {}", id);
 		}

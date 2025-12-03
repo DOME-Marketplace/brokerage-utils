@@ -53,7 +53,7 @@ public class UsageManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public Usage getUsage(String id, String fields) throws ApiException {
-		logger.info("Request: getUsage by id {}", id);
+		logger.debug("Request: getUsage by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -80,7 +80,7 @@ public class UsageManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<Usage> listUsages(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listUsages: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listUsages: offset={}, limit={}", offset, limit);
 			
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -142,7 +142,7 @@ public class UsageManagementApis {
 		
 		boolean success = (usage != null && usage.getId() != null);
 		if (success) {
-			logger.debug("Successfully updated Usage with id: {}", id);
+			logger.info("Successfully updated Usage with id: {}", id);
 		} else {
 			logger.warn("Update may have failed for Usage id: {}", id);
 		}
@@ -160,7 +160,7 @@ public class UsageManagementApis {
 	 * @throws ApiException if the API call fails or the resource cannot be retrieved
 	 */
 	public UsageSpecification getUsageSpecification(String id, String fields) throws ApiException {
-		logger.info("Request: getUsageSpecification by id {}", id);
+		logger.debug("Request: getUsageSpecification by id {}", id);
 
 		if (fields != null) {
 			logger.debug("Selected attributes: [{}]", fields);
@@ -187,7 +187,7 @@ public class UsageManagementApis {
 	 * @throws ApiException if the API call fails or the resources cannot be retrieved
 	 */
 	public List<UsageSpecification> listUsageSpecifications(String fields, int offset, int limit, Map<String, String> filter) throws ApiException {
-		logger.info("Request: listUsageSpecifications: offset={}, limit={}", offset, limit);
+		logger.debug("Request: listUsageSpecifications: offset={}, limit={}", offset, limit);
 				
 		if (filter != null && !filter.isEmpty()) {
 			logger.debug("Params used in the query-string filter: {}", filter);
@@ -244,7 +244,7 @@ public class UsageManagementApis {
 		
 		boolean success = (usageSpecification != null && usageSpecification.getId() != null);
 		if (success) {
-			logger.debug("Successfully updated UsageSpecification with id: {}", id);
+			logger.info("Successfully updated UsageSpecification with id: {}", id);
 		} else {
 			logger.warn("Update may have failed for UsageSpecification id: {}", id);
 		}
