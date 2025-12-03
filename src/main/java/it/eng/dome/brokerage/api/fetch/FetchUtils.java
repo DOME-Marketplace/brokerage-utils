@@ -1,5 +1,6 @@
 package it.eng.dome.brokerage.api.fetch;
 
+import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +14,9 @@ import java.util.stream.StreamSupport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import it.eng.dome.brokerage.exception.GenericApiException;
+
 
 public class FetchUtils {
 	
@@ -124,19 +128,9 @@ public class FetchUtils {
 				            return false;
 				        }
 					} catch (Exception e) {
-						
-						// Error Management with Exception
-						if (hasCause(e, UnknownHostException.class)) {	
-							//exit from loop if UnknownHostException
-					        throw new RuntimeException(e.getMessage());
-					    }
-						
-			            logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
-						
-						// fallback: divide & conquer
-						logger.debug("Batch fetch failed at offset {} - applying divide-and-conquer fallback to recover valid items.", offset);
-						batch = safeFetchRange(fetcher, fields, filter, offset, pageSize); 
-						logger.debug("Items retrieved in fallback {}", batch.size());
+						// Recover valid items based on the type of exceptions at offset={offset} and limit={pageSize}
+						batch = recoverValidItemsOnError(e, offset, pageSize, fetcher, fields, filter);				
+						logger.info("Number of valid items retrieved in fallback: {} - based on a total: {}", batch.size(), pageSize);
 					}
 					
 					currentBatch = batch;
@@ -164,7 +158,7 @@ public class FetchUtils {
 	 * batch using a {@link BatchProcessor}.
 	 * 
 	 * <p>This method retrieves items page by page, using the given {@code fetcher}
-	 * with the specified {@code batchSize}. Each non-empty batch is passed to the
+	 * with the specified {@code pageSize}. Each non-empty batch is passed to the
 	 * supplied {@code consumer} for processing. Fetching continues until an empty
 	 * batch is returned, indicating that no further items are available.</p>
 	 *
@@ -183,13 +177,13 @@ public class FetchUtils {
 	 * @param fetcher   the {@link ListedFetcher} used to fetch items in batches
 	 * @param fields    a comma-separated list of fields to include in each fetch; may be {@code null} or empty
 	 * @param filter    a map of filtering criteria; may be {@code null} or empty
-	 * @param batchSize the maximum number of items to fetch in each batch; must be greater than 0
+	 * @param pageSize the maximum number of items to fetch in each batch; must be greater than 0
 	 * @param consumer  the {@link BatchProcessor} that processes each batch; must not be {@code null}
 	 * @throws RuntimeException if fetching fails with an unrecoverable error, 
 	 *                  if fallback recovery fails, 
 	 *                  or if batch processing encounters an error
 	 */
-	public static <T> void fetchByBatch(ListedFetcher<T> fetcher, String fields, Map<String, String> filter, int batchSize, BatchProcessor<T> consumer) {
+	public static <T> void fetchByBatch(ListedFetcher<T> fetcher, String fields, Map<String, String> filter, int pageSize, BatchProcessor<T> consumer) {
 
 		int offset = 0;
 		
@@ -197,26 +191,16 @@ public class FetchUtils {
 			List<T> batch = null;
 			
 	        try {
-	            batch = fetcher.fetch(fields, offset, batchSize, filter);
+	            batch = fetcher.fetch(fields, offset, pageSize, filter);
 	            
 	            if (batch.isEmpty()) {
 	            	break;
 	            }
 	            
-	        } catch (Exception e) {
-	        	
-	        	// Error Management with Exception
-				if (hasCause(e, UnknownHostException.class)) {	
-					//exit from loop if UnknownHostException
-					throw new RuntimeException(e.getMessage());
-			    }
-	        	        	
-	        	logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
-
-	        	// fallback: divide & conquer
-	            logger.debug("Batch fetch failed at offset {} - applying divide-and-conquer fallback to recover valid items.", offset);
-	            batch = safeFetchRange(fetcher, fields, filter, offset, batchSize);
-	            logger.debug("Items retrieved in fallback {}", batch.size());
+	        } catch (Exception e) {	        	
+				// Recover valid items based on the type of exceptions at offset={offset} and limit={pageSize}
+				batch = recoverValidItemsOnError(e, offset, pageSize, fetcher, fields, filter);				
+				logger.info("Number of valid items retrieved in fallback: {} - based on a total: {}", batch.size(), pageSize);
 	        }
 
 	        try {
@@ -227,7 +211,7 @@ public class FetchUtils {
 	            throw new RuntimeException("Error processing batch starting at offset " + offset, e);
 	        }
 
-	        offset += batchSize;
+	        offset += pageSize;
 	    }
 	}
 	
@@ -255,6 +239,60 @@ public class FetchUtils {
 		fetchByBatch(fetcher, fields, filter, pageSize, batch -> allItems.addAll(batch));
 
 		return allItems;
+	}
+	
+	/**
+	 * Handles exceptions occurring during batch fetching and applies a divide-and-conquer
+	 * fallback strategy to recover valid items.
+	 * <p>
+	 * The method manages different types of exceptions as follows:
+	 * <ul>
+	 *   <li>{@link UnknownHostException}: rethrows as {@link RuntimeException} to exit the loop.</li>
+	 *   <li>{@link SocketTimeoutException}: logs a warning and proceeds with the fallback.</li>
+	 *   <li>TMF {@link GenericApiException}: logs the TMForum ApiException message and proceeds with the fallback.</li>
+	 *   <li>Other exceptions: logs the error and proceeds with the fallback.</li>
+	 * </ul>
+	 * The fallback strategy retrieves items in smaller batches using a divide-and-conquer
+	 * approach to maximize the number of valid items recovered. 
+	 * 
+	 * @param <T> the type of items being fetched
+	 * @param e the exception that occurred during the batch fetch
+	 * @param offset the offset of the batch where the exception occurred
+	 * @param pageSize the maximum number of items requested in the batch
+	 * @param fetcher a {@link ListedFetcher} functional interface used to fetch items
+	 * @param fields the fields to include in the fetched items
+	 * @param filter a map of filters to apply to the fetch request
+	 * @return a list of valid items successfully retrieved using the fallback strategy
+	 */
+	private static <T> List<T> recoverValidItemsOnError(Exception e, int offset, int pageSize, ListedFetcher<T> fetcher,
+	        String fields, Map<String, String> filter) {
+		
+		// Error Management with Exception
+		if (hasCause(e, UnknownHostException.class)) {	
+			// exit from loop if UnknownHostException
+	        throw new RuntimeException(e.getMessage());
+	    }
+		
+		if (hasCause(e, SocketTimeoutException.class)) {						
+			// SocketTimeoutException does not block the process and proceeds to the fallback strategy
+			logger.warn("Consider reducing limit={} in the requests", pageSize);
+			
+		} else if (isApiException(e)){							
+			// Use GenericApiException to logging error message and proceeds to the fallback strategy
+			GenericApiException tmfEx = new GenericApiException(e);
+			logger.error("ApiException: {}", tmfEx.getMessage());
+			
+		} else {
+			// Logging other types of exceptions and proceeds to the fallback strategy
+			logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());
+		}
+        
+		// fallback: divide & conquer to recover valid items 
+        logger.warn("Batch fetch failed at offset {} and limit {}. Applying divide-and-conquer fallback to recover valid items", offset, pageSize);
+        logger.info("Divide-and-conquer fallback strategy in progress ...");
+		
+		// retrieve items using divide-and-conquer fallback strategy at offset={offset} and limit={pageSize}
+        return safeFetchRange(fetcher, fields, filter, offset, pageSize); 		
 	}
 	
 	
@@ -329,7 +367,27 @@ public class FetchUtils {
 	private static boolean hasCause(Throwable t, Class<? extends Throwable> type) {
 	    while (t != null) {	    	
 	        if (type.isInstance(t)) {
-	        	logger.error("Error processing batch - {}", t.getMessage());
+	        	logger.error("Error processing batch - {}", t.toString());
+	            return true;
+	        }
+	        t = t.getCause();
+	    }
+	    return false;
+	}
+	
+	
+	/**
+	 * Checks whether the given throwable or any of its causes is an instance
+	 * of a class named "ApiException". This method does not rely on the package
+	 * of the exception and works for any class with the simple name "ApiException".
+	 *
+	 * @param t the throwable to check, may be null
+	 * @return true if the throwable or any of its causes has the simple class
+	 *         name "ApiException", false otherwise
+	 */
+	private static boolean isApiException(Throwable t) {
+	    while (t != null) {
+	        if (t.getClass().getSimpleName().equals("ApiException")) {
 	            return true;
 	        }
 	        t = t.getCause();
