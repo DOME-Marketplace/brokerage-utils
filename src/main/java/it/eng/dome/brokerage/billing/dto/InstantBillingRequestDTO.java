@@ -32,7 +32,8 @@ public class InstantBillingRequestDTO {
 	 */
 	@JsonCreator
 	public InstantBillingRequestDTO(@JsonProperty("product") Product product, @JsonProperty("date") OffsetDateTime date) {
-
+		this.setProduct(product);
+		this.setDate(date);
 	}
 
 	/**

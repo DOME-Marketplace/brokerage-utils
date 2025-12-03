@@ -9,6 +9,7 @@
 
 **BugFix**
 * Improve `streamAll` and `fetchByBatch` methods in **FetchUtils**.
+* Updated `InstantBillingRequestDTO`
 
 
 
