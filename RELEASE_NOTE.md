@@ -2,6 +2,11 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.2.5</code> :calendar: 04/12/2025 (WIP)
+**Improvements**
+* Set final **schemaLocation** versions in the `dome-tmf-schema.properties`.
+
+
 ### <code>2.2.4</code> :calendar: 03/12/2025
 **Improvements**
 * Add `GenericApiException` to display error message of **TMForum ApiExceptions**.
@@ -9,7 +14,7 @@
 
 **BugFix**
 * Improve `streamAll` and `fetchByBatch` methods in **FetchUtils**.
-* Updated `InstantBillingRequestDTO`
+* Updated `InstantBillingRequestDTO`.
 
 
 ### <code>2.2.3</code> :calendar: 28/11/2025
@@ -19,8 +24,8 @@
 * Add `dome-tmf-schema.properties` to set default schema location for custom attributes.
 * Add `AbstractMarkdownGenerator` to share for all services to generate **REST_APIs.md** documentation.
 * Use of `JUnit Tests` for APIs.
-* Added model classes and DTO
-* Update `ProductOfferingPriceUtils` 
+* Added model classes and **DTO**.
+* Update `ProductOfferingPriceUtils`. 
 
 
 ### <code>2.2.2</code> :calendar: 18/11/2025
@@ -37,10 +42,10 @@
 
 ### <code>2.2.1</code> :calendar: 24/10/2025
 **Improvements**
-* Add `BillingResponseDTO` class to manage billing response
-* Add `ProductOfferingPriceUtils` class to manage ProductOfferingPrice
-* Add `it.eng.dome.brokerage.model` package
-* Add `ApplyTaxesRequestDTO` class to manage invoicing service request
+* Add `BillingResponseDTO` class to manage billing response.
+* Add `ProductOfferingPriceUtils` class to manage ProductOfferingPrice.
+* Add `it.eng.dome.brokerage.model` package.
+* Add `ApplyTaxesRequestDTO` class to manage invoicing service request.
 
 **BugFix**
 * Set `offset={}, limit={}` params in the logger description for all **list** methods.
