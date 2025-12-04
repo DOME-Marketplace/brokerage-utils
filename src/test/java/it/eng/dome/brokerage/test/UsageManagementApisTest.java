@@ -30,7 +30,7 @@ public class UsageManagementApisTest {
 	final static String tmf635UsagePath = "tmf-api/usageManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
 	
-	final static String SCHEMA = "https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/TrackedEntity.json";
+	final static String SCHEMA = "https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/TrackedEntity.schema.json";
 
 	@Test
 	public void RunTest() {
@@ -179,7 +179,7 @@ public class UsageManagementApisTest {
 		) 
 		.forEach(us -> { 
 			count.incrementAndGet();
-			System.out.println(count + " " + us.getId() + " → " + us.getUsageDate() + " / " + us.getStatus());
+			System.out.println(count + " " + us.getId() + " → " + us.getUsageDate() + " / " + us.getLastUpdate());
 			}
 		);		
 		

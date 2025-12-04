@@ -47,7 +47,7 @@ public class ProductInventoryApisTest {
 		/**
 		 * Update Product
 		 */
-//		String id = "urn:ngsi-ld:product:b6fcb927-b2fe-428d-b7b9-fa165fcb2dbb";
+//		String id = "urn:ngsi-ld:product:0e5f87ea-462c-4155-b2d9-27dc78a505f6";
 //		TestUpdateProduct(id);
 	}
 	

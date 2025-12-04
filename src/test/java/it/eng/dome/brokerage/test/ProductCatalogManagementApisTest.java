@@ -39,7 +39,7 @@ public class ProductCatalogManagementApisTest {
 	final static String tmf620ProductCatalogPath = "tmf-api/productCatalogManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it"; /* "https://an-dhub-sbx.dome-project.eu"; */ //"https://tmf.dome-marketplace-sbx.org";
 	
-	final static String SCHEMA = "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/AppliedCustomerBillRate.schema.json";
+	final static String SCHEMA = "https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/ShareableEntity.schema.json";
 	
 	@Test
 	public void RunTest() {
@@ -55,7 +55,7 @@ public class ProductCatalogManagementApisTest {
 //		TestGetAllProductOfferingCompare();
 //		TestGetAllProductOfferingStream();
 //		TestGetFilteredProductOffering();		
-//		String id = "urn:ngsi-ld:product-offering:27e1e44f-da97-4657-aca6-317b1a97e9c2";
+//		String id = "urn:ngsi-ld:product-offering:782cb22e-2459-41f8-9b73-f1234bf70693";
 //		TestGetProductOffering(id);		
 //		TestUpdateProductOffering(id);	
 //		TestCustomFilterProductOffering();	
@@ -64,7 +64,7 @@ public class ProductCatalogManagementApisTest {
 		 * ProductOfferingPrice
 		 */
 //		TestCreateProductOfferingPrice();
-//		TestGetAllProductOfferingPrice();
+		TestGetAllProductOfferingPrice();
 //		String id = "urn:ngsi-ld:product-offering-price:1c83c61d-bc44-4398-9e26-d78b11114caf";
 //		TestUpdateProductOfferingPrice(id);
 //		TestGetProductOfferingPrice(id);		
@@ -168,7 +168,7 @@ public class ProductCatalogManagementApisTest {
 		
 		ProductOfferingCreate poc = new ProductOfferingCreate();
 		poc.setName("Simple Product Offering");
-		poc.setDescription("Use Case: Product Offering for testing with ExternallyBilled.schema.json");
+		poc.setDescription("Use Case: Product Offering for testing with default schema");
 		poc.isBundle(false);
 		poc.setLastUpdate(OffsetDateTime.now());
 		poc.setLifecycleStatus("Launched");
@@ -195,14 +195,14 @@ public class ProductCatalogManagementApisTest {
 		rp.setId("urn:ngsi-ld:organization:eb6647da-84f2-4645-8d9f-c2905775b561");
 		rp.setName("did:elsi:VATIT-12622480155");
 		rp.setRole("Seller");
-		//parties.add(rp);
+		parties.add(rp);
 		
 		//poc.setLastUpdate(OffsetDateTime.now());
 		poc.setRelatedParty(parties);
 //		String schemaLocation = "https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/ShareableEntity.schema.json"; //OK
 		//String schemaLocation = "https://raw.githubusercontent.com/Sh3rd3n/SchemaValidationTest/refs/heads/main/ProductOfferingExtension.schema.json"; //OK creazione -> no array
-//		String schemaLocation = "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/ProductOfferingExtensionTest.schema.json"; //OK
-		String schemaLocation = "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/ProductOfferingTestAll.schema.json"; //OK
+		String schemaLocation = "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/ProductOfferingExtensionTest.schema.json"; //OK
+		//String schemaLocation = "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/ProductOfferingTestAll.schema.json"; //OK
 //		String schemaLocation = "https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/ExternallyBilled.schema.json"; // OK creazione -> GET OK pla, KO relatedParty (only one)
 		poc.setAtSchemaLocation(URI.create(schemaLocation));
 		
@@ -216,7 +216,7 @@ public class ProductCatalogManagementApisTest {
 		
 		String id = null;
 		try {
-			System.out.println(poc.toJson());
+			//System.out.println(poc.toJson());
 			id = apis.createProductOffering(poc);
 		} catch (ApiException e) {
 			System.err.println("Error: " + e.getMessage());
@@ -447,7 +447,7 @@ public class ProductCatalogManagementApisTest {
 		FetchUtils.streamAll(
 	        apis::listProductOfferings,				// method reference
 	        null,                       			// fields
-	        Map.of("lifecycleStatus","Obsolete"), 	// filter //Obsolete, Retired, Launched
+	        Map.of("pricingLogicAlgorithm.plaSpecId","new-attr"), 	// filter //Obsolete, Retired, Launched
 	        100                         			// pageSize
 		) 
 		.forEach(po -> { 

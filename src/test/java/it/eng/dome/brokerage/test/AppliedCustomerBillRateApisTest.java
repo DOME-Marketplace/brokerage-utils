@@ -32,7 +32,11 @@ public class AppliedCustomerBillRateApisTest {
 	final static String tmf678CustomerBillPath = "tmf-api/customerBillManagement/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it";
 	
-	final static String SCHEMA = "https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/TrackedShareableEntity.schema.json";
+	final static String SCHEMA = //"https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/TrackedShareableEntity.schema.json"; 
+			//"https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/AppliedCustomerBillRate.schema.json"; 
+			//"https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/applied.schema.json";
+	
+			"https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/test/AppliedCustomerBillingRate.schema.json";
 	
     @Test
     public void RunTest() {
@@ -43,27 +47,27 @@ public class AppliedCustomerBillRateApisTest {
 		
 //		TestAppliedCustomerBillRateFetchAll();
 
+//		String id = "urn:ngsi-ld:applied-customer-billing-rate:14001008-6add-4c0b-8db1-a4daba3e9513";
+//		TestUpdateApplyCustomerBillingRate(id);
+//		TestAppliedCustomerBillRateById(id);
 		
-//		TestAppliedCustomerBillRateById();
 		
 //		TestAppliedCustomerBillRateFilter();
+//		TestAppliedCustomerBillRateWithFilter();
 		
 //		TestAppliedCustomerBillRateRevenueBilled();
 		
 //		TestCreateApplyRelatedParty();
-		TestCreateApplyCustomerBillingRate();
-		
-//    	TestUpdateApplyCustomerBillingRate();
+//		TestCreateApplyCustomerBillingRate();
     }
     
-	  public static void TestUpdateApplyCustomerBillingRate() {
+	  public static void TestUpdateApplyCustomerBillingRate(String id) {
 	    	
 	    	ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
 			apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
 			
 			AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
 
-			String id = "urn:ngsi-ld:applied-customer-billing-rate:b51d9352-25e1-4fcf-9016-9bcc8af275f3";
 			try {
 				AppliedCustomerBillingRateUpdate acbru = new AppliedCustomerBillingRateUpdate();
 				acbru.setIsBilled(true);
@@ -75,8 +79,7 @@ public class AppliedCustomerBillRateApisTest {
 				
 				apis.updateAppliedCustomerBillingRate(id, acbru);
 			} catch (ApiException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.err.println("Error: " + e.getMessage());
 			}
 			
 	  }
@@ -90,9 +93,7 @@ public class AppliedCustomerBillRateApisTest {
 		AppliedCustomerBillingRateCreate acbrc = new AppliedCustomerBillingRateCreate();
 		
 		acbrc.setType("recurring");
-		acbrc.setName("Auto set lastUpdate field");
-//		Instant instant = Instant.now();
-//		acbrc.setLastUpdate(instant.atOffset(ZoneOffset.UTC));
+		acbrc.setName("Test Applied using default SchemaLocation");
 		
 		List<RelatedParty> relatedParty = new ArrayList<RelatedParty>();
 		
@@ -116,7 +117,8 @@ public class AppliedCustomerBillRateApisTest {
 		BillingAccountRef ba = new BillingAccountRef();
 		ba.setId("urn:ngsi-ld:billing-account:3bf025cb-1b58-48be-b0ae-bb0967d09d3b");
 		acbrc.setBillingAccount(ba);
-		acbrc.setAtSchemaLocation(URI.create(SCHEMA));
+		
+		//acbrc.setAtSchemaLocation(URI.create(SCHEMA));
 		
 		try {
 			String id = apis.createAppliedCustomerBillingRate(acbrc);
@@ -191,7 +193,7 @@ public class AppliedCustomerBillRateApisTest {
 		FetchUtils.streamAll(
 		        apis::listAppliedCustomerBillingRates,    // method reference
 		        null,                                     // fields
-		        Map.of("isBilled", "true"),               // filter
+		        null, //Map.of("isBilled", "true"),               // filter
 		        100                                       // pageSize
 		) 
 		//.filter(rate -> "recurring".equals(rate.getType()))
@@ -206,16 +208,17 @@ public class AppliedCustomerBillRateApisTest {
 	}
 	
 	
-	public static void TestAppliedCustomerBillRateById() {
+	public static void TestAppliedCustomerBillRateById(String id) {
 		
 		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
 		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
 		
 		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
 		try {
-			AppliedCustomerBillingRate apply = apis.getAppliedCustomerBillingRate("urn:ngsi-ld:applied-customer-billing-rate:c510a70c-67a3-435c-80e6-5e623766e01c", null);
+			AppliedCustomerBillingRate apply = apis.getAppliedCustomerBillingRate(id, null);
 			if (apply != null) {
 				System.out.println(apply.getName() + " " + apply.getLastUpdate());
+				System.out.println("RelatedParty: " + apply.getRelatedParty().size());
 			}	
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
@@ -249,6 +252,31 @@ public class AppliedCustomerBillRateApisTest {
 		.forEach(rate -> { 
 			count.incrementAndGet();
 			System.out.println(count + " " + rate.getId() + " → " + rate.getType());
+			}
+		);		
+	}
+	
+	
+	public static void TestAppliedCustomerBillRateWithFilter() {
+		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+		
+		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+		AtomicInteger count = new AtomicInteger(0);
+		
+		Map<String, String> filter = new HashMap<String, String>();
+		filter.put("lastUpdate.gt", "2025-12-04T10:04:38.983Z");
+
+		
+		FetchUtils.streamAll(
+		        apis::listAppliedCustomerBillingRates,    // method reference
+		        "lastUpdate,name",                          // fields
+		        filter,    								  // filter
+		        100                                       // pageSize
+		) 
+		.forEach(rate -> { 
+			count.incrementAndGet();
+			System.out.println(count + " " + rate.getId() + " → " + rate.getName() + " / " + rate.getLastUpdate());
 			}
 		);		
 	}

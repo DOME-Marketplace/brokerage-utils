@@ -22,7 +22,7 @@ public class APIPartyApisTest {
 	final static String tmf63ePartyPath = "tmf-api/party/v4";
 	final static String tmfEndpoint = "https://dome-dev.eng.it"; 
 	
-	final static String SCHEMA = "https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/AppliedCustomerBillRate.schema.json";
+	final static String SCHEMA = "https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/TrackedEntity.schema.json";
 
 	@Test
 	public void RunTest() {
