@@ -93,7 +93,7 @@ public class AppliedCustomerBillRateApisTest {
 		AppliedCustomerBillingRateCreate acbrc = new AppliedCustomerBillingRateCreate();
 		
 		acbrc.setType("recurring");
-		acbrc.setName("Test Applied using default SchemaLocation");
+		acbrc.setName("New test");
 		
 		List<RelatedParty> relatedParty = new ArrayList<RelatedParty>();
 		

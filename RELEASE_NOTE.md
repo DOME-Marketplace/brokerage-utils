@@ -2,7 +2,7 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
-### <code>2.2.5</code> :calendar: 04/12/2025 (WIP)
+### <code>2.2.5</code> :calendar: 04/12/2025
 **Improvements**
 * Set final **schemaLocation** versions in the `dome-tmf-schema.properties`.
 

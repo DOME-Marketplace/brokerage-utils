@@ -64,7 +64,7 @@ public class ProductCatalogManagementApisTest {
 		 * ProductOfferingPrice
 		 */
 //		TestCreateProductOfferingPrice();
-		TestGetAllProductOfferingPrice();
+//		TestGetAllProductOfferingPrice();
 //		String id = "urn:ngsi-ld:product-offering-price:1c83c61d-bc44-4398-9e26-d78b11114caf";
 //		TestUpdateProductOfferingPrice(id);
 //		TestGetProductOfferingPrice(id);		
