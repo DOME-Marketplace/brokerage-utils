@@ -30,7 +30,7 @@ import it.eng.dome.tmforum.tmf678.v4.model.TimePeriod;
 public class AppliedCustomerBillRateApisTest {
 
 	final static String tmf678CustomerBillPath = "tmf-api/customerBillManagement/v4";
-	final static String tmfEndpoint = "https://dome-dev.eng.it";
+	final static String tmfEndpoint = "https://dome-dev.eng.it"; // "https://tmf.dome-marketplace-sbx.org";
 	
 	final static String SCHEMA = //"https://raw.githubusercontent.com/DOME-Marketplace/tmf-api/refs/heads/main/DOME/TrackedShareableEntity.schema.json"; 
 			//"https://raw.githubusercontent.com/pasquy73/test-workflow/refs/heads/test_related/AppliedCustomerBillRate.schema.json"; 
@@ -42,7 +42,8 @@ public class AppliedCustomerBillRateApisTest {
     public void RunTest() {
     	
 //		TestAppliedCustomerBillRate();
-		
+//    	TestAppliedCustomerBillRateList();
+    	
 //		TestAppliedCustomerBillRateFetch();
 		
 //		TestAppliedCustomerBillRateFetchAll();
@@ -205,6 +206,24 @@ public class AppliedCustomerBillRateApisTest {
 		);
 		
 		System.out.println("AppliedCustomerBillingRate found: " + count.get());
+	}
+	
+	@Test
+	public static void TestAppliedCustomerBillRateList() {
+		
+		ApiClient apiClientTmf678 = Configuration.getDefaultApiClient();
+		apiClientTmf678.setBasePath(tmfEndpoint + "/" + tmf678CustomerBillPath);
+		
+		AppliedCustomerBillRateApis apis = new AppliedCustomerBillRateApis(apiClientTmf678);
+	
+		List<AppliedCustomerBillingRate> acbrs = FetchUtils.streamAll(
+		        apis::listAppliedCustomerBillingRates,  // method reference
+		        null,                                   // fields
+		        null,               					// filter
+		        5                                       // pageSize
+		).toList();
+		
+		System.out.println("AppliedCustomerBillingRateList found: " + acbrs.size());
 	}
 	
 	
