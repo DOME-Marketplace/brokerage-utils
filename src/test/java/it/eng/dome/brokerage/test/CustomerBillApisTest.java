@@ -64,7 +64,9 @@ public class CustomerBillApisTest {
 		// filtered
 		Map<String, String> filter = new HashMap<String, String>();
 		filter.put("state", "new");
-		filter.put("amountDue.tmfValue.gt", "0");
+		filter.put("amountDue.tmfValue.st", "0");
+		//filter.put("amountDue.tmfValue.eq", "0");
+		//filter.put("taxIncludedAmount.value.eq", "5");
 		
 		FetchUtils.streamAll(
 	        apis::listCustomerBills, 	// method reference

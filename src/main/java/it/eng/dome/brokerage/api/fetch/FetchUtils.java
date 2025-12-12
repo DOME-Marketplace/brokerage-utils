@@ -277,11 +277,18 @@ public class FetchUtils {
 			// SocketTimeoutException does not block the process and proceeds to the fallback strategy
 			logger.warn("Consider reducing limit={} in the requests", pageSize);
 			
-		} else if (isApiException(e)){							
+		} else if (isApiException(e)){		
 			// Use GenericApiException to logging error message and proceeds to the fallback strategy
 			GenericApiException tmfEx = new GenericApiException(e);
-			logger.error("ApiException: {}", tmfEx.getMessage());
+			logger.error("GenericApiException: {}", tmfEx.getMessage());
 			
+			// TMForum Error Message strategies: 
+			// 1. "Was not able to list entities" => malformed data => fallback strategy 
+			// 2. "Request could not be answered due to an unexpected internal error" => bad query-string generates loop infinitive 
+			if (!tmfEx.getMessage().contains("Was not able to list entities")) {
+				logger.error("Error message body: {}", tmfEx.getResponseBody());
+				throw new RuntimeException(e.getMessage());
+			}
 		} else {
 			// Logging other types of exceptions and proceeds to the fallback strategy
 			logger.error("Error fetching batch at offset {}: {}", offset, e.getMessage());

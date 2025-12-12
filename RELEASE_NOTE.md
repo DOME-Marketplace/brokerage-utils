@@ -2,6 +2,11 @@
 
 **Release Notes** of the *Brokerage Utils* software:
 
+### <code>2.2.6</code> :calendar: 12/12/2025 (WIP)
+**BugFix**
+* Update in **recoverValidItemsOnError** method to verify if the message includes the `Was not able to list entities` string for malformed data and start the fallback strategy.
+
+
 ### <code>2.2.5</code> :calendar: 04/12/2025
 **Improvements**
 * Set final **schemaLocation** versions in the `dome-tmf-schema.properties`.
